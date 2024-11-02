@@ -111,6 +111,7 @@
             DGVCK.RowHeadersWidth = 51;
             DGVCK.Size = new Size(792, 188);
             DGVCK.TabIndex = 4;
+            DGVCK.CellClick += DGVCK_CellClick;
             // 
             // btnThemCK
             // 

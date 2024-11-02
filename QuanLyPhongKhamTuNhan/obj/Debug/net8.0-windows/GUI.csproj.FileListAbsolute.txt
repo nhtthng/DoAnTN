@@ -31,3 +31,4 @@ D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.sourcelink.jso
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.csproj.Up2Date
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.QuanLyDichVu.resources
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.QuanLyChuyenKhoa.resources
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.QuanLyBacSi.resources

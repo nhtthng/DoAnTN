@@ -19,6 +19,8 @@ namespace GUI
         {
             InitializeComponent();
             LoadAllChuyenKhoa();
+            DGVCK.CellClick += DGVCK_CellClick; // Đăng ký sự kiện
+            errorProviderCK.BlinkStyle = ErrorBlinkStyle.NeverBlink;
         }
         private void LoadAllChuyenKhoa()
         {
@@ -171,7 +173,7 @@ namespace GUI
             errorProviderCK.Clear();
 
             // Lấy từ khóa tìm kiếm
-            
+
             if (string.IsNullOrWhiteSpace(txtBoxTimCK.Text))
             {
                 MessageBox.Show("Vui lòng nhập từ khóa tìm kiếm.");
@@ -210,6 +212,20 @@ namespace GUI
         private void btnTimCK_Click(object sender, EventArgs e)
         {
             SearchChuyenKhoa();
+        }
+
+        private void DGVCK_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Kiểm tra xem người dùng có nhấn vào một dòng hợp lệ không
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = DGVCK.Rows[e.RowIndex];
+
+                // Cập nhật các trường nhập liệu từ các ô trong dòng đã chọn
+                txtBoxMaCK.Text = row.Cells["MaCK"].Value.ToString(); // Thay "MaBS" bằng tên cột thực tế
+                txtBoxTenCK.Text = row.Cells["TenCK"].Value.ToString(); // Thay "TenBS" bằng tên cột thực tế
+                
+            }
         }
     }
 }

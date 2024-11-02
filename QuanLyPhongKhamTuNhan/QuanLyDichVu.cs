@@ -20,6 +20,7 @@ namespace GUI
             InitializeComponent();
             LoadAllServices();
             DGVDV.CellClick += DGVDV_CellClick;
+            errorProviderDV.BlinkStyle = ErrorBlinkStyle.NeverBlink;
         }
         private void LoadAllServices()
         {
@@ -110,6 +111,29 @@ namespace GUI
         }
         private void UpdateService()
         {
+            // Đặt lại ErrorProvider
+            errorProviderDV.Clear();
+
+            bool isValid = true;
+            if (string.IsNullOrWhiteSpace(txtBoxMaDV.Text))
+            {
+                errorProviderDV.SetError(txtBoxMaDV, "Vui lòng nhập mã dịch vụ.");
+                isValid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtBoxTenDV.Text))
+            {
+                errorProviderDV.SetError(txtBoxTenDV, "Vui lòng nhập tên dịch vụ.");
+                isValid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtGiaDV.Text))
+            {
+                errorProviderDV.SetError(txtGiaDV, "Vui lòng nhập giá.");
+                isValid = false;
+            }
+            if (!isValid)
+            {
+                return; // Dừng hàm nếu còn trường trống
+            }
             int maDV = int.Parse(txtBoxMaDV.Text);
             string tenDV = txtBoxTenDV.Text;
             decimal gia = decimal.Parse(txtGiaDV.Text);
@@ -140,7 +164,7 @@ namespace GUI
             bool isValid = true;
             if (string.IsNullOrWhiteSpace(txtBoxTimKiemDV.Text))
             {
-                errorProviderDV.SetError(txtBoxMaDV, "Vui lòng nhập mã dịch vụ.");
+                errorProviderDV.SetError(txtBoxTimKiemDV, "Vui lòng nhập mã dịch vụ.");
                 isValid = false;
             }
             if (!isValid)

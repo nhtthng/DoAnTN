@@ -148,6 +148,51 @@ namespace QuanLyPhongKham
 
         private void btnSuaBN_Click(object sender, EventArgs e)
         {
+            // Đặt lại ErrorProvider
+            errorProvider.Clear();
+            // Kiểm tra các trường và đặt thông báo lỗi nếu cần
+            bool isValid = true;
+            if (string.IsNullOrWhiteSpace(txtboxMaBenhNhan.Text))
+            {
+                errorProvider.SetError(txtboxMaBenhNhan, "Vui lòng nhập mã bệnh nhân.");
+                isValid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtBoxHoTenBN.Text))
+            {
+                errorProvider.SetError(txtBoxHoTenBN, "Vui lòng nhập họ tên.");
+                isValid = false;
+            }
+            if (cboGioiTinhBN.SelectedItem == null)
+            {
+                errorProvider.SetError(cboGioiTinhBN, "Vui lòng chọn giới tính.");
+                isValid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtBoxEmaiBN.Text))
+            {
+                errorProvider.SetError(txtBoxEmaiBN, "Vui lòng nhập email.");
+                isValid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtBoxBHYTBN.Text))
+            {
+                errorProvider.SetError(txtBoxBHYTBN, "Vui lòng nhập số BHYT.");
+                isValid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtBoxSDTBN.Text))
+            {
+                errorProvider.SetError(txtBoxSDTBN, "Vui lòng nhập số điện thoại.");
+                isValid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtBoxDiaChiBN.Text))
+            {
+                errorProvider.SetError(txtBoxDiaChiBN, "Vui lòng nhập địa chỉ.");
+                isValid = false;
+            }
+
+            // Kiểm tra nếu tất cả các trường đều hợp lệ
+            if (!isValid)
+            {
+                return; // Dừng hàm nếu còn trường trống
+            }
             var patient = new DTO_QuanLyBenhNhan
             {
                 MaBN = int.Parse(txtboxMaBenhNhan.Text),
