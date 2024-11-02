@@ -35,5 +35,13 @@ namespace BLL
         {
             return _patientDAL.LoadPatientByMaBN(id);
         }
+        public bool checkIdPatient(int id)
+        {
+            if (_patientDAL.IsPatientIdExists(id) != false)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

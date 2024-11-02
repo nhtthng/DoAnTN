@@ -39,6 +39,8 @@ namespace QuanLyPhongKham
 
         private void btnThemBN_Click(object sender, EventArgs e)
         {
+            BLL_QuanLyBenhNhan _PatientBLL = new BLL_QuanLyBenhNhan();
+
             // Đặt lại ErrorProvider
             errorProvider.Clear();
             // Kiểm tra các trường và đặt thông báo lỗi nếu cần
@@ -84,6 +86,13 @@ namespace QuanLyPhongKham
             {
                 return; // Dừng hàm nếu còn trường trống
             }
+
+            if(_PatientBLL.checkIdPatient(int.Parse(txtboxMaBenhNhan.Text)) == false)
+            {
+                MessageBox.Show("Mã bệnh nhân bị trùng");
+                return;
+            }
+
             var patient = new DTO_QuanLyBenhNhan
             {
                 MaBN = int.Parse(txtboxMaBenhNhan.Text),
@@ -95,7 +104,6 @@ namespace QuanLyPhongKham
                 SoDT = txtBoxSDTBN.Text,
                 DiaChi = txtBoxDiaChiBN.Text
             };
-            BLL_QuanLyBenhNhan _PatientBLL = new BLL_QuanLyBenhNhan();
             if (_PatientBLL.AddPatient(patient))
             {
                 MessageBox.Show("Thêm bệnh nhân thành công!");

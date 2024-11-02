@@ -229,5 +229,20 @@ namespace DAL
             }
             return null; // Trả về null nếu không tìm thấy bệnh nhân
         }
+        public bool IsPatientIdExists(int maBN)
+        {
+            bool exists = false;
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                conn.Open();
+                string query = "SELECT COUNT(*) FROM BenhNhan WHERE MaBN = @MaBN";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaBN", maBN);
+                    exists = (int)cmd.ExecuteScalar() > 0;
+                }
+            }
+            return exists;
+        }
     }
 }
