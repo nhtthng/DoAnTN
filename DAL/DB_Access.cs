@@ -9,17 +9,18 @@ namespace DAL
 {
     public class SqlConnectionData
     {
-        public static SqlConnection Connect()
+        private static readonly string strcon = @"Data Source=SANTA\SQLEXPRESS;Initial Catalog=QuanLyPKTN_Final;User ID=sa;Password=123";
+        public static SqlConnection GetConnection()
         {
-            string strcon = @"Data Source=SANTA\\SQLEXPRESS;Initial Catalog=QuanLyPKTN_Final;User ID=sa;Password=123;Trust Server Certificate=True";
             SqlConnection conn = new SqlConnection(strcon); // khởi tạo 
             return conn;
         }
-    }
-    
-    public class DB_Access
-    {
-        // tạo chuỗi kết nối cơ sở dữ liệu
-        
+        public static void CloseConnection(SqlConnection conn)
+        {
+            if (conn != null && conn.State == System.Data.ConnectionState.Open)
+            {
+                conn.Close();
+            } 
+        }
     }
 }

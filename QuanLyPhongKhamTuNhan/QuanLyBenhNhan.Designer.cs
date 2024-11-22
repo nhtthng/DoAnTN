@@ -78,6 +78,7 @@
             btnTimBN.TabIndex = 2;
             btnTimBN.Text = "Tìm";
             btnTimBN.UseVisualStyleBackColor = true;
+            btnTimBN.Click += btnTimBN_Click;
             // 
             // DGVBN
             // 
@@ -87,6 +88,7 @@
             DGVBN.RowHeadersWidth = 51;
             DGVBN.Size = new Size(1184, 267);
             DGVBN.TabIndex = 3;
+            DGVBN.CellClick += DGVBN_CellClick;
             // 
             // label2
             // 
@@ -148,6 +150,7 @@
             // cboGioiTinhBN
             // 
             cboGioiTinhBN.FormattingEnabled = true;
+            cboGioiTinhBN.Items.AddRange(new object[] { "Nam", "Nữ" });
             cboGioiTinhBN.Location = new Point(507, 76);
             cboGioiTinhBN.Name = "cboGioiTinhBN";
             cboGioiTinhBN.Size = new Size(226, 28);
@@ -225,6 +228,7 @@
             btnThemBN.TabIndex = 2;
             btnThemBN.Text = "Thêm";
             btnThemBN.UseVisualStyleBackColor = true;
+            btnThemBN.Click += btnThemBN_Click;
             // 
             // btnXoaBN
             // 
@@ -234,6 +238,7 @@
             btnXoaBN.TabIndex = 2;
             btnXoaBN.Text = "Xóa";
             btnXoaBN.UseVisualStyleBackColor = true;
+            btnXoaBN.Click += btnXoaBN_Click;
             // 
             // btnSuaBN
             // 
@@ -243,6 +248,7 @@
             btnSuaBN.TabIndex = 2;
             btnSuaBN.Text = "Sửa";
             btnSuaBN.UseVisualStyleBackColor = true;
+            btnSuaBN.Click += btnSuaBN_Click;
             // 
             // QuanLyBenhNhan
             // 
@@ -274,6 +280,7 @@
             Controls.Add(label1);
             Name = "QuanLyBenhNhan";
             Text = "QuanLyBenhNhan";
+            Load += QuanLyBenhNhan_Load;
             ((System.ComponentModel.ISupportInitialize)DGVBN).EndInit();
             ResumeLayout(false);
             PerformLayout();
