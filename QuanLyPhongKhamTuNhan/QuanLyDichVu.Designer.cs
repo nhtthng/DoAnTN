@@ -43,6 +43,7 @@
             btnXoaDV = new Button();
             btnSuaDV = new Button();
             errorProviderDV = new ErrorProvider(components);
+            btnReset = new Button();
             ((System.ComponentModel.ISupportInitialize)DGVDV).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProviderDV).BeginInit();
             SuspendLayout();
@@ -50,7 +51,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(45, 37);
+            label1.Location = new Point(45, 19);
             label1.Name = "label1";
             label1.Size = new Size(72, 20);
             label1.TabIndex = 0;
@@ -58,14 +59,14 @@
             // 
             // txtBoxTimKiemDV
             // 
-            txtBoxTimKiemDV.Location = new Point(158, 34);
+            txtBoxTimKiemDV.Location = new Point(158, 16);
             txtBoxTimKiemDV.Name = "txtBoxTimKiemDV";
             txtBoxTimKiemDV.Size = new Size(426, 27);
             txtBoxTimKiemDV.TabIndex = 1;
             // 
             // btnTimKiemDV
             // 
-            btnTimKiemDV.Location = new Point(656, 33);
+            btnTimKiemDV.Location = new Point(656, 16);
             btnTimKiemDV.Name = "btnTimKiemDV";
             btnTimKiemDV.Size = new Size(94, 29);
             btnTimKiemDV.TabIndex = 2;
@@ -76,7 +77,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(45, 110);
+            label2.Location = new Point(43, 79);
             label2.Name = "label2";
             label2.Size = new Size(85, 20);
             label2.TabIndex = 0;
@@ -84,7 +85,7 @@
             // 
             // txtBoxMaDV
             // 
-            txtBoxMaDV.Location = new Point(158, 107);
+            txtBoxMaDV.Location = new Point(158, 76);
             txtBoxMaDV.Name = "txtBoxMaDV";
             txtBoxMaDV.Size = new Size(239, 27);
             txtBoxMaDV.TabIndex = 3;
@@ -92,7 +93,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(45, 183);
+            label3.Location = new Point(43, 142);
             label3.Name = "label3";
             label3.Size = new Size(87, 20);
             label3.TabIndex = 0;
@@ -100,7 +101,7 @@
             // 
             // txtBoxTenDV
             // 
-            txtBoxTenDV.Location = new Point(158, 180);
+            txtBoxTenDV.Location = new Point(158, 139);
             txtBoxTenDV.Name = "txtBoxTenDV";
             txtBoxTenDV.Size = new Size(239, 27);
             txtBoxTenDV.TabIndex = 3;
@@ -108,7 +109,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(45, 256);
+            label4.Location = new Point(45, 206);
             label4.Name = "label4";
             label4.Size = new Size(31, 20);
             label4.TabIndex = 0;
@@ -116,7 +117,7 @@
             // 
             // txtGiaDV
             // 
-            txtGiaDV.Location = new Point(158, 253);
+            txtGiaDV.Location = new Point(158, 203);
             txtGiaDV.Name = "txtGiaDV";
             txtGiaDV.Size = new Size(239, 27);
             txtGiaDV.TabIndex = 3;
@@ -133,7 +134,7 @@
             // 
             // btnThemDV
             // 
-            btnThemDV.Location = new Point(656, 110);
+            btnThemDV.Location = new Point(656, 76);
             btnThemDV.Name = "btnThemDV";
             btnThemDV.Size = new Size(94, 29);
             btnThemDV.TabIndex = 5;
@@ -143,7 +144,7 @@
             // 
             // btnXoaDV
             // 
-            btnXoaDV.Location = new Point(656, 183);
+            btnXoaDV.Location = new Point(656, 139);
             btnXoaDV.Name = "btnXoaDV";
             btnXoaDV.Size = new Size(94, 29);
             btnXoaDV.TabIndex = 5;
@@ -153,7 +154,7 @@
             // 
             // btnSuaDV
             // 
-            btnSuaDV.Location = new Point(656, 252);
+            btnSuaDV.Location = new Point(656, 202);
             btnSuaDV.Name = "btnSuaDV";
             btnSuaDV.Size = new Size(94, 29);
             btnSuaDV.TabIndex = 5;
@@ -165,11 +166,22 @@
             // 
             errorProviderDV.ContainerControl = this;
             // 
+            // btnReset
+            // 
+            btnReset.Location = new Point(656, 265);
+            btnReset.Name = "btnReset";
+            btnReset.Size = new Size(94, 29);
+            btnReset.TabIndex = 6;
+            btnReset.Text = "Reset";
+            btnReset.UseVisualStyleBackColor = true;
+            btnReset.Click += btnReset_Click;
+            // 
             // QuanLyDichVu
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(813, 506);
+            Controls.Add(btnReset);
             Controls.Add(btnSuaDV);
             Controls.Add(btnXoaDV);
             Controls.Add(btnThemDV);
@@ -207,5 +219,6 @@
         private Button btnXoaDV;
         private Button btnSuaDV;
         private ErrorProvider errorProviderDV;
+        private Button btnReset;
     }
 }

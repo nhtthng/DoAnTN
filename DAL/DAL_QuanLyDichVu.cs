@@ -68,12 +68,11 @@ namespace DAL
                 {
                     conn.Open();
                     // Câu truy vấn thêm dịch vụ
-                    string query = "INSERT INTO DichVu (MaDV,TenDV, Gia) VALUES (@MaDV,@TenDV, @Gia)";
+                    string query = "INSERT INTO DichVu (TenDV, Gia) VALUES (@TenDV, @Gia)";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         // Gán giá trị cho các tham số
-                        cmd.Parameters.AddWithValue("@MaDV", service.MaDV);
                         cmd.Parameters.AddWithValue("@TenDV", service.TenDV);
                         cmd.Parameters.AddWithValue("@Gia", service.Gia);
 
@@ -173,24 +172,23 @@ namespace DAL
 
             return isUpdated;
         }
-        public DTO_QuanLyDichVu FindServiceById(int maDV)
+        public DTO_QuanLyDichVu FindServiceByName(string tenDV)
         {
             DTO_QuanLyDichVu service = null;
 
             // Mở kết nối
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                
                 try
                 {
                     conn.Open();
-                    // Câu truy vấn tìm kiếm dịch vụ theo mã
-                    string query = "SELECT MaDV, TenDV, Gia FROM DichVu WHERE MaDV = @MaDV";
+                    // Câu truy vấn tìm kiếm dịch vụ theo tên
+                    string query = "SELECT MaDV, TenDV, Gia FROM DichVu WHERE TenDV = @TenDV";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         // Gán giá trị cho tham số
-                        cmd.Parameters.AddWithValue("@MaDV", maDV);
+                        cmd.Parameters.AddWithValue("@TenDV", tenDV);
 
                         // Thực thi câu lệnh và đọc dữ liệu
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -221,17 +219,30 @@ namespace DAL
             }
             return service;
         }
-        public bool IsServiceIdExists(int maDV)
+
+        public bool IsServiceNameExists(string tenDV)
         {
             bool exists = false;
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                conn.Open();
-                string query = "SELECT COUNT(*) FROM DichVu WHERE MaDV = @MaDV";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                try
                 {
-                    cmd.Parameters.AddWithValue("@MaDV", maDV);
-                    exists = (int)cmd.ExecuteScalar() > 0;
+                    conn.Open();
+                    string query = "SELECT COUNT(*) FROM DichVu WHERE TenDV = @TenDV";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        // Trim và không phân biệt chữ hoa chữ thường
+                        cmd.Parameters.AddWithValue("@TenDV", tenDV.Trim());
+                        exists = (int)cmd.ExecuteScalar() > 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Lỗi kiểm tra tên dịch vụ: " + ex.Message);
+                }
+                finally
+                {
+                    SqlConnectionData.CloseConnection(conn);
                 }
             }
             return exists;

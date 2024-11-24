@@ -33,11 +33,6 @@ namespace GUI
             errorProviderDV.Clear();
 
             bool isValid = true;
-            if (string.IsNullOrWhiteSpace(txtBoxMaDV.Text))
-            {
-                errorProviderDV.SetError(txtBoxMaDV, "Vui lòng nhập mã dịch vụ.");
-                isValid = false;
-            }
             if (string.IsNullOrWhiteSpace(txtBoxTenDV.Text))
             {
                 errorProviderDV.SetError(txtBoxTenDV, "Vui lòng nhập tên dịch vụ.");
@@ -52,20 +47,18 @@ namespace GUI
             {
                 return; // Dừng hàm nếu còn trường trống
             }
-            if (_QuanLyDichVuBLL.CheckIdDv(int.Parse(txtBoxMaDV.Text)) == false)
+            if (_QuanLyDichVuBLL.CheckTenDV(txtBoxTenDV.Text) == false)
             {
-                MessageBox.Show("Mã dịch vụ bị trùng");
+                MessageBox.Show("Tên dịch vụ bị trùng");
                 return;
             }
-            int maDV = int.Parse(txtBoxMaDV.Text);
             string tenDV = txtBoxTenDV.Text;
             decimal gia = decimal.Parse(txtGiaDV.Text);
 
-            
+
 
             DTO_QuanLyDichVu newService = new DTO_QuanLyDichVu
             {
-                MaDV = maDV,
                 TenDV = tenDV,
                 Gia = gia
             };
@@ -137,6 +130,12 @@ namespace GUI
             int maDV = int.Parse(txtBoxMaDV.Text);
             string tenDV = txtBoxTenDV.Text;
             decimal gia = decimal.Parse(txtGiaDV.Text);
+            DTO_QuanLyDichVu existingService = _QuanLyDichVuBLL.FindServiceByName(tenDV);
+            if (existingService != null && existingService.MaDV != maDV)
+            {
+                MessageBox.Show("Tên dịch vụ đã tồn tại.");
+                return;
+            }
 
             DTO_QuanLyDichVu updatedService = new DTO_QuanLyDichVu
             {
@@ -158,21 +157,20 @@ namespace GUI
         }
         private void SearchService()
         {
-            // Đặt lại ErrorProvider
             errorProviderDV.Clear();
 
             bool isValid = true;
             if (string.IsNullOrWhiteSpace(txtBoxTimKiemDV.Text))
             {
-                errorProviderDV.SetError(txtBoxTimKiemDV, "Vui lòng nhập mã dịch vụ.");
+                errorProviderDV.SetError(txtBoxTimKiemDV, "Vui lòng nhập tên dịch vụ.");
                 isValid = false;
             }
             if (!isValid)
             {
                 return; // Dừng hàm nếu còn trường trống
             }
-            int maDV = int.Parse(txtBoxTimKiemDV.Text);
-            DTO_QuanLyDichVu service = _QuanLyDichVuBLL.FindServiceById(maDV);
+            string tenDV = txtBoxTimKiemDV.Text;
+            DTO_QuanLyDichVu service = _QuanLyDichVuBLL.FindServiceByName(tenDV);
 
             if (service != null)
             {
@@ -182,6 +180,7 @@ namespace GUI
             else
             {
                 MessageBox.Show("Không tìm thấy dịch vụ.");
+                LoadAllServices(); // Tải lại toàn bộ danh sách
             }
         }
 
@@ -212,10 +211,23 @@ namespace GUI
                 DataGridViewRow row = DGVDV.Rows[e.RowIndex];
 
                 // Điền giá trị vào các trường tương ứng
-                txtBoxMaDV.Text = row.Cells["MaDV"].Value.ToString(); 
-                txtBoxTenDV.Text = row.Cells["TenDV"].Value.ToString(); 
-                txtGiaDV.Text = row.Cells["Gia"].Value.ToString(); 
+                txtBoxMaDV.Text = row.Cells["MaDV"].Value.ToString();
+                txtBoxTenDV.Text = row.Cells["TenDV"].Value.ToString();
+                txtGiaDV.Text = row.Cells["Gia"].Value.ToString();
             }
+        }
+        private void ResetForm()
+        {
+            txtBoxMaDV.Clear();
+            txtBoxTenDV.Clear();
+            txtGiaDV.Clear();
+            txtBoxTimKiemDV.Clear();
+            LoadAllServices(); // Tải lại danh sách ban đầu
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            ResetForm();
         }
     }
 }

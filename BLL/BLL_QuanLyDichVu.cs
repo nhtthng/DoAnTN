@@ -33,13 +33,27 @@ namespace BLL
             return _QuanLyDichVuDAL.AddService(service);
         }
         // check ID DV
-        public bool CheckIdDv(int ID)
+        public bool CheckTenDV(string tenDV)
         {
-            if (_QuanLyDichVuDAL.IsServiceIdExists(ID) != false)
+            // Kiểm tra tên dịch vụ có tồn tại chưa
+            // Trả về false nếu tên dịch vụ đã tồn tại
+            if (string.IsNullOrWhiteSpace(tenDV))
             {
-                return false;
+                throw new ArgumentException("Tên dịch vụ không được để trống.");
             }
-            return true;
+
+            return !_QuanLyDichVuDAL.IsServiceNameExists(tenDV.Trim());
+        }
+
+        public DTO_QuanLyDichVu FindServiceByName(string tenDV)
+        {
+            if (string.IsNullOrWhiteSpace(tenDV))
+            {
+                Console.WriteLine("Tên dịch vụ không hợp lệ");
+                return null;
+            }
+
+            return _QuanLyDichVuDAL.FindServiceByName(tenDV.Trim());
         }
         // Xóa dịch vụ
         public bool DeleteService(int maDV)
@@ -63,18 +77,6 @@ namespace BLL
             }
 
             return _QuanLyDichVuDAL.UpdateService(service);
-        }
-
-        // Tìm kiếm dịch vụ theo mã
-        public DTO_QuanLyDichVu FindServiceById(int maDV)
-        {
-            if (maDV <= 0)
-            {
-                Console.WriteLine("Mã dịch vụ không hợp lệ");
-                return null;
-            }
-
-            return _QuanLyDichVuDAL.FindServiceById(maDV);
         }
     }
 }
