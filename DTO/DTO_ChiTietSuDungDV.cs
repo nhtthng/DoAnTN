@@ -15,5 +15,6 @@ namespace DTO
         //public decimal ThanhTien { get; set; }
         public int MaBN { get; set; }
         public DateTime NgayLap { get; set; }
+        public int MaBS { get; set; }
     }
 }

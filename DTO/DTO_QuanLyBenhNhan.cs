@@ -16,7 +16,6 @@ namespace DTO
         public string SoBHYT { get; set; }
         public string SoDT { get; set; }
         public string DiaChi { get; set; }
-        public int MaBS { get; set; }
         public override string ToString()
         {
             return $"{MaBN} - {HoTenBN}"; // Ví dụ: Hiển thị Mã BN và Họ Tên

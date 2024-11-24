@@ -51,6 +51,7 @@
             btnThemBN = new Button();
             btnXoaBN = new Button();
             btnSuaBN = new Button();
+            btnReset = new Button();
             ((System.ComponentModel.ISupportInitialize)DGVBN).BeginInit();
             SuspendLayout();
             // 
@@ -171,6 +172,7 @@
             txtBoxSDTBN.Name = "txtBoxSDTBN";
             txtBoxSDTBN.Size = new Size(226, 27);
             txtBoxSDTBN.TabIndex = 5;
+            txtBoxSDTBN.KeyPress += txtBoxSDTBN_KeyPress;
             // 
             // label7
             // 
@@ -222,7 +224,7 @@
             // 
             // btnThemBN
             // 
-            btnThemBN.Location = new Point(123, 244);
+            btnThemBN.Location = new Point(59, 244);
             btnThemBN.Name = "btnThemBN";
             btnThemBN.Size = new Size(94, 29);
             btnThemBN.TabIndex = 2;
@@ -232,7 +234,7 @@
             // 
             // btnXoaBN
             // 
-            btnXoaBN.Location = new Point(559, 244);
+            btnXoaBN.Location = new Point(353, 244);
             btnXoaBN.Name = "btnXoaBN";
             btnXoaBN.Size = new Size(94, 29);
             btnXoaBN.TabIndex = 2;
@@ -242,7 +244,7 @@
             // 
             // btnSuaBN
             // 
-            btnSuaBN.Location = new Point(988, 244);
+            btnSuaBN.Location = new Point(740, 244);
             btnSuaBN.Name = "btnSuaBN";
             btnSuaBN.Size = new Size(94, 29);
             btnSuaBN.TabIndex = 2;
@@ -250,11 +252,22 @@
             btnSuaBN.UseVisualStyleBackColor = true;
             btnSuaBN.Click += btnSuaBN_Click;
             // 
+            // btnReset
+            // 
+            btnReset.Location = new Point(1045, 244);
+            btnReset.Name = "btnReset";
+            btnReset.Size = new Size(94, 29);
+            btnReset.TabIndex = 9;
+            btnReset.Text = "Reset";
+            btnReset.UseVisualStyleBackColor = true;
+            btnReset.Click += btnReset_Click;
+            // 
             // QuanLyBenhNhan
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1192, 565);
+            Controls.Add(btnReset);
             Controls.Add(cboGioiTinhBN);
             Controls.Add(DTPNgaySinhBN);
             Controls.Add(label4);
@@ -311,5 +324,6 @@
         private Button btnThemBN;
         private Button btnXoaBN;
         private Button btnSuaBN;
+        private Button btnReset;
     }
 }

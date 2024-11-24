@@ -18,6 +18,8 @@ namespace DAL
             {
                 try
                 {
+                    conn.Open();
+
                     // Tạo câu lệnh truy vấn
                     string query = "SELECT * FROM BenhNhan";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -61,12 +63,11 @@ namespace DAL
                     // Mở kết nối
                     conn.Open();
                     // Tạo câu lệnh truy vấn
-                    string query = "INSERT INTO BenhNhan (MaBN,HoTenBN,NgaySinh,GioiTinh,Email,SoBHYT,SoDT,DiaChi) VALUES (@MaBN,@HoTenBN,@NgaySinh,@GioiTinh,@Email,@SoBHYT,@SoDT,@DiaChi)";
-      
-                    using (SqlCommand cmd = new SqlCommand(query, conn)) 
+                    string query = "INSERT INTO BenhNhan (HoTenBN,NgaySinh,GioiTinh,Email,SoBHYT,SoDT,DiaChi) VALUES (@HoTenBN,@NgaySinh,@GioiTinh,@Email,@SoBHYT,@SoDT,@DiaChi)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         // Thêm tham số vào câu lệnh
-                        cmd.Parameters.AddWithValue("@MaBN", patient.MaBN);
                         cmd.Parameters.AddWithValue("@HoTenBN", patient.HoTenBN);
                         cmd.Parameters.AddWithValue("@NgaySinh", patient.NgaySinh);
                         cmd.Parameters.AddWithValue("@GioiTinh", patient.GioiTinh);
@@ -77,7 +78,7 @@ namespace DAL
                         int result = cmd.ExecuteNonQuery();
                         return result > 0;
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -95,8 +96,8 @@ namespace DAL
                     conn.Open();
                     // Tạo câu lệnh truy vấn
                     string query = "DELETE FROM BenhNhan WHERE MaBN = @MaBN";
-                    
-                    using(SqlCommand cmd = new SqlCommand(query, conn))
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         // Thêm tham số vào câu lệnh
                         cmd.Parameters.AddWithValue("@MaBN", maBN);
@@ -123,7 +124,7 @@ namespace DAL
                     // Tạo câu lệnh truy vấn
                     string query = "UPDATE BenhNhan SET HoTenBN = @HoTenBN, NgaySinh = @NgaySinh, GioiTinh = @GioiTinh, Email = @Email, SoBHYT = @SoBHYT, SoDT = @SoDT, DiaChi = @DiaChi WHERE MaBN = @MaBN";
                     //SqlCommand cmd = new SqlCommand(query, conn);
-                    using(SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         // Thêm tham số vào câu lệnh
                         cmd.Parameters.AddWithValue("@MaBN", patient.MaBN);
@@ -146,20 +147,32 @@ namespace DAL
                 }
             }
         }
-        public DTO_QuanLyBenhNhan SearchPatientByMaBN(int maBN)
+        public DTO_QuanLyBenhNhan SearchPatientBySDT(string soDienThoai)
         {
+            // Validate số điện thoại (nếu cần)
+            if (string.IsNullOrWhiteSpace(soDienThoai))
+            {
+                return null;
+            }
+
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
                 try
                 {
-                    string query = "SELECT * FROM BenhNhan WHERE MaBN = @MaBN";
+                    conn.Open();
+                    // Thay đổi câu truy vấn để tìm theo số điện thoại
+                    string query = "SELECT * FROM BenhNhan WHERE SoDT = @SoDT";
+
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@MaBN", maBN);
+                        // Thêm tham số số điện thoại
+                        cmd.Parameters.AddWithValue("@SoDT", soDienThoai);
+
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
+                                // Tạo và trả về đối tượng DTO_QuanLyBenhNhan
                                 return new DTO_QuanLyBenhNhan
                                 {
                                     MaBN = Convert.ToInt32(reader["MaBN"]),
@@ -177,11 +190,56 @@ namespace DAL
                 }
                 catch (Exception ex)
                 {
-                    // Xử lý ngoại lệ nếu cần, ví dụ ghi log lỗi
-                    Console.WriteLine("Lỗi khi tìm bệnh nhân: " + ex.Message);
+                    // Xử lý ngoại lệ
+                    Console.WriteLine("Lỗi khi tìm bệnh nhân theo số điện thoại: " + ex.Message);
+                    // Hoặc throw để xử lý ở tầng gọi
+                    // throw;
                 }
             }
             return null; // Trả về null nếu không tìm thấy bệnh nhân
         }
+        public bool KiemTraTrungSoDienThoai(string soDienThoai)
+        {
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT COUNT(*) FROM BenhNhan WHERE SoDT = @SoDienThoai";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SoDienThoai", soDienThoai);
+                    conn.Open();
+                    int count = (int)cmd.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+        public bool KiemTraTrungEmail(string email)
+        {
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT COUNT(*) FROM BenhNhan WHERE Email = @Email";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    conn.Open();
+                    int count = (int)cmd.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+        public bool KiemTraTrungSoBHYT(string soBHYT)
+        {
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT COUNT(*) FROM BenhNhan WHERE SoBHYT = @SoBHYT";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SoBHYT", soBHYT);
+                    conn.Open();
+                    int count = (int)cmd.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+
     }
 }

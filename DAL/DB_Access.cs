@@ -9,7 +9,7 @@ namespace DAL
 {
     public class SqlConnectionData
     {
-        private static readonly string strcon = @"Data Source=SANTA\SQLEXPRESS;Initial Catalog=QuanLyPKTN_Final;User ID=sa;Password=123";
+        private static readonly string strcon = @"Data Source=SANTA\SQLEXPRESS;Initial Catalog=QuanLyPKTN_Final_2;User ID=sa;Password=123";
         public static SqlConnection GetConnection()
         {
             SqlConnection conn = new SqlConnection(strcon); // khởi tạo 

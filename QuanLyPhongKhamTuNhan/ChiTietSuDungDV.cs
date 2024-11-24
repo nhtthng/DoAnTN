@@ -35,6 +35,10 @@ namespace GUI
             cboMaHD.DataSource = hoaDonList;
             cboMaHD.DisplayMember = "MaHD";
             cboMaHD.ValueMember = "MaHD";
+            List<DTO_QuanLyBacSi> bacSiList = dataHelper.GetBacSiList();
+            cboMaBacSi.DataSource = bacSiList;
+            cboMaBacSi.DisplayMember = "TenBS";
+            cboMaBacSi.ValueMember = "MaBS";
         }
         // Load danh sách Chi Tiết Sử Dụng Dịch Vụ
         private void LoadDanhSachChiTietSuDungDV()
@@ -61,7 +65,8 @@ namespace GUI
                     SoLuong = (int)numericSoLuong.Value,
                     Gia = decimal.Parse(txtBoxGia.Text),
                     MaBN = Convert.ToInt32(cboBenhNhan.SelectedValue),
-                    NgayLap = DTPNgayLap.Value
+                    NgayLap = DTPNgayLap.Value,
+                    MaBS = Convert.ToInt32(cboMaBacSi.SelectedValue),
                 };
 
                 // Gọi phương thức thêm từ BLL
@@ -105,7 +110,8 @@ namespace GUI
                 SoLuong = (int)numericSoLuong.Value,
                 Gia = decimal.Parse(txtBoxGia.Text),
                 MaBN = Convert.ToInt32(cboBenhNhan.SelectedValue),
-                NgayLap = DTPNgayLap.Value
+                NgayLap = DTPNgayLap.Value,
+                MaBS = Convert.ToInt32(cboMaBacSi.SelectedValue)
             };
 
             bool result = _CTSDDVBLL.SuaChiTietSuDungDV(chiTiet);
@@ -154,6 +160,7 @@ namespace GUI
                 txtBoxGia.Text = row.Cells["Gia"].Value.ToString(); // Gán giá vào TextBox
                 cboBenhNhan.SelectedValue = row.Cells["MaBN"].Value;
                 DTPNgayLap.Value = Convert.ToDateTime(row.Cells["NgayLap"].Value);
+                cboMaBacSi.SelectedValue = row.Cells["MaBS"].Value;
             }
         }
 
@@ -184,6 +191,95 @@ namespace GUI
         {
             ResetForm();
             LoadDanhSachChiTietSuDungDV();
+        }
+
+        private void btnTimSDTBN_Click(object sender, EventArgs e)
+        {
+            // Lấy số điện thoại và loại bỏ khoảng trắng thừa
+            string soDienThoai = txtBoxTimSDTBN.Text.Trim();
+
+            // Kiểm tra tính hợp lệ của số điện thoại
+            if (!ValidatePhoneNumber(soDienThoai))
+            {
+                MessageBox.Show("Số điện thoại không hợp lệ.",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // Gọi phương thức tìm kiếm từ BLL
+                List<DTO_QuanLyBenhNhan> danhSachBenhNhan = _CTSDDVBLL.TimBenhNhanTrongLichHen(soDienThoai);
+
+                // Kiểm tra nếu không tìm thấy bệnh nhân
+                if (danhSachBenhNhan == null || danhSachBenhNhan.Count == 0)
+                {
+                    MessageBox.Show("Không tìm thấy bệnh nhân nào với số điện thoại này.",
+                        "Thông Báo",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    // Làm sáng tỏ các trường liên quan
+                    cboBenhNhan.SelectedIndex = -1;  // Bỏ chọn combobox
+                    return;
+                }
+
+                // Trường hợp chỉ có 1 bệnh nhân
+                if (danhSachBenhNhan.Count == 1)
+                {
+                    // Lấy bệnh nhân đầu tiên
+                    DTO_QuanLyBenhNhan benhNhan = danhSachBenhNhan[0];
+                    DTO_HoaDon hoaDonChuaThanhToan = _CTSDDVBLL.LayHoaDonMoiNhatChuaThanhToan(benhNhan.MaBN);
+
+                    // Điền thông tin vào các control
+                    cboBenhNhan.SelectedValue = benhNhan.MaBN;
+
+                    cboMaHD.SelectedValue = hoaDonChuaThanhToan.MaHD;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ chi tiết
+                MessageBox.Show(
+                    $"Lỗi tìm kiếm bệnh nhân: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                // Làm sáng tỏ các control
+                cboBenhNhan.SelectedIndex = -1;
+            }
+        }
+        // Kiểm tra tính hợp lệ của số điện thoại
+        private bool ValidatePhoneNumber(string soDienThoai)
+        {
+            // Kiểm tra rỗng
+            if (string.IsNullOrWhiteSpace(soDienThoai))
+            {
+                MessageBox.Show("Vui lòng nhập số điện thoại.",
+                    "Cảnh Báo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                txtBoxTimSDTBN.Focus();
+                return false;
+            }
+
+            // Kiểm tra định dạng số điện thoại (VN)
+            // Có thể điều chỉnh regex cho phù hợp với quy tắc của bạn
+            string phonePattern = @"^(0[3|5|7|8|9])+([0-9]{8})$";
+            if (!System.Text.RegularExpressions.Regex.IsMatch(soDienThoai, phonePattern))
+            {
+                MessageBox.Show("Số điện thoại không đúng định dạng.",
+                    "Cảnh Báo",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                txtBoxTimSDTBN.Focus();
+                return false;
+            }
+
+            return true;
         }
     }
 }

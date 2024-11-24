@@ -32,26 +32,53 @@ namespace QuanLyPhongKham
 
         private void btnThemBN_Click(object sender, EventArgs e)
         {
-            var patient = new DTO_QuanLyBenhNhan
+            // Kiểm tra các trường bắt buộc
+            if (string.IsNullOrWhiteSpace(txtBoxHoTenBN.Text))
             {
-                MaBN = int.Parse(txtboxMaBenhNhan.Text),
-                HoTenBN = txtBoxHoTenBN.Text,
-                NgaySinh = DTPNgaySinhBN.Value,
-                GioiTinh = cboGioiTinhBN.SelectedItem.ToString(),
-                Email = txtBoxEmaiBN.Text,
-                SoBHYT = txtBoxBHYTBN.Text,
-                SoDT = txtBoxSDTBN.Text,
-                DiaChi = txtBoxDiaChiBN.Text
-            };
-            BLL_QuanLyBenhNhan _PatientBLL = new BLL_QuanLyBenhNhan();
-            if (_PatientBLL.AddPatient(patient))
-            {
-                MessageBox.Show("Thêm bệnh nhân thành công!");
-                LoadAllPatients();
+                MessageBox.Show("Vui lòng nhập họ tên bệnh nhân.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtBoxHoTenBN.Focus();
+                return;
             }
-            else
+
+            if (string.IsNullOrWhiteSpace(txtBoxSDTBN.Text))
             {
-                MessageBox.Show("Thêm bệnh nhân thất bại.");
+                MessageBox.Show("Vui lòng nhập số điện thoại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtBoxSDTBN.Focus();
+                return;
+            }
+
+            if (cboGioiTinhBN.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn giới tính.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                cboGioiTinhBN.Focus();
+                return;
+            }
+
+            try
+            {
+                var patient = new DTO_QuanLyBenhNhan
+                {
+                    HoTenBN = txtBoxHoTenBN.Text.Trim(),
+                    NgaySinh = DTPNgaySinhBN.Value,
+                    GioiTinh = cboGioiTinhBN.SelectedItem.ToString(),
+                    Email = txtBoxEmaiBN.Text.Trim(),
+                    SoBHYT = txtBoxBHYTBN.Text.Trim(),
+                    SoDT = txtBoxSDTBN.Text.Trim(),
+                    DiaChi = txtBoxDiaChiBN.Text.Trim()
+                };
+
+                BLL_QuanLyBenhNhan _PatientBLL = new BLL_QuanLyBenhNhan();
+
+                if (_PatientBLL.ThemBenhNhan(patient))
+                {
+                    MessageBox.Show("Thêm bệnh nhân thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadAllPatients();
+                    ResetForm();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Thêm bệnh nhân thất bại", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -74,53 +101,113 @@ namespace QuanLyPhongKham
 
         private void btnSuaBN_Click(object sender, EventArgs e)
         {
-            var patient = new DTO_QuanLyBenhNhan
+            // Kiểm tra mã bệnh nhân
+            if (string.IsNullOrWhiteSpace(txtboxMaBenhNhan.Text))
             {
-                MaBN = int.Parse(txtboxMaBenhNhan.Text),
-                HoTenBN = txtBoxHoTenBN.Text,
-                NgaySinh = DTPNgaySinhBN.Value,
-                GioiTinh = cboGioiTinhBN.SelectedItem.ToString(),
-                Email = txtBoxEmaiBN.Text,
-                SoBHYT = txtBoxBHYTBN.Text,
-                SoDT = txtBoxSDTBN.Text,
-                DiaChi = txtBoxDiaChiBN.Text
-            };
-
-            BLL_QuanLyBenhNhan bll = new BLL_QuanLyBenhNhan();
-            if (bll.UpdatePatient(patient))
-            {
-                MessageBox.Show("Cập nhật bệnh nhân thành công!");
-                LoadAllPatients();
+                MessageBox.Show("Vui lòng chọn bệnh nhân cần sửa.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else
+
+            // Kiểm tra các trường bắt buộc
+            if (string.IsNullOrWhiteSpace(txtBoxHoTenBN.Text))
             {
-                MessageBox.Show("Cập nhật bệnh nhân thất bại.");
+                MessageBox.Show("Vui lòng nhập họ tên bệnh nhân.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtBoxHoTenBN.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtBoxSDTBN.Text))
+            {
+                MessageBox.Show("Vui lòng nhập số điện thoại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtBoxSDTBN.Focus();
+                return;
+            }
+
+            if (cboGioiTinhBN.SelectedItem == null)
+            {
+                MessageBox.Show("Vui lòng chọn giới tính.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                cboGioiTinhBN.Focus();
+                return;
+            }
+
+            try
+            {
+                var patient = new DTO_QuanLyBenhNhan
+                {
+                    MaBN = int.Parse(txtboxMaBenhNhan.Text),
+                    HoTenBN = txtBoxHoTenBN.Text.Trim(),
+                    NgaySinh = DTPNgaySinhBN.Value,
+                    GioiTinh = cboGioiTinhBN.SelectedItem.ToString(),
+                    Email = txtBoxEmaiBN.Text.Trim(),
+                    SoBHYT = txtBoxBHYTBN.Text.Trim(),
+                    SoDT = txtBoxSDTBN.Text.Trim(),
+                    DiaChi = txtBoxDiaChiBN.Text.Trim()
+                };
+
+                BLL_QuanLyBenhNhan bll = new BLL_QuanLyBenhNhan();
+
+                if (bll.UpdatePatient(patient))
+                {
+                    MessageBox.Show("Cập nhật bệnh nhân thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadAllPatients();
+                    ResetForm();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Cập nhật bệnh nhân thất bại", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnTimBN_Click(object sender, EventArgs e)
         {
-            int maBN;
-            if (int.TryParse(txtboxMaBenhNhan.Text, out maBN))
-            {
-                BLL_QuanLyBenhNhan bll = new BLL_QuanLyBenhNhan();
-                DTO_QuanLyBenhNhan patient = bll.SearchPatientByMaBN(maBN);
+            // Lấy số điện thoại từ TextBox
+            string soDienThoai = txtBoxTimKiemBN.Text.Trim();
 
-                if (patient != null)
-                {
-                    // Hiển thị thông tin bệnh nhân vào DataGridView
-                    DGVBN.DataSource = new List<DTO_QuanLyBenhNhan> { patient };
-                    LoadAllPatients();
-                }
-                else
-                {
-                    MessageBox.Show("Không tìm thấy bệnh nhân với mã này.");
-                }
+            // Kiểm tra tính hợp lệ của số điện thoại
+            if (string.IsNullOrWhiteSpace(txtBoxTimKiemBN.Text))
+            {
+                MessageBox.Show("Vui lòng nhập số điện thoại.");
+                return;
+            }
+
+            // Kiểm tra định dạng số điện thoại (nếu cần)
+            if (!IsValidPhoneNumber(soDienThoai))
+            {
+                MessageBox.Show("Số điện thoại không hợp lệ. Vui lòng nhập lại.");
+                return;
+            }
+
+            // Khởi tạo BLL
+            BLL_QuanLyBenhNhan bll = new BLL_QuanLyBenhNhan();
+
+            // Tìm kiếm bệnh nhân theo số điện thoại
+            DTO_QuanLyBenhNhan patient = bll.SearchPatientBySDT(soDienThoai);
+
+            if (patient != null)
+            {
+                // Hiển thị thông tin bệnh nhân vào DataGridView
+                DGVBN.DataSource = new List<DTO_QuanLyBenhNhan> { patient };
+
+                // Nếu muốn load lại danh sách sau khi tìm kiếm
+                
             }
             else
             {
-                MessageBox.Show("Vui lòng nhập mã bệnh nhân hợp lệ.");
+                // Thông báo nếu không tìm thấy bệnh nhân
+                MessageBox.Show("Không tìm thấy bệnh nhân có số điện thoại này.");
+
+                // Có thể reset DataGridView
+                DGVBN.DataSource = null;
             }
+        }
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            // Ví dụ đơn giản: kiểm tra độ dài và ký tự
+            return !string.IsNullOrWhiteSpace(phoneNumber) &&
+                   phoneNumber.Length >= 10 &&
+                   phoneNumber.Length <= 11 &&
+                   phoneNumber.All(char.IsDigit);
         }
 
         private void QuanLyBenhNhan_Load(object sender, EventArgs e)
@@ -145,6 +232,33 @@ namespace QuanLyPhongKham
                 txtBoxEmaiBN.Text = selectedRow.Cells["Email"].Value.ToString();
                 txtBoxBHYTBN.Text = selectedRow.Cells["SoBHYT"].Value.ToString();
             }
+        }
+
+        private void txtBoxSDTBN_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Chỉ cho phép nhập số và các phím điều khiển (Backspace, Delete, vv)
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // Ngăn không cho nhập ký tự
+            }
+        }
+        private void ResetForm()
+        {
+            txtboxMaBenhNhan.Clear();
+            txtBoxHoTenBN.Clear();
+            txtBoxEmaiBN.Clear();
+            txtBoxBHYTBN.Clear();
+            txtBoxSDTBN.Clear();
+            txtBoxDiaChiBN.Clear();
+            DTPNgaySinhBN.Value = DateTime.Now;
+            cboGioiTinhBN.SelectedIndex = -1;
+            txtBoxTimKiemBN.Clear();
+            LoadAllPatients();
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            ResetForm();
         }
     }
 }
