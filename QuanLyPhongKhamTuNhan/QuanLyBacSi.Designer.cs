@@ -42,8 +42,6 @@
             txtBoxTenBS = new TextBox();
             label6 = new Label();
             txtBoxSDTBS = new TextBox();
-            label7 = new Label();
-            txtBoxMatKhauBS = new TextBox();
             label8 = new Label();
             txtBoxKNBS = new TextBox();
             label9 = new Label();
@@ -53,6 +51,7 @@
             btnXoaBS = new Button();
             btnSuaBS = new Button();
             errorProviderBS = new ErrorProvider(components);
+            btnReset = new Button();
             ((System.ComponentModel.ISupportInitialize)DGVBS).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProviderBS).BeginInit();
             SuspendLayout();
@@ -165,22 +164,6 @@
             txtBoxSDTBS.Size = new Size(151, 27);
             txtBoxSDTBS.TabIndex = 4;
             // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(637, 189);
-            label7.Name = "label7";
-            label7.Size = new Size(72, 20);
-            label7.TabIndex = 3;
-            label7.Text = "Mật Khẩu";
-            // 
-            // txtBoxMatKhauBS
-            // 
-            txtBoxMatKhauBS.Location = new Point(742, 186);
-            txtBoxMatKhauBS.Name = "txtBoxMatKhauBS";
-            txtBoxMatKhauBS.Size = new Size(151, 27);
-            txtBoxMatKhauBS.TabIndex = 4;
-            // 
             // label8
             // 
             label8.AutoSize = true;
@@ -226,7 +209,7 @@
             // 
             // btnThemBS
             // 
-            btnThemBS.Location = new Point(91, 353);
+            btnThemBS.Location = new Point(43, 353);
             btnThemBS.Name = "btnThemBS";
             btnThemBS.Size = new Size(94, 29);
             btnThemBS.TabIndex = 8;
@@ -236,7 +219,7 @@
             // 
             // btnXoaBS
             // 
-            btnXoaBS.Location = new Point(427, 353);
+            btnXoaBS.Location = new Point(309, 353);
             btnXoaBS.Name = "btnXoaBS";
             btnXoaBS.Size = new Size(94, 29);
             btnXoaBS.TabIndex = 8;
@@ -246,7 +229,7 @@
             // 
             // btnSuaBS
             // 
-            btnSuaBS.Location = new Point(756, 353);
+            btnSuaBS.Location = new Point(585, 353);
             btnSuaBS.Name = "btnSuaBS";
             btnSuaBS.Size = new Size(94, 29);
             btnSuaBS.TabIndex = 8;
@@ -258,11 +241,22 @@
             // 
             errorProviderBS.ContainerControl = this;
             // 
+            // btnReset
+            // 
+            btnReset.Location = new Point(820, 353);
+            btnReset.Name = "btnReset";
+            btnReset.Size = new Size(94, 29);
+            btnReset.TabIndex = 9;
+            btnReset.Text = "Reset";
+            btnReset.UseVisualStyleBackColor = true;
+            btnReset.Click += btnReset_Click;
+            // 
             // QuanLyBacSi
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(948, 627);
+            Controls.Add(btnReset);
             Controls.Add(btnSuaBS);
             Controls.Add(btnXoaBS);
             Controls.Add(btnThemBS);
@@ -272,13 +266,11 @@
             Controls.Add(txtBoxKNBS);
             Controls.Add(txtBoxTenBS);
             Controls.Add(txtBoxMaBS);
-            Controls.Add(txtBoxMatKhauBS);
             Controls.Add(txtBoxSDTBS);
             Controls.Add(txtBoxEmailBS);
             Controls.Add(label9);
             Controls.Add(label6);
             Controls.Add(label4);
-            Controls.Add(label7);
             Controls.Add(label3);
             Controls.Add(label8);
             Controls.Add(label5);
@@ -309,8 +301,6 @@
         private TextBox txtBoxTenBS;
         private Label label6;
         private TextBox txtBoxSDTBS;
-        private Label label7;
-        private TextBox txtBoxMatKhauBS;
         private Label label8;
         private TextBox txtBoxKNBS;
         private Label label9;
@@ -320,5 +310,6 @@
         private Button btnXoaBS;
         private Button btnSuaBS;
         private ErrorProvider errorProviderBS;
+        private Button btnReset;
     }
 }

@@ -59,16 +59,14 @@ namespace DAL
                 using (SqlConnection conn = SqlConnectionData.GetConnection())
                 {
                     conn.Open();
-                    string query = "INSERT INTO BacSi (MaBS, TenBS, GioiTinh, Email, SoDT, KinhNghiem, MatKhau, MaCK) VALUES (@MaBS, @TenBS, @GioiTinh, @Email, @SoDT, @KinhNghiem, @MatKhau, @MaCK)";
+                    string query = "INSERT INTO BacSi ( TenBS, GioiTinh, Email, SoDT, KinhNghiem, MatKhau, MaCK) VALUES ( @TenBS, @GioiTinh, @Email, @SoDT, @KinhNghiem, 1, @MaCK)";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@MaBS", bacSi.MaBS); // Gán mã bác sĩ
                         cmd.Parameters.AddWithValue("@TenBS", bacSi.TenBS);
                         cmd.Parameters.AddWithValue("@GioiTinh", bacSi.GioiTinh);
                         cmd.Parameters.AddWithValue("@Email", bacSi.Email);
                         cmd.Parameters.AddWithValue("@SoDT", bacSi.SoDT);
                         cmd.Parameters.AddWithValue("@KinhNghiem", bacSi.KinhNghiem);
-                        cmd.Parameters.AddWithValue("@MatKhau", bacSi.MatKhau);
                         cmd.Parameters.AddWithValue("@MaCK", bacSi.MaCK);
 
                         return cmd.ExecuteNonQuery() > 0; // Trả về true nếu thêm thành công
@@ -111,7 +109,7 @@ namespace DAL
                 using (SqlConnection conn = SqlConnectionData.GetConnection())
                 {
                     conn.Open();
-                    string query = "UPDATE BacSi SET TenBS = @TenBS, GioiTinh = @GioiTinh, Email = @Email, SoDT = @SoDT, KinhNghiem = @KinhNghiem, MatKhau = @MatKhau, MaCK = @MaCK WHERE MaBS = @MaBS";
+                    string query = "UPDATE BacSi SET TenBS = @TenBS, GioiTinh = @GioiTinh, Email = @Email, SoDT = @SoDT, KinhNghiem = @KinhNghiem, MaCK = @MaCK WHERE MaBS = @MaBS";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@MaBS", bacSi.MaBS);
@@ -120,7 +118,6 @@ namespace DAL
                         cmd.Parameters.AddWithValue("@Email", bacSi.Email);
                         cmd.Parameters.AddWithValue("@SoDT", bacSi.SoDT);
                         cmd.Parameters.AddWithValue("@KinhNghiem", bacSi.KinhNghiem);
-                        cmd.Parameters.AddWithValue("@MatKhau", bacSi.MatKhau);
                         cmd.Parameters.AddWithValue("@MaCK", bacSi.MaCK);
 
                         return cmd.ExecuteNonQuery() > 0; // Trả về true nếu sửa thành công
@@ -134,7 +131,7 @@ namespace DAL
             }
         }
         // Tìm kiếm bác sĩ
-        public List<DTO_QuanLyBacSi> FindBacSiByMaBS(int maBS)
+        public List<DTO_QuanLyBacSi> FindBacSiBySDT(string soDT)
         {
             List<DTO_QuanLyBacSi> danhSachBacSi = new List<DTO_QuanLyBacSi>();
 
@@ -143,15 +140,11 @@ namespace DAL
                 using (SqlConnection conn = SqlConnectionData.GetConnection())
                 {
                     conn.Open();
-                    string query = "SELECT MaBS, TenBS, GioiTinh, Email, SoDT, KinhNghiem, MatKhau, MaCK FROM BacSi WHERE MaBS = @MaBS";
-                    
+                    string query = "SELECT MaBS, TenBS, GioiTinh, Email, SoDT, KinhNghiem, MatKhau, MaCK FROM BacSi WHERE SoDT = @SoDT";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                       
-                        
-                            cmd.Parameters.AddWithValue("@MaBS", maBS);
-                        
+                        cmd.Parameters.AddWithValue("@SoDT", soDT);
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -179,22 +172,155 @@ namespace DAL
                 Console.WriteLine(ex.Message);
             }
 
-            return danhSachBacSi; // Trả về danh sách bác sĩ tìm thấy
+            return danhSachBacSi;
         }
-        public bool IsDoctorIdExists(int maBS)
+        // Hàm kiểm tra số điện thoại đã tồn tại
+        public bool IsSoDTExists(string soDT)
         {
-            bool exists = false;
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            try
             {
-                conn.Open();
-                string query = "SELECT COUNT(*) FROM BacSi WHERE MaBS = @MaBS";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlConnection conn = SqlConnectionData.GetConnection())
                 {
-                    cmd.Parameters.AddWithValue("@MaBN", maBS);
-                    exists = (int)cmd.ExecuteScalar() > 0;
+                    conn.Open();
+                    string query = "SELECT COUNT(*) FROM BacSi WHERE SoDT = @SoDT";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@SoDT", soDT);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        return count > 0;
+                    }
                 }
             }
-            return exists;
+            catch (Exception ex)
+            {
+                // Log lỗi
+                Console.WriteLine($"Lỗi kiểm tra số điện thoại: {ex.Message}");
+                return false;
+            }
+        }
+        // Hàm kiểm tra email đã tồn tại
+        public bool IsEmailExists(string email)
+        {
+            try
+            {
+                using (SqlConnection conn = SqlConnectionData.GetConnection())
+                {
+                    conn.Open();
+                    string query = "SELECT COUNT(*) FROM BacSi WHERE Email = @Email";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        return count > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+        // Hàm kiểm tra cấu trúc số điện thoại
+        public bool ValidatePhoneNumber(string phoneNumber)
+        {
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+                return false;
+
+            // Regex kiểm tra số điện thoại (ví dụ: 10 số bắt đầu bằng 0)
+            string phonePattern = @"^0\d{9}$";
+            return System.Text.RegularExpressions.Regex.IsMatch(phoneNumber, phonePattern);
+        }
+        // Hàm kiểm tra cấu trúc email
+        public bool ValidateEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            // Regex kiểm tra email
+            string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            return System.Text.RegularExpressions.Regex.IsMatch(email, emailPattern);
+        }
+
+        // Lấy bác sĩ theo số điện thoại
+        public DTO_QuanLyBacSi GetBacSiByPhone(string soDT)
+        {
+            try
+            {
+                using (SqlConnection conn = SqlConnectionData.GetConnection())
+                {
+                    conn.Open();
+                    string query = "SELECT * FROM BacSi WHERE SoDT = @SoDT";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@SoDT", soDT);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return new DTO_QuanLyBacSi
+                                {
+                                    MaBS = Convert.ToInt32(reader["MaBS"]),
+                                    TenBS = reader["TenBS"].ToString(),
+                                    GioiTinh = reader["GioiTinh"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    SoDT = reader["SoDT"].ToString(),
+                                    KinhNghiem = Convert.ToInt32(reader["KinhNghiem"]),
+                                    MaCK = Convert.ToInt32(reader["MaCK"])
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+        }
+        // Lấy bác sĩ theo email
+        public DTO_QuanLyBacSi GetBacSiByEmail(string email)
+        {
+            try
+            {
+                using (SqlConnection conn = SqlConnectionData.GetConnection())
+                {
+                    conn.Open();
+                    string query = "SELECT * FROM BacSi WHERE Email = @Email";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Email", email);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return new DTO_QuanLyBacSi
+                                {
+                                    MaBS = Convert.ToInt32(reader["MaBS"]),
+                                    TenBS = reader["TenBS"].ToString(),
+                                    GioiTinh = reader["GioiTinh"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    SoDT = reader["SoDT"].ToString(),
+                                    KinhNghiem = Convert.ToInt32(reader["KinhNghiem"]),
+                                    MaCK = Convert.ToInt32(reader["MaCK"])
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
         }
     }
 }

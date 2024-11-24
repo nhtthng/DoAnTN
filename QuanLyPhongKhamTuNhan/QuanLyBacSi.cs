@@ -36,77 +36,87 @@ namespace GUI
 
         private void btnThemBS_Click(object sender, EventArgs e)
         {
-            // Đặt lại ErrorProvider
-            errorProviderBS.Clear();
-            // Kiểm tra các trường và đặt thông báo lỗi nếu cần
-            bool isValid = true;
-            if (string.IsNullOrWhiteSpace(txtBoxMaBS.Text))
+            try
             {
-                errorProviderBS.SetError(txtBoxMaBS, "Vui lòng nhập mã bác sĩ.");
-                isValid = false;
-            }
-            if (string.IsNullOrWhiteSpace(txtBoxTenBS.Text))
-            {
-                errorProviderBS.SetError(txtBoxTenBS, "Vui lòng nhập họ tên.");
-                isValid = false;
-            }
-            if (cboGTBS.SelectedItem == null)
-            {
-                errorProviderBS.SetError(cboGTBS, "Vui lòng chọn giới tính.");
-                isValid = false;
-            }
-            if (string.IsNullOrWhiteSpace(txtBoxEmailBS.Text))
-            {
-                errorProviderBS.SetError(txtBoxEmailBS, "Vui lòng nhập email.");
-                isValid = false;
-            }
-            if (string.IsNullOrWhiteSpace(txtBoxSDTBS.Text))
-            {
-                errorProviderBS.SetError(txtBoxSDTBS, "Vui lòng nhập số điện thoại.");
-                isValid = false;
-            }
-            if (string.IsNullOrWhiteSpace(txtBoxKNBS.Text))
-            {
-                errorProviderBS.SetError(txtBoxKNBS, "Vui lòng nhập kinh nghiệm.");
-                isValid = false;
-            }
-            if (string.IsNullOrWhiteSpace(txtBoxMatKhauBS.Text))
-            {
-                errorProviderBS.SetError(txtBoxMatKhauBS, "Vui lòng nhập mật khẩu.");
-                isValid = false;
-            }
+                // Đặt lại ErrorProvider
+                errorProviderBS.Clear();
 
-            // Kiểm tra nếu tất cả các trường đều hợp lệ
-            if (!isValid)
-            {
-                return; // Dừng hàm nếu còn trường trống
-            }
-            if (_QuanLyBacSiBLL.checkIdDoctor(int.Parse(txtBoxMaBS.Text)) == false) 
-            {
-                MessageBox.Show("Mã bác sĩ bị trùng");
-                return;
-            }
-            DTO_QuanLyBacSi bacSi = new DTO_QuanLyBacSi
-            {
-                MaBS = int.Parse(txtBoxMaBS.Text),
-                TenBS = txtBoxTenBS.Text,
-                GioiTinh = cboGTBS.Text,
-                Email = txtBoxEmailBS.Text,
-                SoDT = txtBoxSDTBS.Text,
-                KinhNghiem = int.Parse(txtBoxKNBS.Text),
-                MatKhau = txtBoxMatKhauBS.Text,
-                MaCK = (int)cboChuyenKhoaBS.SelectedValue
-            };
+                // Kiểm tra các trường và đặt thông báo lỗi nếu cần
+                bool isValid = true;
+                if (string.IsNullOrWhiteSpace(txtBoxTenBS.Text))
+                {
+                    errorProviderBS.SetError(txtBoxTenBS, "Vui lòng nhập họ tên.");
+                    isValid = false;
+                }
+                if (cboGTBS.SelectedItem == null)
+                {
+                    errorProviderBS.SetError(cboGTBS, "Vui lòng chọn giới tính.");
+                    isValid = false;
+                }
+                if (string.IsNullOrWhiteSpace(txtBoxEmailBS.Text))
+                {
+                    errorProviderBS.SetError(txtBoxEmailBS, "Vui lòng nhập email.");
+                    isValid = false;
+                }
+                if (string.IsNullOrWhiteSpace(txtBoxSDTBS.Text))
+                {
+                    errorProviderBS.SetError(txtBoxSDTBS, "Vui lòng nhập số điện thoại.");
+                    isValid = false;
+                }
+                if (string.IsNullOrWhiteSpace(txtBoxKNBS.Text))
+                {
+                    errorProviderBS.SetError(txtBoxKNBS, "Vui lòng nhập kinh nghiệm.");
+                    isValid = false;
+                }
 
-            bool isAdded = _QuanLyBacSiBLL.AddBacSi(bacSi);
-            if (isAdded)
-            {
-                MessageBox.Show("Thêm bác sĩ thành công!");
-                LoadData();
+                // Kiểm tra nếu tất cả các trường đều hợp lệ
+                if (!isValid)
+                {
+                    return; // Dừng hàm nếu còn trường trống
+                }
+
+                // Kiểm tra định dạng số và email
+                if (!int.TryParse(txtBoxKNBS.Text, out int kinhNghiem))
+                {
+                    errorProviderBS.SetError(txtBoxKNBS, "Kinh nghiệm phải là số.");
+                    return;
+                }
+
+                DTO_QuanLyBacSi bacSi = new DTO_QuanLyBacSi
+                {
+                    TenBS = txtBoxTenBS.Text.Trim(),
+                    GioiTinh = cboGTBS.Text,
+                    Email = txtBoxEmailBS.Text.Trim(),
+                    SoDT = txtBoxSDTBS.Text.Trim(),
+                    KinhNghiem = kinhNghiem,
+                    MaCK = (int)cboChuyenKhoaBS.SelectedValue
+                };
+
+                try
+                {
+                    bool isAdded = _QuanLyBacSiBLL.AddBacSi(bacSi);
+                    if (isAdded)
+                    {
+                        MessageBox.Show("Thêm bác sĩ thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadData();
+                        // Xóa các trường sau khi thêm thành công
+                        ResetForm();
+                    }
+                }
+                catch (ArgumentException ex)
+                {
+                    // Hiển thị lỗi cụ thể từ BLL
+                    MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    // Bắt các lỗi không mong muốn
+                    MessageBox.Show($"Có lỗi xảy ra: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Có lỗi xảy ra khi thêm bác sĩ.");
+                MessageBox.Show($"Lỗi không xác định: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -145,7 +155,6 @@ namespace GUI
                 string.IsNullOrWhiteSpace(txtBoxTenBS.Text) ||
                 string.IsNullOrWhiteSpace(txtBoxEmailBS.Text) ||
                 string.IsNullOrWhiteSpace(txtBoxKNBS.Text) ||
-                string.IsNullOrWhiteSpace(txtBoxMatKhauBS.Text) ||
                 string.IsNullOrWhiteSpace(txtBoxSDTBS.Text) ||
                 cboGTBS.SelectedIndex == -1 || // Kiểm tra ComboBox giới tính
                 cboChuyenKhoaBS.SelectedIndex == -1) // Kiểm tra ComboBox chuyên khoa
@@ -161,7 +170,6 @@ namespace GUI
                 Email = txtBoxEmailBS.Text,
                 SoDT = txtBoxSDTBS.Text,
                 KinhNghiem = int.Parse(txtBoxKNBS.Text),
-                MatKhau = txtBoxMatKhauBS.Text,
                 MaCK = (int)cboChuyenKhoaBS.SelectedValue
             };
 
@@ -193,8 +201,8 @@ namespace GUI
             {
                 return; // Dừng hàm nếu còn trường trống
             }
-            int maBS = int.Parse(txtBoxTimBS.Text);
-            List<DTO_QuanLyBacSi> bacSiTimThay = _QuanLyBacSiBLL.FindBacSiByMaBS(maBS);
+            string SDTBS = txtBoxTimBS.Text;
+            List<DTO_QuanLyBacSi> bacSiTimThay = _QuanLyBacSiBLL.FindBacSiBySDT(SDTBS);
             DGVBS.DataSource = bacSiTimThay;
         }
 
@@ -206,7 +214,6 @@ namespace GUI
                 // Lấy hàng được chọn
                 DataGridViewRow row = DGVBS.Rows[e.RowIndex];
 
-
                 txtBoxMaBS.Text = row.Cells["MaBS"].Value.ToString();
                 txtBoxTenBS.Text = row.Cells["TenBS"].Value.ToString();
 
@@ -216,11 +223,29 @@ namespace GUI
                 txtBoxEmailBS.Text = row.Cells["Email"].Value.ToString();
                 txtBoxSDTBS.Text = row.Cells["SoDT"].Value.ToString();
                 txtBoxKNBS.Text = row.Cells["KinhNghiem"].Value.ToString();
-                txtBoxMatKhauBS.Text = row.Cells["MatKhau"].Value.ToString();
 
-                // Gán giá trị cho ComboBox Mã Chuyên Khoa
-                cboChuyenKhoaBS.SelectedItem = row.Cells["MaCK"].Value.ToString();
+                // Gán giá trị cho ComboBox Mã Chuyên Khoa bằng SelectedValue
+                int maCK = Convert.ToInt32(row.Cells["MaCK"].Value);
+                cboChuyenKhoaBS.SelectedValue = maCK;
             }
+        }
+
+        private void ResetForm()
+        {
+            txtBoxMaBS.Clear();
+            txtBoxTenBS.Clear();
+            txtBoxEmailBS.Clear();
+            txtBoxSDTBS.Clear();
+            txtBoxKNBS.Clear();
+            txtBoxTimBS.Clear();
+            cboGTBS.SelectedIndex = -1;
+            cboChuyenKhoaBS.SelectedIndex = -1;
+            LoadData();
+
+        }
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            ResetForm();
         }
     }
 }
