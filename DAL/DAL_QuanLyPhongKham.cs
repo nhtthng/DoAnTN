@@ -15,9 +15,8 @@ namespace DAL
         {
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                string query = "INSERT INTO PhongKham (MaPK,TenPK, MaCK) VALUES (@MaPK,@TenPK, @MaCK)";
+                string query = "INSERT INTO PhongKham (TenPK, MaCK) VALUES (@TenPK, @MaCK)";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaPK", phongKham.MaPK);
                 cmd.Parameters.AddWithValue("@TenPK", phongKham.TenPK);
                 cmd.Parameters.AddWithValue("@MaCK", phongKham.MaCK);
 
@@ -80,15 +79,15 @@ namespace DAL
             return phongKhams;
         }
         // Tìm kiếm phòng khám bằng mã phòng khám
-        public DTO_QuanLyPhongKham GetPhongKhamByMaPK(int maPK)
+        public DTO_QuanLyPhongKham GetPhongKhamByTenPK(string tenPK)
         {
             DTO_QuanLyPhongKham phongKham = null;
 
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                string query = "SELECT MaPK, TenPK, MaCK FROM PhongKham WHERE MaPK = @MaPK";
+                string query = "SELECT MaPK, TenPK, MaCK FROM PhongKham WHERE TenPK = @TenPK";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaPK", maPK);
+                cmd.Parameters.AddWithValue("@TenPK", tenPK);
 
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -105,16 +104,17 @@ namespace DAL
 
             return phongKham; // Trả về null nếu không tìm thấy
         }
-        public bool IsClinicIdExists(int maPK)
+
+        public bool IsClinicNameExists(string tenPK)
         {
             bool exists = false;
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
                 conn.Open();
-                string query = "SELECT COUNT(*) FROM PhongKham WHERE MaPK = @MaPK";
+                string query = "SELECT COUNT(*) FROM PhongKham WHERE TenPK = @TenPK";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@MaPK", maPK);
+                    cmd.Parameters.AddWithValue("@TenPK", tenPK);
                     exists = (int)cmd.ExecuteScalar() > 0;
                 }
             }

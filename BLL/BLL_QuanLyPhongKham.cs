@@ -45,24 +45,25 @@ namespace BLL
             return _QuanLyPhongKhamDAL.UpdatePhongKham(phongKham);
         }
         // Tìm kiếm phòng khám bằng mã phòng khám
-        public DTO_QuanLyPhongKham GetPhongKhamByMaPK(int maPK)
+        public DTO_QuanLyPhongKham GetPhongKhamByTenPK(string tenPK)
         {
-            // Kiểm tra mã phòng khám hợp lệ
-            if (maPK <= 0)
+            // Kiểm tra tên phòng khám hợp lệ
+            if (string.IsNullOrWhiteSpace(tenPK))
             {
-                throw new ArgumentException("Mã phòng khám không hợp lệ.");
+                throw new ArgumentException("Tên phòng khám không được để trống.");
             }
 
-            return _QuanLyPhongKhamDAL.GetPhongKhamByMaPK(maPK);
+            return _QuanLyPhongKhamDAL.GetPhongKhamByTenPK(tenPK);
         }
         // Xuất tất cả phòng khám
         public List<DTO_QuanLyPhongKham> GetAllPhongKham()
         {
             return _QuanLyPhongKhamDAL.GetAllPhongKham();
         }
-        public bool checkIdClinic(int id)
+        public bool checkTenClinic(string tenPK)
         {
-            if (_QuanLyPhongKhamDAL.IsClinicIdExists(id) != false)
+            // Trả về false nếu tên phòng khám đã tồn tại
+            if (_QuanLyPhongKhamDAL.IsClinicNameExists(tenPK))
             {
                 return false;
             }
