@@ -33,45 +33,49 @@ namespace GUI
             errorProviderCK.Clear();
 
             bool isValid = true;
-            if (string.IsNullOrWhiteSpace(txtBoxMaCK.Text))
-            {
-                errorProviderCK.SetError(txtBoxMaCK, "Vui lòng nhập mã chuyên khoa.");
-                isValid = false;
-            }
             if (string.IsNullOrWhiteSpace(txtBoxTenCK.Text))
             {
                 errorProviderCK.SetError(txtBoxTenCK, "Vui lòng nhập tên chuyên khoa.");
                 isValid = false;
             }
+
             if (!isValid)
             {
                 return; // Dừng hàm nếu còn trường trống
             }
-            if (_QuanLyChuyenKhoaBLL.CheckIdCK(int.Parse(txtBoxMaCK.Text)) == false)
+
+            string tenCK = txtBoxTenCK.Text.Trim();
+
+            // Kiểm tra tên chuyên khoa đã tồn tại chưa
+            try
             {
-                MessageBox.Show("Mã chuyên khoa bị trùng");
-                return;
+                // Nếu tên chuyên khoa đã tồn tại
+                if (_QuanLyChuyenKhoaBLL.CheckTenCK(tenCK))
+                {
+                    MessageBox.Show("Tên chuyên khoa đã tồn tại. Vui lòng nhập tên khác.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                DTO_QuanLyChuyenKhoa newChuyenKhoa = new DTO_QuanLyChuyenKhoa
+                {
+                    TenCK = tenCK,
+                };
+
+                bool success = _QuanLyChuyenKhoaBLL.AddChuyenKhoa(newChuyenKhoa);
+                if (success)
+                {
+                    MessageBox.Show("Thêm chuyên khoa thành công!");
+                    LoadAllChuyenKhoa(); // Cập nhật lại danh sách
+                    txtBoxTenCK.Clear(); // Xóa trắng ô nhập liệu
+                }
+                else
+                {
+                    MessageBox.Show("Thêm chuyên khoa thất bại.");
+                }
             }
-            int maCK = int.Parse(txtBoxMaCK.Text);
-            string tenCK = txtBoxTenCK.Text;
-
-
-
-            DTO_QuanLyChuyenKhoa newChuyenKhoa = new DTO_QuanLyChuyenKhoa
+            catch (Exception ex)
             {
-                MaCK = maCK,
-                TenCK = tenCK,
-            };
-
-            bool success = _QuanLyChuyenKhoaBLL.AddChuyenKhoa(newChuyenKhoa);
-            if (success)
-            {
-                MessageBox.Show("Thêm chuyên khoa thành công!");
-                LoadAllChuyenKhoa(); // Cập nhật lại danh sách
-            }
-            else
-            {
-                MessageBox.Show("Thêm chuyên khoa thất bại.");
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void DeleteChuyenKhoa()
@@ -180,9 +184,9 @@ namespace GUI
                 return;
             }
 
-            int keyword = int.Parse(txtBoxTimCK.Text);
+            string keyword = txtBoxTimCK.Text;
             // Gọi hàm tìm kiếm từ BLL
-            var results = _QuanLyChuyenKhoaBLL.GetChuyenKhoaByMaCK(keyword);
+            var results = _QuanLyChuyenKhoaBLL.GetChuyenKhoaByTen(keyword);
             if (results != null)
             {
                 DGVCK.DataSource = results; // Cập nhật DataGridView với kết quả tìm kiếm
@@ -224,8 +228,16 @@ namespace GUI
                 // Cập nhật các trường nhập liệu từ các ô trong dòng đã chọn
                 txtBoxMaCK.Text = row.Cells["MaCK"].Value.ToString(); // Thay "MaBS" bằng tên cột thực tế
                 txtBoxTenCK.Text = row.Cells["TenCK"].Value.ToString(); // Thay "TenBS" bằng tên cột thực tế
-                
+
             }
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            txtBoxMaCK.Clear();
+            txtBoxTenCK.Clear();
+            txtBoxTimCK.Clear();
+            LoadAllChuyenKhoa();
         }
     }
 }

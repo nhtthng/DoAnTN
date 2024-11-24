@@ -42,10 +42,9 @@ namespace DAL
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
                 conn.Open();
-                string query = "INSERT INTO ChuyenKhoa (MaCK,TenCK) VALUES (@MaCK,@TenCK)";
+                string query = "INSERT INTO ChuyenKhoa (TenCK) VALUES (@TenCK)";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@MaCK", chuyenKhoa.MaCK);
                     cmd.Parameters.AddWithValue("@TenCK", chuyenKhoa.TenCK);
                     return cmd.ExecuteNonQuery() > 0;
                 }
@@ -81,7 +80,7 @@ namespace DAL
             }
         }
         // tìm kiếm chuyên khoa
-        public List<DTO_QuanLyChuyenKhoa> GetChuyenKhoaByMaCK(int maCK)
+        public List<DTO_QuanLyChuyenKhoa> GetChuyenKhoaByTen(string tenCK)
         {
             List<DTO_QuanLyChuyenKhoa> danhSachChuyenKhoa = new List<DTO_QuanLyChuyenKhoa>();
 
@@ -90,10 +89,12 @@ namespace DAL
                 using (SqlConnection conn = SqlConnectionData.GetConnection())
                 {
                     conn.Open();
-                    string query = "SELECT MaCK, TenCK FROM ChuyenKhoa WHERE MaCK = @MaCK";
+                    // Sử dụng LIKE để tìm kiếm gần đúng
+                    string query = "SELECT MaCK, TenCK FROM ChuyenKhoa WHERE TenCK LIKE @TenCK";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@MaCK", maCK);
+                        // Thêm % để tìm kiếm gần đúng
+                        cmd.Parameters.AddWithValue("@TenCK", "%" + tenCK + "%");
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -111,21 +112,23 @@ namespace DAL
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                // Ghi log lỗi thay vì chỉ in ra console
+                Console.WriteLine($"Lỗi tìm kiếm chuyên khoa: {ex.Message}");
             }
 
-            return danhSachChuyenKhoa; // Trả về danh sách chuyên khoa
+            return danhSachChuyenKhoa;
         }
-        public bool IsCKIdExists(int maCK)
+        // Hàm kiểm tra tồn tại chuyên khoa theo tên
+        public bool IsCKTenExists(string tenCK)
         {
             bool exists = false;
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
                 conn.Open();
-                string query = "SELECT COUNT(*) FROM ChuyenKhoa WHERE MaCK = @MaCK";
+                string query = "SELECT COUNT(*) FROM ChuyenKhoa WHERE TenCK = @TenCK";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@MaCK", maCK);
+                    cmd.Parameters.AddWithValue("@TenCK", tenCK);
                     exists = (int)cmd.ExecuteScalar() > 0;
                 }
             }

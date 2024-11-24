@@ -44,27 +44,53 @@ namespace BLL
         }
 
         // Hàm tìm kiếm chuyên khoa bằng mã chuyên khoa
-        public List<DTO_QuanLyChuyenKhoa> GetChuyenKhoaByMaCK(int maCK)
+        public List<DTO_QuanLyChuyenKhoa> GetChuyenKhoaByTen(string tenCK)
         {
-            if (maCK <= 0)
+            // Validate đầu vào
+            if (string.IsNullOrWhiteSpace(tenCK))
             {
-                throw new ArgumentException("Mã chuyên khoa không hợp lệ.");
+                throw new ArgumentException("Tên chuyên khoa không được để trống.");
             }
 
-            return _QuanLyChuyenKhoaDAL.GetChuyenKhoaByMaCK(maCK);
+            // Giới hạn độ dài tìm kiếm
+            if (tenCK.Length > 100) // Điều chỉnh độ dài tối đa phù hợp với CSDL
+            {
+                throw new ArgumentException("Tên chuyên khoa quá dài.");
+            }
+
+            // Loại bỏ khoảng trắng thừa
+            tenCK = tenCK.Trim();
+
+            // Thực hiện tìm kiếm
+            List<DTO_QuanLyChuyenKhoa> danhSachChuyenKhoa = _QuanLyChuyenKhoaDAL.GetChuyenKhoaByTen(tenCK);
+
+            // Kiểm tra kết quả
+            if (danhSachChuyenKhoa == null || danhSachChuyenKhoa.Count == 0)
+            {
+                throw new Exception($"Không tìm thấy chuyên khoa có tên: {tenCK}");
+            }
+
+            return danhSachChuyenKhoa;
         }
         // Hàm lấy tất cả chuyên khoa
         public List<DTO_QuanLyChuyenKhoa> GetAllChuyenKhoa()
         {
             return _QuanLyChuyenKhoaDAL.GetAllChuyenKhoa();
         }
-        public bool CheckIdCK(int maCK)
+        // Hàm kiểm tra tồn tại chuyên khoa theo tên
+        public bool CheckTenCK(string tenCK)
         {
-            if (_QuanLyChuyenKhoaDAL.IsCKIdExists(maCK) != false)
+            // Validate đầu vào
+            if (string.IsNullOrWhiteSpace(tenCK))
             {
-                return false;
+                throw new ArgumentException("Tên chuyên khoa không được để trống.");
             }
-            return true;
+
+            // Loại bỏ khoảng trắng thừa
+            tenCK = tenCK.Trim();
+
+            // Kiểm tra tồn tại
+            return _QuanLyChuyenKhoaDAL.IsCKTenExists(tenCK);
         }
     }
 }

@@ -41,6 +41,7 @@
             btnXoaCK = new Button();
             btnSuaCK = new Button();
             errorProviderCK = new ErrorProvider(components);
+            btnReset = new Button();
             ((System.ComponentModel.ISupportInitialize)DGVCK).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProviderCK).BeginInit();
             SuspendLayout();
@@ -115,7 +116,7 @@
             // 
             // btnThemCK
             // 
-            btnThemCK.Location = new Point(82, 232);
+            btnThemCK.Location = new Point(32, 232);
             btnThemCK.Name = "btnThemCK";
             btnThemCK.Size = new Size(94, 29);
             btnThemCK.TabIndex = 5;
@@ -125,7 +126,7 @@
             // 
             // btnXoaCK
             // 
-            btnXoaCK.Location = new Point(357, 232);
+            btnXoaCK.Location = new Point(227, 232);
             btnXoaCK.Name = "btnXoaCK";
             btnXoaCK.Size = new Size(94, 29);
             btnXoaCK.TabIndex = 5;
@@ -135,7 +136,7 @@
             // 
             // btnSuaCK
             // 
-            btnSuaCK.Location = new Point(631, 232);
+            btnSuaCK.Location = new Point(475, 232);
             btnSuaCK.Name = "btnSuaCK";
             btnSuaCK.Size = new Size(94, 29);
             btnSuaCK.TabIndex = 5;
@@ -147,11 +148,22 @@
             // 
             errorProviderCK.ContainerControl = this;
             // 
+            // btnReset
+            // 
+            btnReset.Location = new Point(671, 232);
+            btnReset.Name = "btnReset";
+            btnReset.Size = new Size(94, 29);
+            btnReset.TabIndex = 6;
+            btnReset.Text = "Reset";
+            btnReset.UseVisualStyleBackColor = true;
+            btnReset.Click += btnReset_Click;
+            // 
             // QuanLyChuyenKhoa
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 480);
+            Controls.Add(btnReset);
             Controls.Add(btnSuaCK);
             Controls.Add(btnXoaCK);
             Controls.Add(btnThemCK);
@@ -185,5 +197,6 @@
         private Button btnXoaCK;
         private Button btnSuaCK;
         private ErrorProvider errorProviderCK;
+        private Button btnReset;
     }
 }
