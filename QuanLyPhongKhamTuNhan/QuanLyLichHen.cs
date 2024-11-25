@@ -47,18 +47,28 @@ namespace GUI
             DGVLichHen.DataSource = lichHenList;
         }
 
-
+        private void ClearInputFields()
+        {
+            txtBoxMaLH.Clear();
+            txtBoxSDTBN.Clear();
+            txtBoxSDTBS.Clear();
+            txtBoxTimMaLH.Clear();
+            txtBoxTinhTrang.Clear();
+            cboMaBS.SelectedIndex = -1;
+            cboMaBN.SelectedIndex = -1;
+            txtBoxTinhTrang.Clear();
+            DTPThoiGianHen.Value = DateTime.Now;
+            DTPNgayHen.Value = DateTime.Today;
+            LoadLichHenList();
+        }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
             // Đặt lại ErrorProvider
             errorProviderLH.Clear();
             bool isValid = true;
-            if (string.IsNullOrWhiteSpace(txtBoxMaLH.Text))
-            {
-                errorProviderLH.SetError(txtBoxMaLH, "Vui lòng nhập mã lịch hẹn.");
-                isValid = false;
-            }
+
+            // Kiểm tra các trường bắt buộc
             if (cboMaBS.SelectedItem == null)
             {
                 errorProviderLH.SetError(cboMaBS, "Vui lòng chọn bác sĩ.");
@@ -74,21 +84,17 @@ namespace GUI
                 errorProviderLH.SetError(txtBoxTinhTrang, "Vui lòng nhập tình trạng.");
                 isValid = false;
             }
+
             // Kiểm tra nếu tất cả các trường đều hợp lệ
             if (!isValid)
             {
-                return; // Dừng hàm nếu còn trường trống
+                return;
             }
+
             try
             {
-                if (_QuanLyLichHenBLL.checkIdAppointment(int.Parse(txtBoxMaLH.Text)) == false)
-                {
-                    MessageBox.Show("Mã lịch hẹn bị trùng");
-                    return;
-                }
                 DTO_LichHen lichHen = new DTO_LichHen
                 {
-                    MaLH = int.Parse(txtBoxMaLH.Text),
                     MaBS = (int)cboMaBS.SelectedValue,
                     MaBN = (int)cboMaBN.SelectedValue,
                     ThoiGianHen = DTPThoiGianHen.Value,
@@ -99,7 +105,8 @@ namespace GUI
                 if (_QuanLyLichHenBLL.AddLichHen(lichHen))
                 {
                     MessageBox.Show("Thêm lịch hẹn thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadLichHenList(); // Tải lại danh sách
+                    LoadLichHenList();
+                    ClearInputFields();
                 }
                 else
                 {
@@ -231,7 +238,7 @@ namespace GUI
 
             if (string.IsNullOrWhiteSpace(txtBoxTimMaLH.Text))
             {
-                errorProviderLH.SetError(txtBoxTimMaLH, "Vui lòng nhập mã lịch hẹn.");
+                errorProviderLH.SetError(txtBoxTimMaLH, "Vui lòng nhập số điện thoại bệnh nhân.");
                 isValid = false;
             }
             if (!isValid)
@@ -240,34 +247,164 @@ namespace GUI
             }
             try
             {
-                // Lấy mã lịch hẹn từ TextBox
-                int maLH;
-                if (int.TryParse(txtBoxTimMaLH.Text, out maLH))
-                {
-                    // Tìm kiếm lịch hẹn theo mã
-                    DTO_LichHen lichHen = _QuanLyLichHenBLL.GetLichHenByMaLH(maLH);
+                // Lấy số điện thoại từ TextBox
+                string soDT = txtBoxTimMaLH.Text.Trim();
 
-                    // Nếu tìm thấy, hiển thị thông tin vào các trường
-                    if (lichHen != null)
-                    {
-                        // Tạo danh sách để chứa kết quả tìm kiếm
-                        List<DTO_LichHen> searchResult = new List<DTO_LichHen> { lichHen };
-                        DGVLichHen.DataSource = searchResult; // Đổ dữ liệu vào DataGridView
-                    }
-                    else
-                    {
-                        MessageBox.Show("Không tìm thấy lịch hẹn!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        LoadLichHenList(); // Tải lại danh sách đầy đủ nếu không tìm thấy
-                    }
+                // Kiểm tra tính hợp lệ của số điện thoại
+                if (string.IsNullOrWhiteSpace(soDT))
+                {
+                    MessageBox.Show("Vui lòng nhập số điện thoại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Tìm kiếm lịch hẹn theo số điện thoại
+                List<DTO_LichHen> searchResult = _QuanLyLichHenBLL.GetLichHenBySDT(soDT);
+
+                // Kiểm tra kết quả tìm kiếm
+                if (searchResult != null && searchResult.Count > 0)
+                {
+                    // Hiển thị kết quả tìm kiếm trong DataGridView
+                    DGVLichHen.DataSource = searchResult;
+
+                    // Hiển thị số lượng kết quả
+                    MessageBox.Show($"Tìm thấy {searchResult.Count} lịch hẹn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show("Vui lòng nhập mã lịch hẹn hợp lệ!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Không tìm thấy lịch hẹn cho số điện thoại này!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    // Tải lại danh sách đầy đủ
+                    LoadLichHenList();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Có lỗi xảy ra khi tìm kiếm lịch hẹn: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            ClearInputFields();
+        }
+
+        private void btnTimSDTBN_Click(object sender, EventArgs e)
+        {
+            // Đặt lại ErrorProvider
+            errorProviderLH.Clear();
+
+            // Lấy số điện thoại từ TextBox
+            string soDT = txtBoxSDTBN.Text.Trim();
+
+            try
+            {
+                // Sử dụng phương thức từ BLL để kiểm tra và lấy thông tin bệnh nhân
+                var benhNhan = _QuanLyLichHenBLL.GetBenhNhanBySDT(soDT);
+
+                if (benhNhan != null)
+                {
+                    // Tìm thấy bệnh nhân, điền vào ComboBox
+                    int index = ((List<DTO_QuanLyBenhNhan>)cboMaBN.DataSource)
+                        .FindIndex(bn => bn.MaBN == benhNhan.MaBN);
+
+                    if (index != -1)
+                    {
+                        cboMaBN.SelectedIndex = index;
+                        MessageBox.Show($"Tìm thấy bệnh nhân: {benhNhan.HoTenBN}",
+                            "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không tìm thấy bệnh nhân trong danh sách.",
+                            "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Không tìm thấy bệnh nhân với số điện thoại này.",
+                        "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                // Xử lý lỗi số điện thoại không hợp lệ
+                errorProviderLH.SetError(txtBoxSDTBN, ex.Message);
+                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý các lỗi khác
+                MessageBox.Show($"Lỗi: {ex.Message}",
+                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnTimSDTBS_Click(object sender, EventArgs e)
+        {
+            // Đặt lại ErrorProvider
+            errorProviderLH.Clear();
+
+            // Lấy số điện thoại từ TextBox
+            string soDT = txtBoxSDTBS.Text.Trim();
+
+            try
+            {
+                // Sử dụng phương thức từ BLL để kiểm tra và lấy thông tin bác sĩ
+                var bacSi = _QuanLyLichHenBLL.GetBacSiBySDT(soDT);
+
+                if (bacSi != null)
+                {
+                    // Tìm thấy bác sĩ, điền vào ComboBox
+                    int index = ((List<DTO_QuanLyBacSi>)cboMaBS.DataSource)
+                        .FindIndex(bs => bs.MaBS == bacSi.MaBS);
+
+                    if (index != -1)
+                    {
+                        cboMaBS.SelectedIndex = index;
+                        MessageBox.Show($"Tìm thấy bác sĩ: {bacSi.TenBS}",
+                            "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không tìm thấy bác sĩ trong danh sách.",
+                            "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Không tìm thấy bác sĩ với số điện thoại này.",
+                        "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                // Xử lý lỗi số điện thoại không hợp lệ
+                errorProviderLH.SetError(txtBoxSDTBS, ex.Message);
+                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý các lỗi khác
+                MessageBox.Show($"Lỗi: {ex.Message}",
+                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void txtBoxSDTBN_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Chỉ cho phép nhập số và các phím điều khiển (Backspace, Delete, vv)
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // Ngăn không cho nhập ký tự
+            }
+        }
+
+        private void txtBoxSDTBS_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Chỉ cho phép nhập số và các phím điều khiển
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // Ngăn không cho nhập ký tự
             }
         }
     }

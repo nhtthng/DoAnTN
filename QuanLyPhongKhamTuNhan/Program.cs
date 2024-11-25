@@ -12,7 +12,7 @@ namespace QuanLyPhongKhamTuNhan
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            Application.Run(new QuanLyBacSi());
+            Application.Run(new QuanLyLichHen());
         }
     }
 }

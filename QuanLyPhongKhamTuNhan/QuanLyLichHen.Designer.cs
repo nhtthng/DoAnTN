@@ -49,6 +49,13 @@
             btnXoa = new Button();
             btnSua = new Button();
             errorProviderLH = new ErrorProvider(components);
+            label8 = new Label();
+            txtBoxSDTBN = new TextBox();
+            label9 = new Label();
+            txtBoxSDTBS = new TextBox();
+            btnTimSDTBN = new Button();
+            btnTimSDTBS = new Button();
+            btnReset = new Button();
             ((System.ComponentModel.ISupportInitialize)DGVLichHen).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProviderLH).BeginInit();
             SuspendLayout();
@@ -116,7 +123,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(12, 181);
+            label5.Location = new Point(12, 159);
             label5.Name = "label5";
             label5.Size = new Size(99, 20);
             label5.TabIndex = 3;
@@ -124,7 +131,7 @@
             // 
             // DTPThoiGianHen
             // 
-            DTPThoiGianHen.Location = new Point(117, 181);
+            DTPThoiGianHen.Location = new Point(129, 154);
             DTPThoiGianHen.Name = "DTPThoiGianHen";
             DTPThoiGianHen.Size = new Size(250, 27);
             DTPThoiGianHen.TabIndex = 5;
@@ -132,7 +139,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(510, 181);
+            label6.Location = new Point(541, 154);
             label6.Name = "label6";
             label6.Size = new Size(72, 20);
             label6.TabIndex = 3;
@@ -140,7 +147,7 @@
             // 
             // DTPNgayHen
             // 
-            DTPNgayHen.Location = new Point(588, 176);
+            DTPNgayHen.Location = new Point(635, 154);
             DTPNgayHen.Name = "DTPNgayHen";
             DTPNgayHen.Size = new Size(250, 27);
             DTPNgayHen.TabIndex = 6;
@@ -156,9 +163,9 @@
             // 
             // txtBoxTinhTrang
             // 
-            txtBoxTinhTrang.Location = new Point(94, 272);
+            txtBoxTinhTrang.Location = new Point(129, 272);
             txtBoxTinhTrang.Name = "txtBoxTinhTrang";
-            txtBoxTinhTrang.Size = new Size(744, 27);
+            txtBoxTinhTrang.Size = new Size(867, 27);
             txtBoxTinhTrang.TabIndex = 7;
             // 
             // cboMaBS
@@ -189,7 +196,7 @@
             // 
             // btnThem
             // 
-            btnThem.Location = new Point(94, 337);
+            btnThem.Location = new Point(47, 337);
             btnThem.Name = "btnThem";
             btnThem.Size = new Size(94, 29);
             btnThem.TabIndex = 10;
@@ -199,7 +206,7 @@
             // 
             // btnXoa
             // 
-            btnXoa.Location = new Point(437, 337);
+            btnXoa.Location = new Point(305, 337);
             btnXoa.Name = "btnXoa";
             btnXoa.Size = new Size(94, 29);
             btnXoa.TabIndex = 10;
@@ -209,7 +216,7 @@
             // 
             // btnSua
             // 
-            btnSua.Location = new Point(774, 337);
+            btnSua.Location = new Point(601, 337);
             btnSua.Name = "btnSua";
             btnSua.Size = new Size(94, 29);
             btnSua.TabIndex = 10;
@@ -221,11 +228,82 @@
             // 
             errorProviderLH.ContainerControl = this;
             // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(541, 215);
+            label8.Name = "label8";
+            label8.Size = new Size(79, 20);
+            label8.TabIndex = 11;
+            label8.Text = "SDT Bác Sĩ";
+            // 
+            // txtBoxSDTBN
+            // 
+            txtBoxSDTBN.Location = new Point(129, 211);
+            txtBoxSDTBN.Name = "txtBoxSDTBN";
+            txtBoxSDTBN.Size = new Size(250, 27);
+            txtBoxSDTBN.TabIndex = 12;
+            txtBoxSDTBN.KeyPress += txtBoxSDTBN_KeyPress;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(12, 215);
+            label9.Name = "label9";
+            label9.Size = new Size(111, 20);
+            label9.TabIndex = 11;
+            label9.Text = "SDT Bệnh Nhân";
+            // 
+            // txtBoxSDTBS
+            // 
+            txtBoxSDTBS.Location = new Point(635, 212);
+            txtBoxSDTBS.Name = "txtBoxSDTBS";
+            txtBoxSDTBS.Size = new Size(250, 27);
+            txtBoxSDTBS.TabIndex = 12;
+            txtBoxSDTBS.KeyPress += txtBoxSDTBS_KeyPress;
+            // 
+            // btnTimSDTBN
+            // 
+            btnTimSDTBN.Location = new Point(408, 211);
+            btnTimSDTBN.Name = "btnTimSDTBN";
+            btnTimSDTBN.Size = new Size(94, 29);
+            btnTimSDTBN.TabIndex = 13;
+            btnTimSDTBN.Text = "Tìm";
+            btnTimSDTBN.UseVisualStyleBackColor = true;
+            btnTimSDTBN.Click += btnTimSDTBN_Click;
+            // 
+            // btnTimSDTBS
+            // 
+            btnTimSDTBS.Location = new Point(902, 211);
+            btnTimSDTBS.Name = "btnTimSDTBS";
+            btnTimSDTBS.Size = new Size(94, 29);
+            btnTimSDTBS.TabIndex = 13;
+            btnTimSDTBS.Text = "Tìm";
+            btnTimSDTBS.UseVisualStyleBackColor = true;
+            btnTimSDTBS.Click += btnTimSDTBS_Click;
+            // 
+            // btnReset
+            // 
+            btnReset.Location = new Point(848, 337);
+            btnReset.Name = "btnReset";
+            btnReset.Size = new Size(94, 29);
+            btnReset.TabIndex = 14;
+            btnReset.Text = "Reset";
+            btnReset.UseVisualStyleBackColor = true;
+            btnReset.Click += btnReset_Click;
+            // 
             // QuanLyLichHen
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1008, 638);
+            Controls.Add(btnReset);
+            Controls.Add(btnTimSDTBS);
+            Controls.Add(btnTimSDTBN);
+            Controls.Add(txtBoxSDTBS);
+            Controls.Add(txtBoxSDTBN);
+            Controls.Add(label9);
+            Controls.Add(label8);
             Controls.Add(btnSua);
             Controls.Add(btnXoa);
             Controls.Add(btnThem);
@@ -275,5 +353,12 @@
         private Button btnXoa;
         private Button btnSua;
         private ErrorProvider errorProviderLH;
+        private Button btnTimSDTBS;
+        private Button btnTimSDTBN;
+        private TextBox txtBoxSDTBS;
+        private TextBox txtBoxSDTBN;
+        private Label label9;
+        private Label label8;
+        private Button btnReset;
     }
 }

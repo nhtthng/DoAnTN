@@ -45,9 +45,8 @@ namespace DAL
             {
                 using (SqlConnection conn = SqlConnectionData.GetConnection())
                 {
-                    string query = "INSERT INTO LichHen (MaLH, MaBS, MaBN, ThoiGianHen, NgayHen, TinhTrang) VALUES (@MaLH, @MaBS, @MaBN, @ThoiGianHen, @NgayHen, @TinhTrang)";
+                    string query = "INSERT INTO LichHen ( MaBS, MaBN, ThoiGianHen, NgayHen, TinhTrang) VALUES (@MaBS, @MaBN, @ThoiGianHen, @NgayHen, @TinhTrang)";
                     SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@MaLH", lichHen.MaLH); // Thêm mã lịch hẹn
                     cmd.Parameters.AddWithValue("@MaBS", lichHen.MaBS);
                     cmd.Parameters.AddWithValue("@MaBN", lichHen.MaBN);
                     cmd.Parameters.AddWithValue("@ThoiGianHen", lichHen.ThoiGianHen);
@@ -114,22 +113,27 @@ namespace DAL
                 return false; // Xóa không thành công
             }
         }
-        public DTO_LichHen GetLichHenByMaLH(int maLH)
+        public List<DTO_LichHen> GetLichHenBySDT(string soDT)
         {
-            DTO_LichHen lichHen = null;
+            List<DTO_LichHen> danhSachLichHen = new List<DTO_LichHen>();
 
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                string query = "SELECT MaLH, MaBS, MaBN, ThoiGianHen, NgayHen, TinhTrang FROM LichHen WHERE MaLH = @MaLH";
+                string query = @"
+            SELECT LH.MaLH, LH.MaBS, LH.MaBN, LH.ThoiGianHen, LH.NgayHen, LH.TinhTrang 
+            FROM LichHen LH
+            JOIN BenhNhan BN ON LH.MaBN = BN.MaBN
+            WHERE BN.SoDT = @SoDT";
+
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaLH", maLH);
+                cmd.Parameters.AddWithValue("@SoDT", soDT);
 
                 conn.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    if (reader.Read())
+                    while (reader.Read())
                     {
-                        lichHen = new DTO_LichHen
+                        DTO_LichHen lichHen = new DTO_LichHen
                         {
                             MaLH = reader.GetInt32(0),
                             MaBS = reader.GetInt32(1),
@@ -138,25 +142,91 @@ namespace DAL
                             NgayHen = reader.GetDateTime(4),
                             TinhTrang = reader.GetString(5)
                         };
+                        danhSachLichHen.Add(lichHen);
                     }
                 }
             }
-            return lichHen;
+            return danhSachLichHen;
         }
-        public bool IsAppointmentIdExists(int maLH)
+        // Hàm kiểm tra trùng lịch hẹn
+        public bool KiemTraTrungLichHen(int maBS, int maBN, DateTime ngayHen, DateTime thoiGianHen)
         {
-            bool exists = false;
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
+                string query = @"
+        SELECT COUNT(*) 
+        FROM LichHen 
+        WHERE MaBS = @MaBS 
+        AND NgayHen = @NgayHen 
+        AND ThoiGianHen = @ThoiGianHen
+        AND (MaBN = @MaBN OR 
+             EXISTS (
+                 SELECT 1 FROM LichHen 
+                 WHERE MaBS = @MaBS 
+                 AND NgayHen = @NgayHen 
+                 AND ThoiGianHen = @ThoiGianHen
+             ))";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaBS", maBS);
+                cmd.Parameters.AddWithValue("@MaBN", maBN);
+                cmd.Parameters.AddWithValue("@NgayHen", ngayHen.Date);
+                cmd.Parameters.AddWithValue("@ThoiGianHen", thoiGianHen);
+
                 conn.Open();
-                string query = "SELECT COUNT(*) FROM LichHen WHERE MaLH = @MaLH";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+                return count > 0;
+            }
+        }
+        public DTO_QuanLyBenhNhan GetBenhNhanBySDT(string soDT)
+        {
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT * FROM BenhNhan WHERE SoDT = @SoDT";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@SoDT", soDT);
+
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    cmd.Parameters.AddWithValue("@MaLH", maLH);
-                    exists = (int)cmd.ExecuteScalar() > 0;
+                    if (reader.Read())
+                    {
+                        return new DTO_QuanLyBenhNhan
+                        {
+                            MaBN = reader.GetInt32(reader.GetOrdinal("MaBN")),
+                            HoTenBN = reader.GetString(reader.GetOrdinal("HoTenBN")),
+                            SoDT = reader.GetString(reader.GetOrdinal("SoDT"))
+                            // Thêm các trường khác nếu cần
+                        };
+                    }
                 }
             }
-            return exists;
+            return null;
+        }
+        public DTO_QuanLyBacSi GetBacSiBySDT(string soDT)
+        {
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT * FROM BacSi WHERE SoDT = @SoDT";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@SoDT", soDT);
+
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new DTO_QuanLyBacSi
+                        {
+                            MaBS = reader.GetInt32(reader.GetOrdinal("MaBS")),
+                            TenBS = reader.GetString(reader.GetOrdinal("TenBS")),
+                            SoDT = reader.GetString(reader.GetOrdinal("SoDT"))
+                            // Thêm các trường khác nếu cần
+                        };
+                    }
+                }
+            }
+            return null;
         }
     }
 }
