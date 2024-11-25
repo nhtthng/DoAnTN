@@ -49,6 +49,10 @@
             DGVKB = new DataGridView();
             btnXoa = new Button();
             errorProviderKB = new ErrorProvider(components);
+            label8 = new Label();
+            txtBoxSDTBN = new TextBox();
+            btnTimSDTBN = new Button();
+            btnReset = new Button();
             ((System.ComponentModel.ISupportInitialize)DGVKB).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProviderKB).BeginInit();
             SuspendLayout();
@@ -115,7 +119,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(700, 93);
+            label4.Location = new Point(686, 90);
             label4.Name = "label4";
             label4.Size = new Size(103, 20);
             label4.TabIndex = 6;
@@ -132,7 +136,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(68, 186);
+            label5.Location = new Point(16, 158);
             label5.Name = "label5";
             label5.Size = new Size(84, 20);
             label5.TabIndex = 3;
@@ -140,15 +144,16 @@
             // 
             // DTPNgayKham
             // 
-            DTPNgayKham.Location = new Point(158, 181);
+            DTPNgayKham.Location = new Point(129, 153);
             DTPNgayKham.Name = "DTPNgayKham";
             DTPNgayKham.Size = new Size(250, 27);
             DTPNgayKham.TabIndex = 8;
+            DTPNgayKham.ValueChanged += DTPNgayKham_ValueChanged;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(544, 186);
+            label6.Location = new Point(686, 153);
             label6.Name = "label6";
             label6.Size = new Size(117, 20);
             label6.TabIndex = 3;
@@ -157,7 +162,7 @@
             // cboMaPK
             // 
             cboMaPK.FormattingEnabled = true;
-            cboMaPK.Location = new Point(667, 183);
+            cboMaPK.Location = new Point(809, 150);
             cboMaPK.Name = "cboMaPK";
             cboMaPK.Size = new Size(151, 28);
             cboMaPK.TabIndex = 9;
@@ -180,7 +185,7 @@
             // 
             // btnThem
             // 
-            btnThem.Location = new Point(106, 347);
+            btnThem.Location = new Point(106, 338);
             btnThem.Name = "btnThem";
             btnThem.Size = new Size(94, 29);
             btnThem.TabIndex = 11;
@@ -190,7 +195,7 @@
             // 
             // btnSua
             // 
-            btnSua.Location = new Point(809, 347);
+            btnSua.Location = new Point(577, 338);
             btnSua.Name = "btnSua";
             btnSua.Size = new Size(94, 29);
             btnSua.TabIndex = 11;
@@ -210,7 +215,7 @@
             // 
             // btnXoa
             // 
-            btnXoa.Location = new Point(447, 347);
+            btnXoa.Location = new Point(339, 338);
             btnXoa.Name = "btnXoa";
             btnXoa.Size = new Size(94, 29);
             btnXoa.TabIndex = 13;
@@ -222,11 +227,51 @@
             // 
             errorProviderKB.ContainerControl = this;
             // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(12, 220);
+            label8.Name = "label8";
+            label8.Size = new Size(111, 20);
+            label8.TabIndex = 14;
+            label8.Text = "SDT Bệnh Nhân";
+            // 
+            // txtBoxSDTBN
+            // 
+            txtBoxSDTBN.Location = new Point(129, 217);
+            txtBoxSDTBN.Name = "txtBoxSDTBN";
+            txtBoxSDTBN.Size = new Size(250, 27);
+            txtBoxSDTBN.TabIndex = 15;
+            // 
+            // btnTimSDTBN
+            // 
+            btnTimSDTBN.Location = new Point(406, 216);
+            btnTimSDTBN.Name = "btnTimSDTBN";
+            btnTimSDTBN.Size = new Size(94, 29);
+            btnTimSDTBN.TabIndex = 16;
+            btnTimSDTBN.Text = "Tìm";
+            btnTimSDTBN.UseVisualStyleBackColor = true;
+            btnTimSDTBN.Click += btnTimSDTBN_Click;
+            // 
+            // btnReset
+            // 
+            btnReset.Location = new Point(794, 338);
+            btnReset.Name = "btnReset";
+            btnReset.Size = new Size(94, 29);
+            btnReset.TabIndex = 17;
+            btnReset.Text = "Reset";
+            btnReset.UseVisualStyleBackColor = true;
+            btnReset.Click += btnReset_Click;
+            // 
             // KhamBenh
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(972, 592);
+            Controls.Add(btnReset);
+            Controls.Add(btnTimSDTBN);
+            Controls.Add(txtBoxSDTBN);
+            Controls.Add(label8);
             Controls.Add(btnXoa);
             Controls.Add(DGVKB);
             Controls.Add(btnSua);
@@ -276,5 +321,9 @@
         private DataGridView DGVKB;
         private Button btnXoa;
         private ErrorProvider errorProviderKB;
+        private Button btnTimSDTBN;
+        private TextBox txtBoxSDTBN;
+        private Label label8;
+        private Button btnReset;
     }
 }

@@ -248,6 +248,7 @@
             txtBoxTimSDTBN.Name = "txtBoxTimSDTBN";
             txtBoxTimSDTBN.Size = new Size(185, 27);
             txtBoxTimSDTBN.TabIndex = 18;
+            txtBoxTimSDTBN.KeyPress += txtBoxTimSDTBN_KeyPress;
             // 
             // btnTimSDTBN
             // 

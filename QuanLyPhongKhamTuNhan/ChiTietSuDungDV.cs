@@ -281,5 +281,14 @@ namespace GUI
 
             return true;
         }
+
+        private void txtBoxTimSDTBN_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Chỉ cho phép nhập số và các phím điều khiển
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // Ngăn không cho nhập ký tự
+            }
+        }
     }
 }

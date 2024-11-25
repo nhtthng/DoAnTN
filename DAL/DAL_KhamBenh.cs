@@ -40,9 +40,10 @@ namespace DAL
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    
+                    // Ghi log lỗi
+                    throw new Exception("Lỗi truy vấn danh sách khám bệnh: " + ex.Message);
                 }
             }
             return listKhamBenh;
@@ -57,10 +58,9 @@ namespace DAL
                 {
                     conn.Open();
 
-                    string query = "INSERT INTO LichSuKhamBenh (MaLSKB,MaBS, MaBN, NgayKham, ChuanDoan, MaPK) VALUES (@MaLSKB,@MaBS, @MaBN, @NgayKham, @ChuanDoan, @MaPK)";
+                    string query = "INSERT INTO LichSuKhamBenh (MaBS, MaBN, NgayKham, ChuanDoan, MaPK) VALUES (@MaBS, @MaBN, @NgayKham, @ChuanDoan, @MaPK)";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@MaLSKB", khamBenh.MaLSKB);
                         cmd.Parameters.AddWithValue("@MaBS", khamBenh.MaBS);
                         cmd.Parameters.AddWithValue("@MaBN", khamBenh.MaBN);
                         cmd.Parameters.AddWithValue("@NgayKham", khamBenh.NgayKham);
@@ -127,57 +127,130 @@ namespace DAL
             }
         }
         // Tìm kiếm lịch sử khám bệnh theo Mã Bệnh Nhân
-        public List<DTO_KhamBenh> SearchKhamBenhByMaBN(int maBN)
+        public List<DTO_QuanLyBenhNhan> SearchBenhNhanInLichHenBySDT(string soDT)
         {
-            List<DTO_KhamBenh> listKhamBenh = new List<DTO_KhamBenh>();
+            List<DTO_QuanLyBenhNhan> listBenhNhan = new List<DTO_QuanLyBenhNhan>();
+
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
                 try
                 {
                     conn.Open();
-                    string query = "SELECT * FROM LichSuKhamBenh WHERE MaBN = @MaBN";
+                    string query = @"
+                    SELECT DISTINCT 
+                        BN.MaBN, 
+                        BN.HoTenBN, 
+                        BN.NgaySinh, 
+                        BN.GioiTinh, 
+                        BN.Email, 
+                        BN.SoBHYT, 
+                        BN.SoDT, 
+                        BN.DiaChi,
+                        LH.NgayHen,
+                        LH.TinhTrang
+                    FROM BenhNhan BN
+                    INNER JOIN LichHen LH ON BN.MaBN = LH.MaBN
+                    WHERE BN.SoDT = @SoDT";
+
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@MaBN", maBN);
+                        cmd.Parameters.AddWithValue("@SoDT", soDT);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                DTO_QuanLyBenhNhan benhNhan = new DTO_QuanLyBenhNhan
+                                {
+                                    MaBN = Convert.ToInt32(reader["MaBN"]),
+                                    HoTenBN = reader["HoTenBN"].ToString(),
+                                    NgaySinh = Convert.ToDateTime(reader["NgaySinh"]),
+                                    GioiTinh = reader["GioiTinh"].ToString(),
+                                    Email = reader["Email"].ToString(),
+                                    SoBHYT = reader["SoBHYT"].ToString(),
+                                    SoDT = reader["SoDT"].ToString(),
+                                    DiaChi = reader["DiaChi"].ToString()
+                                };
+                                listBenhNhan.Add(benhNhan);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Ghi log lỗi
+                    throw new Exception("Lỗi truy vấn bệnh nhân trong Lịch Hẹn: " + ex.Message);
+                }
+            }
+
+            return listBenhNhan;
+        }
+        public List<DTO_KhamBenh> SearchBenhNhanInKhamBenhBySDT(string soDT)
+        {
+            List<DTO_KhamBenh> listKhamBenh = new List<DTO_KhamBenh>();
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                try
+                {
+                    conn.Open();
+                    string query = @"
+            SELECT 
+                KB.MaLSKB, 
+                KB.MaBS, 
+                KB.MaBN, 
+                KB.NgayKham, 
+                KB.ChuanDoan, 
+                KB.MaPK
+            FROM LichSuKhamBenh KB
+            INNER JOIN BenhNhan BN ON KB.MaBN = BN.MaBN
+            WHERE BN.SoDT = @SoDT";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@SoDT", soDT);
+
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
                                 DTO_KhamBenh khamBenh = new DTO_KhamBenh
                                 {
-                                    MaLSKB = (int)reader["MaLSKB"],
-                                    MaBS = (int)reader["MaBS"],
-                                    MaBN = (int)reader["MaBN"],
-                                    NgayKham = (DateTime)reader["NgayKham"],
+                                    MaLSKB = Convert.ToInt32(reader["MaLSKB"]),
+                                    MaBS = Convert.ToInt32(reader["MaBS"]),
+                                    MaBN = Convert.ToInt32(reader["MaBN"]),
+                                    NgayKham = Convert.ToDateTime(reader["NgayKham"]),
                                     ChuanDoan = reader["ChuanDoan"].ToString(),
-                                    MaPK = (int)reader["MaPK"]
+                                    MaPK = Convert.ToInt32(reader["MaPK"])
                                 };
                                 listKhamBenh.Add(khamBenh);
                             }
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // Xử lý lỗi nếu cần
+                    // Ghi log lỗi
+                    throw new Exception("Lỗi truy vấn lịch sử khám bệnh: " + ex.Message);
                 }
             }
+
             return listKhamBenh;
         }
-        public bool IsLSKBIdExists(int maLSKB)
-        {
-            bool exists = false;
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
-            {
-                conn.Open();
-                string query = "SELECT COUNT(*) FROM LichSuKhamBenh WHERE MaLSKB = @MaLSKB";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@MaLSKB", maLSKB);
-                    exists = (int)cmd.ExecuteScalar() > 0;
-                }
-            }
-            return exists;
-        }
+        //public bool IsLSKBIdExists(int maLSKB)
+        //{
+        //    bool exists = false;
+        //    using (SqlConnection conn = SqlConnectionData.GetConnection())
+        //    {
+        //        conn.Open();
+        //        string query = "SELECT COUNT(*) FROM LichSuKhamBenh WHERE MaLSKB = @MaLSKB";
+        //        using (SqlCommand cmd = new SqlCommand(query, conn))
+        //        {
+        //            cmd.Parameters.AddWithValue("@MaLSKB", maLSKB);
+        //            exists = (int)cmd.ExecuteScalar() > 0;
+        //        }
+        //    }
+        //    return exists;
+        //}
     }
 }

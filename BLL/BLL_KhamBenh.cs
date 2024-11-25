@@ -2,6 +2,7 @@
 using DTO;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,79 @@ namespace BLL
     public class BLL_KhamBenh
     {
         private DAL_KhamBenh dalKhamBenh = new DAL_KhamBenh();
+
+
+        // Validate thông tin khám bệnh
+        private void ValidateKhamBenh(DTO_KhamBenh khamBenh)
+        {
+            // Kiểm tra các trường bắt buộc
+            if (khamBenh == null)
+            {
+                throw new ArgumentNullException(nameof(khamBenh), "Thông tin khám bệnh không được null.");
+            }
+
+            if (khamBenh.MaBS <= 0)
+            {
+                throw new ArgumentException("Mã bác sĩ không hợp lệ.");
+            }
+
+            if (khamBenh.MaBN <= 0)
+            {
+                throw new ArgumentException("Mã bệnh nhân không hợp lệ.");
+            }
+
+            if (khamBenh.NgayKham > DateTime.Now)
+            {
+                throw new ArgumentException("Ngày khám không được lớn hơn ngày hiện tại.");
+            }
+
+            // Kiểm tra độ dài chuẩn đoán
+            if (string.IsNullOrWhiteSpace(khamBenh.ChuanDoan))
+            {
+                throw new ArgumentException("Chuẩn đoán không được để trống.");
+            }
+
+            if (khamBenh.ChuanDoan.Length > 500) // Giả sử độ dài tối đa là 500 ký tự
+            {
+                throw new ArgumentException("Chuẩn đoán quá dài.");
+            }
+        }
+
+        // Phương thức validate số điện thoại
+        private bool ValidatePhoneNumber(string soDT)
+        {
+            // Kiểm tra null hoặc rỗng
+            if (string.IsNullOrWhiteSpace(soDT))
+            {
+                throw new ArgumentException("Số điện thoại không được để trống.");
+            }
+
+            // Kiểm tra độ dài và định dạng
+            if (!System.Text.RegularExpressions.Regex.IsMatch(soDT, @"^0\d{9,10}$"))
+            {
+                throw new ArgumentException("Số điện thoại không hợp lệ. Phải bắt đầu bằng 0 và có 10-11 chữ số.");
+            }
+
+            return true;
+        }
+
+
         // Thêm lịch sử khám bệnh
         public bool AddKhamBenh(DTO_KhamBenh khamBenh)
         {
-            return dalKhamBenh.AddKhamBenh(khamBenh);
+            try
+            {
+                // Validate trước khi thêm
+                ValidateKhamBenh(khamBenh);
+
+                // Thực hiện thêm
+                return dalKhamBenh.AddKhamBenh(khamBenh);
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi nếu cần
+                throw new Exception("Lỗi khi thêm lịch sử khám bệnh: " + ex.Message);
+            }
         }
         // Xóa lịch sử khám bệnh
         public bool DeleteKhamBenh(int maLSKB)
@@ -24,12 +94,40 @@ namespace BLL
         // Cập nhật lịch sử khám bệnh
         public bool UpdateKhamBenh(DTO_KhamBenh khamBenh)
         {
-            return dalKhamBenh.UpdateKhamBenh(khamBenh);
+            try
+            {
+                // Validate trước khi cập nhật
+                ValidateKhamBenh(khamBenh);
+
+                // Thực hiện cập nhật
+                return dalKhamBenh.UpdateKhamBenh(khamBenh);
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi nếu cần
+                throw new Exception("Lỗi khi cập nhật lịch sử khám bệnh: " + ex.Message);
+            }
         }
-        // Tìm kiếm lịch sử khám bệnh theo mã bệnh nhân
-        public List<DTO_KhamBenh> SearchKhamBenhByMaBN(int maBN)
+        // Tìm kiếm lịch sử khám bệnh theo sdt bệnh nhân
+        public List<DTO_QuanLyBenhNhan> SearchBenhNhanInLichHenBySDT(string soDT)
         {
-            return dalKhamBenh.SearchKhamBenhByMaBN(maBN);
+            // Validate số điện thoại
+            if (ValidatePhoneNumber(soDT))
+            {
+                // Thực hiện truy vấn
+                List<DTO_QuanLyBenhNhan> danhSachBenhNhan = dalKhamBenh.SearchBenhNhanInLichHenBySDT(soDT);
+
+                // Kiểm tra kết quả
+                if (danhSachBenhNhan == null || danhSachBenhNhan.Count == 0)
+                {
+                    throw new Exception("Không tìm thấy bệnh nhân trong lịch hẹn.");
+                }
+
+                return danhSachBenhNhan;
+            }
+
+            // Nếu validate không thành công (không bao giờ xảy ra do đã throw exception)
+            return new List<DTO_QuanLyBenhNhan>();
         }
 
         // Lấy tất cả lịch sử khám bệnh
@@ -37,13 +135,48 @@ namespace BLL
         {
             return dalKhamBenh.GetAllKhamBenh();
         }
-        public bool CheckIdLSKB(int ID)
+        public List<DTO_KhamBenh> SearchBenhNhanInKhamBenhBySDT(string soDT)
         {
-            if (dalKhamBenh.IsLSKBIdExists(ID) != false)
+            try
             {
-                return false;
+                // 1. Validate số điện thoại
+                ValidatePhoneNumber(soDT);
+
+                // 2. Thực hiện truy vấn từ DAL
+                List<DTO_KhamBenh> danhSachBenhNhan =
+                    dalKhamBenh.SearchBenhNhanInKhamBenhBySDT(soDT);
+
+                // 3. Kiểm tra kết quả truy vấn
+                if (danhSachBenhNhan == null)
+                {
+                    throw new Exception("Lỗi hệ thống khi truy vấn dữ liệu.");
+                }
+
+                // 4. Kiểm tra có bệnh nhân không
+                if (danhSachBenhNhan.Count == 0)
+                {
+                    throw new Exception($"Không tìm thấy bệnh nhân có số điện thoại {soDT} trong lịch sử khám bệnh.");
+                }
+
+                // 5. Bổ sung thêm các logic kiểm tra khác nếu cần
+                // Ví dụ: Lọc bệnh nhân theo điều kiện cụ thể
+
+                // 6. Trả về danh sách bệnh nhân
+                return danhSachBenhNhan;
             }
-            return true;
+            catch (ArgumentException ex)
+            {
+                // Xử lý lỗi validate số điện thoại
+                throw; // Ném lại exception để lớp gọi xử lý
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi (nếu có hệ thống logging)
+                // Logger.Error($"Lỗi tìm kiếm bệnh nhân: {ex.Message}");
+
+                // Ném exception để lớp gọi xử lý
+                throw;
+            }
         }
     }
 }
