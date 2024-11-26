@@ -34,7 +34,13 @@
     <Compile Update="QuanLyLichHen.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="QuanLyNhanVien.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="QuanLyPhongKham.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="SaoLuuVaPhucHoi.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="SearchThuoc.cs">

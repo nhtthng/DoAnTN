@@ -420,5 +420,41 @@ namespace DAL
 
             return benhNhan;
         }
+        public List<DTO_PhongBan> GetPhongBanList()
+        {
+            List<DTO_PhongBan> phongBanList = new List<DTO_PhongBan>();
+            SqlConnection conn = SqlConnectionData.GetConnection();
+
+            try
+            {
+                conn.Open();
+                string query = "SELECT MaPB, TenPB FROM PhongBan";
+                SqlCommand command = new SqlCommand(query, conn);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        DTO_PhongBan phongBan = new DTO_PhongBan()
+                        {
+                            MaPB = reader.GetInt32(0),
+                            TenPB = reader.GetString(1)
+                        };
+                        phongBanList.Add(phongBan);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi: " + ex.Message);
+            }
+            finally
+            {
+                SqlConnectionData.CloseConnection(conn);
+            }
+
+            return phongBanList;
+        }
+
     }
 }

@@ -171,5 +171,11 @@ namespace GUI
             QuanLyDichVu qldv = new QuanLyDichVu();
             qldv.Show();
         }
+
+        private void saoLưuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaoLuuVaPhucHoi slph = new SaoLuuVaPhucHoi();
+            slph.Show();
+        }
     }
 }
