@@ -17,9 +17,9 @@ namespace DAL
                 try
                 {
                     conn.Open();
-                    string query = "INSERT INTO PhongBan (MaPB, TenPB) VALUES (@MaPB, @TenPB)";
+                    string query = "INSERT INTO PhongBan ( TenPB) VALUES ( @TenPB)";
                     SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@MaPB", phongBan.MaPB);
+                    //cmd.Parameters.AddWithValue("@MaPB", phongBan.MaPB);
                     cmd.Parameters.AddWithValue("@TenPB", phongBan.TenPB);
 
                     return cmd.ExecuteNonQuery() > 0;

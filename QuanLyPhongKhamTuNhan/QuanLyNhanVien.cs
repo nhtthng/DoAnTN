@@ -23,8 +23,8 @@ namespace GUI
             LoadDanhSachNhanVien();
             var dsPhongBan = new DataHelper().GetPhongBanList();
             cboMaPhongBan.DataSource = dsPhongBan;
-            cboMaPhongBan.DisplayMember = "HoTen";
-            cboMaPhongBan.ValueMember = "MaNV";
+            cboMaPhongBan.DisplayMember = "TenPB";
+            cboMaPhongBan.ValueMember = "MaPB";
         }
         private void LoadDanhSachNhanVien()
         {
@@ -150,6 +150,15 @@ namespace GUI
             txtBoxTimKiem.Clear();
             cboGioiTinh.SelectedIndex = -1;
             cboMaPhongBan.SelectedIndex = -1;
+        }
+
+        private void txtBoxSDT_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Chỉ cho phép nhập số và các phím điều khiển (Backspace, Delete, vv)
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // Ngăn không cho nhập ký tự
+            }
         }
     }
 }

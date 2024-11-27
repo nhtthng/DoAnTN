@@ -29,12 +29,12 @@ namespace GUI
         private void btnThem_Click(object sender, EventArgs e)
         {
             // Collect data from input fields (assuming you have txtMaPB and txtTenPB TextBoxes)
-            int maPB = int.Parse(txtMaPhong.Text);
+            //int maPB = int.Parse(txtMaPhong.Text);
             string tenPB = txtTenPhongBan.Text;
 
             DTO_PhongBan newPhongBan = new DTO_PhongBan
             {
-                MaPB = maPB,
+                //MaPB = maPB,
                 TenPB = tenPB
             };
 

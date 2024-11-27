@@ -36,8 +36,7 @@
             txtTaiKhoan = new TextBox();
             txtMauKhau = new TextBox();
             btnDangNhap = new Button();
-            rdoBacSiDN = new RadioButton();
-            rdoNhanVienDN = new RadioButton();
+            cboLoaiTaiKhoan = new ComboBox();
             SuspendLayout();
             // 
             // panel1
@@ -92,7 +91,6 @@
             txtMauKhau.Size = new Size(237, 27);
             txtMauKhau.TabIndex = 3;
             txtMauKhau.UseSystemPasswordChar = true;
-            txtMauKhau.TextChanged += txtMauKhau_TextChanged;
             // 
             // btnDangNhap
             // 
@@ -107,36 +105,22 @@
             btnDangNhap.TabIndex = 4;
             btnDangNhap.Text = "       Đăng Nhập";
             btnDangNhap.UseVisualStyleBackColor = true;
+            btnDangNhap.Click += btnDangNhap_Click;
             // 
-            // rdoBacSiDN
+            // cboLoaiTaiKhoan
             // 
-            rdoBacSiDN.AutoSize = true;
-            rdoBacSiDN.Location = new Point(236, 222);
-            rdoBacSiDN.Name = "rdoBacSiDN";
-            rdoBacSiDN.Size = new Size(70, 24);
-            rdoBacSiDN.TabIndex = 5;
-            rdoBacSiDN.TabStop = true;
-            rdoBacSiDN.Text = "Bác Sĩ";
-            rdoBacSiDN.UseVisualStyleBackColor = true;
-            // 
-            // rdoNhanVienDN
-            // 
-            rdoNhanVienDN.AutoSize = true;
-            rdoNhanVienDN.Location = new Point(448, 222);
-            rdoNhanVienDN.Name = "rdoNhanVienDN";
-            rdoNhanVienDN.Size = new Size(98, 24);
-            rdoNhanVienDN.TabIndex = 6;
-            rdoNhanVienDN.TabStop = true;
-            rdoNhanVienDN.Text = "Nhân Viên";
-            rdoNhanVienDN.UseVisualStyleBackColor = true;
+            cboLoaiTaiKhoan.FormattingEnabled = true;
+            cboLoaiTaiKhoan.Location = new Point(236, 208);
+            cboLoaiTaiKhoan.Name = "cboLoaiTaiKhoan";
+            cboLoaiTaiKhoan.Size = new Size(151, 28);
+            cboLoaiTaiKhoan.TabIndex = 5;
             // 
             // DangNhap
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(592, 345);
-            Controls.Add(rdoNhanVienDN);
-            Controls.Add(rdoBacSiDN);
+            Controls.Add(cboLoaiTaiKhoan);
             Controls.Add(btnDangNhap);
             Controls.Add(txtMauKhau);
             Controls.Add(txtTaiKhoan);
@@ -146,7 +130,6 @@
             Controls.Add(panel1);
             Name = "DangNhap";
             Text = "DangNhap";
-            Load += DangNhap_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -160,7 +143,6 @@
         private TextBox txtTaiKhoan;
         private TextBox txtMauKhau;
         private Button btnDangNhap;
-        private RadioButton rdoBacSiDN;
-        private RadioButton rdoNhanVienDN;
+        private ComboBox cboLoaiTaiKhoan;
     }
 }

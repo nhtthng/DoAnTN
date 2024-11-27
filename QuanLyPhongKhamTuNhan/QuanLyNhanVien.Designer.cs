@@ -121,6 +121,7 @@
             // cboGioiTinh
             // 
             cboGioiTinh.FormattingEnabled = true;
+            cboGioiTinh.Items.AddRange(new object[] { "Nam", "Nữ" });
             cboGioiTinh.Location = new Point(823, 99);
             cboGioiTinh.Name = "cboGioiTinh";
             cboGioiTinh.Size = new Size(151, 28);
@@ -157,6 +158,7 @@
             txtBoxSDT.Name = "txtBoxSDT";
             txtBoxSDT.Size = new Size(203, 27);
             txtBoxSDT.TabIndex = 9;
+            txtBoxSDT.KeyPress += txtBoxSDT_KeyPress;
             // 
             // label7
             // 

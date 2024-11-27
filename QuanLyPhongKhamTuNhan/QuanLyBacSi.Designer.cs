@@ -95,7 +95,7 @@
             // 
             txtBoxEmailBS.Location = new Point(427, 91);
             txtBoxEmailBS.Name = "txtBoxEmailBS";
-            txtBoxEmailBS.Size = new Size(151, 27);
+            txtBoxEmailBS.Size = new Size(182, 27);
             txtBoxEmailBS.TabIndex = 4;
             // 
             // label3
@@ -161,7 +161,7 @@
             // 
             txtBoxSDTBS.Location = new Point(427, 186);
             txtBoxSDTBS.Name = "txtBoxSDTBS";
-            txtBoxSDTBS.Size = new Size(151, 27);
+            txtBoxSDTBS.Size = new Size(182, 27);
             txtBoxSDTBS.TabIndex = 4;
             // 
             // label8
@@ -194,7 +194,7 @@
             cboChuyenKhoaBS.FormattingEnabled = true;
             cboChuyenKhoaBS.Location = new Point(427, 272);
             cboChuyenKhoaBS.Name = "cboChuyenKhoaBS";
-            cboChuyenKhoaBS.Size = new Size(151, 28);
+            cboChuyenKhoaBS.Size = new Size(182, 28);
             cboChuyenKhoaBS.TabIndex = 6;
             // 
             // DGVBS
@@ -280,6 +280,7 @@
             Controls.Add(label1);
             Name = "QuanLyBacSi";
             Text = "QuanLyBacSi";
+            KeyPress += QuanLyBacSi_KeyPress;
             ((System.ComponentModel.ISupportInitialize)DGVBS).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProviderBS).EndInit();
             ResumeLayout(false);

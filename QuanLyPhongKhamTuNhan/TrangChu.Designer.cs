@@ -88,6 +88,7 @@
             đổiMậtKhẩuToolStripMenuItem.Name = "đổiMậtKhẩuToolStripMenuItem";
             đổiMậtKhẩuToolStripMenuItem.Size = new Size(224, 30);
             đổiMậtKhẩuToolStripMenuItem.Text = "Đổi Mật  Khẩu";
+            đổiMậtKhẩuToolStripMenuItem.Click += đổiMậtKhẩuToolStripMenuItem_Click;
             // 
             // đăngXuấtToolStripMenuItem
             // 
@@ -119,7 +120,7 @@
             // 
             thuốcToolStripMenuItem.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
             thuốcToolStripMenuItem.Name = "thuốcToolStripMenuItem";
-            thuốcToolStripMenuItem.Size = new Size(193, 30);
+            thuốcToolStripMenuItem.Size = new Size(224, 30);
             thuốcToolStripMenuItem.Text = "Thuốc";
             thuốcToolStripMenuItem.Click += thuốcToolStripMenuItem_Click;
             // 
@@ -127,7 +128,7 @@
             // 
             danhMụcDịchVụToolStripMenuItem.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
             danhMụcDịchVụToolStripMenuItem.Name = "danhMụcDịchVụToolStripMenuItem";
-            danhMụcDịchVụToolStripMenuItem.Size = new Size(193, 30);
+            danhMụcDịchVụToolStripMenuItem.Size = new Size(224, 30);
             danhMụcDịchVụToolStripMenuItem.Text = "Dịch Vụ";
             danhMụcDịchVụToolStripMenuItem.Click += danhMụcDịchVụToolStripMenuItem_Click;
             // 
@@ -135,7 +136,7 @@
             // 
             phòngBanToolStripMenuItem.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             phòngBanToolStripMenuItem.Name = "phòngBanToolStripMenuItem";
-            phòngBanToolStripMenuItem.Size = new Size(193, 30);
+            phòngBanToolStripMenuItem.Size = new Size(224, 30);
             phòngBanToolStripMenuItem.Text = "Phòng Ban";
             phòngBanToolStripMenuItem.Click += phòngBanToolStripMenuItem_Click;
             // 

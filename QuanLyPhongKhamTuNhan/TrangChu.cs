@@ -1,4 +1,5 @@
-﻿using QuanLyPhongKham;
+﻿using DTO;
+using QuanLyPhongKham;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,14 +14,91 @@ namespace GUI
 {
     public partial class TrangChu : Form
     {
-        private int quyen; // Thêm biến để lưu quyền
 
-        public TrangChu(int quyen)
+        public TrangChu(object nguoiDung, string loaiTaiKhoan)
         {
             InitializeComponent();
-            this.quyen = quyen; // Gán quyền vào biến
             panel1.Dock = DockStyle.Fill;
-            ConfigureMenu(); // Gọi phương thức để cấu hình menu
+            //ConfigureMenu(); // Gọi phương thức để cấu hình menu
+            // Nếu là nhân viên, kiểm tra phòng ban
+            this.Tag = nguoiDung;
+            if (nguoiDung is DTO_NhanVien nhanVien)
+            {
+                int maPB = nhanVien.MaPB;
+                MessageBox.Show($"Mã phòng ban: {maPB}");
+
+                CauHinhMenuNhanVien(maPB);
+            }
+            else if (loaiTaiKhoan == "BacSi")
+            {
+                HienThiMenuBacSi();
+            }
+        }
+
+        private void CauHinhMenuNhanVien(int maPB)
+        {
+
+            // Thêm dòng debug để kiểm tra giá trị maPB
+            //MessageBox.Show($"Mã phòng ban: {maPB}");
+
+            // Ẩn tất cả các menu trước
+            HideAllMenus();
+
+            switch (maPB)
+            {
+                case 1: // Phòng ban Quản lý
+                    //MessageBox.Show("Đang gọi HienThiMenuQuanLy()");
+                    HienThiMenuQuanLy();
+                    break;
+
+                case 2: // Phòng ban Kinh Doanh
+                    //MessageBox.Show("Đang gọi HienThiMenuKinhDoanh()");
+                    HienThiMenuKinhDoanh();
+                    break;
+
+                default:
+                    MessageBox.Show($"Không xác định được phòng ban: {maPB}");
+                    break;
+            }
+        }
+        private void HideAllMenus()
+        {
+            // Ẩn tất cả các menu
+            hệThongToolStripMenuItem.Enabled = false;
+            danhMụcToolStripMenuItem.Enabled = false;
+            tiếpNhậnToolStripMenuItem.Enabled = false;
+            khámBệnhToolStripMenuItem.Enabled = false;
+            lịchHẹnToolStripMenuItem.Enabled = false;
+            KeThuocMenuItem1.Enabled = false;
+            HoaDoaStripMenuItem1.Enabled = false;
+            báoCáoToolStripMenuItem.Enabled = false;
+        }
+        private void HienThiMenuBacSi()
+        {
+            danhMụcToolStripMenuItem.Enabled = false;
+            tiếpNhậnToolStripMenuItem.Enabled = false;
+            HoaDoaStripMenuItem1.Enabled = false;
+            báoCáoToolStripMenuItem.Enabled = false;
+
+            hệThongToolStripMenuItem.Enabled = true;
+            khámBệnhToolStripMenuItem.Enabled = true;
+            //lịchHẹnToolStripMenuItem.Enabled = true;
+            KeThuocMenuItem1.Enabled = true;
+            saoLưuToolStripMenuItem.Enabled = false;
+        }
+        private void HienThiMenuKinhDoanh()
+        {
+            hệThongToolStripMenuItem.Enabled = true;
+            báoCáoToolStripMenuItem.Enabled = true;
+            saoLưuToolStripMenuItem.Enabled = false;
+        }
+        private void HienThiMenuQuanLy()
+        {
+            hệThongToolStripMenuItem.Enabled = true;
+            danhMụcToolStripMenuItem.Enabled = true;
+            báoCáoToolStripMenuItem.Enabled = true;
+            HoaDoaStripMenuItem1.Enabled = true;
+            //KeThuocMenuItem1.Enabled = true;
 
         }
 
@@ -37,30 +115,23 @@ namespace GUI
 
         }
 
-        private void ConfigureMenu()
-        {
-            if (quyen == 0) // Bác sĩ
-            {
-                HoaDoaStripMenuItem1.Visible = false;
-
-            }
-            else if (quyen == 1) // Nhân viên
-            {
-
-
-                danhMụcToolStripMenuItem.Visible = false; // Ẩn menu danh mục
-                khámBệnhToolStripMenuItem.Visible = false;
-                KeThuocMenuItem1.Visible = false;
-
-
-
-            }
-        }
-
 
         private void thoátToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            // Hiển thị hộp thoại xác nhận
+            DialogResult result = MessageBox.Show(
+                "Bạn có chắc chắn muốn thoát chương trình?",
+                "Xác nhận thoát",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            // Nếu chọn Yes thì thoát hoàn toàn
+            if (result == DialogResult.Yes)
+            {
+                Application.Exit();
+                Environment.Exit(0); // Đảm bảo thoát hoàn toàn
+            }
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -101,7 +172,8 @@ namespace GUI
 
         private void báoCáoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            BaoCao bc = new BaoCao();
+            bc.Show();
         }
 
         private void đăngXuấtToolStripMenuItem_Click(object sender, EventArgs e)
@@ -176,6 +248,29 @@ namespace GUI
         {
             SaoLuuVaPhucHoi slph = new SaoLuuVaPhucHoi();
             slph.Show();
+        }
+
+        private void đổiMậtKhẩuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Kiểm tra xem đã có thông tin người dùng chưa
+            if (this.Tag is DTO_NhanVien nhanVien)
+            {
+                // Nếu là nhân viên
+                DoiMatKhau dmk = new DoiMatKhau(nhanVien.SoDT, "NhanVien", true);
+                dmk.Show();
+            }
+            else if (this.Tag is DTO_QuanLyBacSi bacSi)
+            {
+                // Nếu là bác sĩ
+                DoiMatKhau dmk = new DoiMatKhau(bacSi.SoDT, "BacSi", true);
+                dmk.Show();
+            }
+            else
+            {
+                // Trường hợp không xác định được người dùng
+                MessageBox.Show("Không thể xác định thông tin người dùng. Vui lòng đăng nhập lại.",
+                                "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

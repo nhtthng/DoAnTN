@@ -84,3 +84,13 @@ D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.TrangChu.resou
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.HoaDon.resources
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.QuanLyNhanVien.resources
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.SaoLuuVaPhucHoi.resources
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\ClosedXML.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\ClosedXML.Parser.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\ExcelNumberFormat.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\RBush.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\System.IO.Packaging.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.BaoCao.resources
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.DoiMatKhau.resources

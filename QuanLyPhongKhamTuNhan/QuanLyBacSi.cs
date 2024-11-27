@@ -247,5 +247,14 @@ namespace GUI
         {
             ResetForm();
         }
+
+        private void QuanLyBacSi_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Chỉ cho phép nhập số và các phím điều khiển (Backspace, Delete, vv)
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // Ngăn không cho nhập ký tự
+            }
+        }
     }
 }
