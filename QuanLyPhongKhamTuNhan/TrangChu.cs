@@ -98,7 +98,10 @@ namespace GUI
             danhMụcToolStripMenuItem.Enabled = true;
             báoCáoToolStripMenuItem.Enabled = true;
             HoaDoaStripMenuItem1.Enabled = true;
-            //KeThuocMenuItem1.Enabled = true;
+            KeThuocMenuItem1.Enabled = true;
+            tiếpNhậnToolStripMenuItem.Enabled = true;
+            lịchHẹnToolStripMenuItem.Enabled = true;
+            khámBệnhToolStripMenuItem.Enabled = true;
 
         }
 
@@ -271,6 +274,12 @@ namespace GUI
                 MessageBox.Show("Không thể xác định thông tin người dùng. Vui lòng đăng nhập lại.",
                                 "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void cTSDDVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChiTietSuDungDV ctsddv = new ChiTietSuDungDV();
+            ctsddv.Show();
         }
     }
 }

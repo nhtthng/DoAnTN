@@ -15,9 +15,9 @@ namespace GUI
 {
     public partial class DoiMatKhau : Form
     {
-        private string _soDienThoai;
-        private string _loaiTaiKhoan;
-        private bool _batBuocDoiMK;
+        private readonly string _soDienThoai;
+        private readonly string _loaiTaiKhoan;
+        private readonly bool _batBuocDoiMK;
         private BLL_DoiMatKhau BLL_DoiMatKhau = new BLL_DoiMatKhau();
         // Thuộc tính để kiểm tra đã đổi mật khẩu chưa
         public bool DaDoiMatKhau { get; private set; } = false;
@@ -28,125 +28,128 @@ namespace GUI
             _loaiTaiKhoan = loaiTaiKhoan;
             _batBuocDoiMK = batBuocDoiMK;
             // Cấu hình form nếu là bắt buộc đổi mật khẩu
-            if (KiemTraLanDauDangNhap() || batBuocDoiMK)
-            {
-                this.Text = "Đổi Mật Khẩu Bắt Buộc";
-                //txtBoxMatKhauCu.Enabled = false; // Vô hiệu hóa ô nhập mật khẩu cũ
-                //this.ControlBox = false; // Vô hiệu hóa nút đóng
-            }
+            CauHinhFormDoiMatKhau();
+            DangKyKienSuKien();
         }
-        private bool KiemTraMatKhau(string matKhau)
+
+        private void CauHinhFormDoiMatKhau()
         {
-            // Kiểm tra độ dài tối đa
-            if (matKhau.Length > 100)
+            bool laLanDauDangNhap = KiemTraLanDauDangNhap();
+
+            if (laLanDauDangNhap || _batBuocDoiMK)
             {
-                MessageBox.Show("Mật khẩu quá dài. Vui lòng chọn mật khẩu ngắn hơn.",
-                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
+                Text = "Đổi Mật Khẩu Bắt Buộc";
+                txtBoxMatKhauCu.Enabled = !laLanDauDangNhap;
+                txtBoxMatKhauCu.Visible = !laLanDauDangNhap;
+
+                if (_batBuocDoiMK)
+                {
+                    ControlBox = false; // Vô hiệu hóa nút đóng
+                }
             }
-
-            // Kiểm tra độ dài tối thiểu
-            if (matKhau.Length < 8)
-            {
-                MessageBox.Show("Mật khẩu phải có ít nhất 8 ký tự.",
-                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-
-            // Kiểm tra các điều kiện về mật khẩu
-            bool coKyTuDacBiet = matKhau.Any(c => !char.IsLetterOrDigit(c));
-            bool coChữHoa = matKhau.Any(char.IsUpper);
-            bool coChữThường = matKhau.Any(char.IsLower);
-            bool coSo = matKhau.Any(char.IsDigit);
-
-            // Chi tiết các yêu cầu về mật khẩu
-            if (!coKyTuDacBiet)
-            {
-                MessageBox.Show("Mật khẩu phải chứa ít nhất một ký tự đặc biệt.",
-                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-
-            if (!coChữHoa)
-            {
-                MessageBox.Show("Mật khẩu phải chứa ít nhất một chữ hoa.",
-                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-
-            if (!coChữThường)
-            {
-                MessageBox.Show("Mật khẩu phải chứa ít nhất một chữ thường.",
-                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-
-            if (!coSo)
-            {
-                MessageBox.Show("Mật khẩu phải chứa ít nhất một chữ số.",
-                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-
-            return true;
         }
 
-        private void btnDoiMK_Click(object sender, EventArgs e)
+        private void DangKyKienSuKien()
+        {
+            btnDoiMK.Click += btnDoiMK_Click;
+            //txtBoxMatKhauMoi.TextChanged += txtBoxMatKhauMoi_TextChanged;
+        }
+
+        private bool KiemTraMatKhau(string matKhau)
         {
             try
             {
-                // Kiểm tra xem có phải lần đầu đăng nhập không
-                bool laLanDauDangNhap = BLL_DoiMatKhau.LaLanDauDangNhap(_soDienThoai, _loaiTaiKhoan);
-
-                if (laLanDauDangNhap)
-                {
-                    // Ẩn textbox mật khẩu cũ
-                    txtBoxMatKhauCu.Visible = false;
-                    //lblMatKhauCu.Visible = false;
-
-                    // Bắt buộc nhập mật khẩu mới
-                    if (string.IsNullOrWhiteSpace(txtBoxMatKhauMoi.Text))
-                    {
-                        MessageBox.Show("Vui lòng nhập mật khẩu mới");
-                        return;
-                    }
-
-                    // Thực hiện đổi mật khẩu
-                    bool ketQua = BLL_DoiMatKhau.ThucHienDoiMatKhau(
-                        _soDienThoai,
-                        "",
-                        txtBoxMatKhauMoi.Text,
-                        _loaiTaiKhoan,
-                        true
-                    );
-                }
-                else
-                {
-                    // Hiển thị textbox mật khẩu cũ
-                    txtBoxMatKhauCu.Visible = true;
-                    //lblMatKhauCu.Visible = true;
-
-                    // Kiểm tra đầy đủ thông tin
-                    if (string.IsNullOrWhiteSpace(txtBoxMatKhauCu.Text) ||
-                        string.IsNullOrWhiteSpace(txtBoxMatKhauMoi.Text))
-                    {
-                        MessageBox.Show("Vui lòng nhập đầy đủ thông tin");
-                        return;
-                    }
-
-                    // Thực hiện đổi mật khẩu
-                    bool ketQua = BLL_DoiMatKhau.ThucHienDoiMatKhau(
-                        _soDienThoai,
-                        txtBoxMatKhauCu.Text,
-                        txtBoxMatKhauMoi.Text,
-                        _loaiTaiKhoan,
-                        false
-                    );
-                }
+                return BLL_DoiMatKhau.ValidateMatKhau(matKhau);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                HienThiThongBaoLoi(ex.Message);
+                return false;
+            }
+        }
+
+
+        private void btnDoiMK_Click(object sender, EventArgs e)
+        {
+            // Validate mật khẩu mới
+            if (!KiemTraMatKhau(txtBoxMatKhauMoi.Text))
+            {
+                return;
+            }
+
+            // Kiểm tra xác nhận mật khẩu
+            if (!KiemTraXacNhanMatKhau())
+            {
+                return;
+            }
+
+            try
+            {
+                bool laLanDauDangNhap = BLL_DoiMatKhau.LaLanDauDangNhap(_soDienThoai, _loaiTaiKhoan);
+                bool ketQua = ThucHienDoiMatKhau(laLanDauDangNhap);
+
+                XuLyKetQuaDoiMatKhau(ketQua);
+            }
+            catch (Exception ex)
+            {
+                HienThiThongBaoLoi(ex.Message);
+            }
+        }
+
+        private bool KiemTraXacNhanMatKhau()
+        {
+            if (txtBoxMatKhauMoi.Text != txtBoxXacNhanMKM.Text)
+            {
+                HienThiThongBaoLoi("Mật khẩu xác nhận không khớp!");
+                return false;
+            }
+            return true;
+        }
+
+        private bool ThucHienDoiMatKhau(bool laLanDauDangNhap)
+        {
+            if (laLanDauDangNhap)
+            {
+                // Đổi mật khẩu lần đầu
+                return BLL_DoiMatKhau.ThucHienDoiMatKhau(
+                    _soDienThoai,
+                    "",
+                    txtBoxMatKhauMoi.Text,
+                    _loaiTaiKhoan,
+                    true
+                );
+            }
+            else
+            {
+                // Kiểm tra mật khẩu hiện tại
+                if (string.IsNullOrWhiteSpace(txtBoxMatKhauCu.Text))
+                {
+                    HienThiThongBaoLoi("Vui lòng nhập mật khẩu hiện tại");
+                    return false;
+                }
+
+                // Đổi mật khẩu các lần sau
+                return BLL_DoiMatKhau.ThucHienDoiMatKhau(
+                    _soDienThoai,
+                    txtBoxMatKhauCu.Text,
+                    txtBoxMatKhauMoi.Text,
+                    _loaiTaiKhoan,
+                    false
+                );
+            }
+        }
+
+        private void XuLyKetQuaDoiMatKhau(bool ketQua)
+        {
+            if (ketQua)
+            {
+                DaDoiMatKhau = true;
+                HienThiThongBaoThanhCong("Đổi mật khẩu thành công!");
+                Close();
+            }
+            else
+            {
+                HienThiThongBaoLoi("Đổi mật khẩu thất bại. Vui lòng thử lại.");
             }
         }
 
@@ -155,15 +158,11 @@ namespace GUI
         {
             try
             {
-                // Kiểm tra xem đây có phải là lần đầu đăng nhập 
-                // hoặc mật khẩu có phải là mật khẩu mặc định không
                 return BLL_DoiMatKhau.KiemTraMatKhauMacDinh(_soDienThoai, _loaiTaiKhoan);
             }
             catch (Exception ex)
             {
-                // Xử lý ngoại lệ nếu có
-                MessageBox.Show($"Lỗi kiểm tra mật khẩu: {ex.Message}",
-                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                HienThiThongBaoLoi($"Lỗi kiểm tra mật khẩu: {ex.Message}");
                 return false;
             }
         }
@@ -171,13 +170,26 @@ namespace GUI
         // Ghi đè phương thức đóng form để kiểm soát việc đóng form
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            // Nếu là bắt buộc đổi mật khẩu nhưng chưa đổi
             if (_batBuocDoiMK && !DaDoiMatKhau)
             {
                 e.Cancel = true;
-                MessageBox.Show("Bạn phải đổi mật khẩu để sử dụng hệ thống!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                HienThiThongBaoLoi("Bạn phải đổi mật khẩu để sử dụng hệ thống!");
             }
             base.OnFormClosing(e);
+        }
+
+        //private void txtBoxMatKhauMoi_TextChanged(object sender, EventArgs e)
+        //{
+        //    KiemTraMatKhau(txtBoxMatKhauMoi.Text);
+        //}
+        // Các phương thức hỗ trợ hiển thị thông báo
+        private void HienThiThongBaoLoi(string thongBao)
+        {
+            MessageBox.Show(thongBao, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        private void HienThiThongBaoThanhCong(string thongBao)
+        {
+            MessageBox.Show(thongBao, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

@@ -53,7 +53,6 @@ namespace QuanLyPhongKham
                 cboGioiTinhBN.Focus();
                 return;
             }
-
             try
             {
                 var patient = new DTO_QuanLyBenhNhan

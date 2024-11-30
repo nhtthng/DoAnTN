@@ -44,9 +44,9 @@
             label1.AutoSize = true;
             label1.Location = new Point(12, 60);
             label1.Name = "label1";
-            label1.Size = new Size(129, 20);
+            label1.Size = new Size(163, 20);
             label1.TabIndex = 0;
-            label1.Text = "Nhập mật khẩu cũ";
+            label1.Text = "Nhập mật khẩu hiện tại";
             // 
             // txtBoxMatKhauCu
             // 

@@ -84,10 +84,10 @@
             // DGVBN
             // 
             DGVBN.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            DGVBN.Location = new Point(6, 295);
+            DGVBN.Location = new Point(-4, 312);
             DGVBN.Name = "DGVBN";
             DGVBN.RowHeadersWidth = 51;
-            DGVBN.Size = new Size(1184, 267);
+            DGVBN.Size = new Size(1194, 267);
             DGVBN.TabIndex = 3;
             DGVBN.CellClick += DGVBN_CellClick;
             // 
@@ -201,7 +201,7 @@
             // 
             // txtBoxBHYTBN
             // 
-            txtBoxBHYTBN.Location = new Point(856, 76);
+            txtBoxBHYTBN.Location = new Point(873, 76);
             txtBoxBHYTBN.Name = "txtBoxBHYTBN";
             txtBoxBHYTBN.Size = new Size(226, 27);
             txtBoxBHYTBN.TabIndex = 5;
@@ -217,14 +217,14 @@
             // 
             // txtBoxEmaiBN
             // 
-            txtBoxEmaiBN.Location = new Point(856, 129);
+            txtBoxEmaiBN.Location = new Point(873, 129);
             txtBoxEmaiBN.Name = "txtBoxEmaiBN";
             txtBoxEmaiBN.Size = new Size(226, 27);
             txtBoxEmaiBN.TabIndex = 5;
             // 
             // btnThemBN
             // 
-            btnThemBN.Location = new Point(59, 244);
+            btnThemBN.Location = new Point(59, 268);
             btnThemBN.Name = "btnThemBN";
             btnThemBN.Size = new Size(94, 29);
             btnThemBN.TabIndex = 2;
@@ -234,7 +234,7 @@
             // 
             // btnXoaBN
             // 
-            btnXoaBN.Location = new Point(353, 244);
+            btnXoaBN.Location = new Point(353, 268);
             btnXoaBN.Name = "btnXoaBN";
             btnXoaBN.Size = new Size(94, 29);
             btnXoaBN.TabIndex = 2;
@@ -244,7 +244,7 @@
             // 
             // btnSuaBN
             // 
-            btnSuaBN.Location = new Point(740, 244);
+            btnSuaBN.Location = new Point(742, 268);
             btnSuaBN.Name = "btnSuaBN";
             btnSuaBN.Size = new Size(94, 29);
             btnSuaBN.TabIndex = 2;
@@ -254,7 +254,7 @@
             // 
             // btnReset
             // 
-            btnReset.Location = new Point(1045, 244);
+            btnReset.Location = new Point(1047, 268);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(94, 29);
             btnReset.TabIndex = 9;
@@ -266,7 +266,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1192, 565);
+            ClientSize = new Size(1192, 581);
             Controls.Add(btnReset);
             Controls.Add(cboGioiTinhBN);
             Controls.Add(DTPNgaySinhBN);

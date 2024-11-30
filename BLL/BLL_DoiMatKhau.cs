@@ -30,69 +30,67 @@ namespace BLL
             // Validate mật khẩu mới
             if (!ValidateMatKhau(matKhauMoi))
             {
-                throw new Exception("Mật khẩu không đáp ứng yêu cầu an toàn");
+                throw new Exception("Mật khẩu không đáp ứng các yêu cầu an toàn");
             }
 
-            // Nếu là lần đầu đăng nhập
+            // Xử lý logic cho lần đầu đăng nhập
             if (laLanDauDangNhap)
             {
-                // Kiểm tra mật khẩu mặc định
-                if (!_DoiMatKhauDAL.KiemTraMatKhauMacDinh(soDienThoai, loaiTaiKhoan))
+                // Kiểm tra xem có phải mật khẩu mặc định không
+                if (!KiemTraMatKhauMacDinh(soDienThoai, loaiTaiKhoan))
                 {
-                    throw new Exception("Không được phép đổi mật khẩu");
+                    throw new Exception("Không phải lần đầu đăng nhập");
                 }
 
-                // Mã hóa mật khẩu mới
-                string matKhauMoiMaHoa = PasswordHasher.HashPassword(matKhauMoi);
-
-                // Đổi mật khẩu với mật khẩu mặc định
-                return _DoiMatKhauDAL.ThucHienDoiMatKhau(
-                    soDienThoai,
-                    "1",  // Mật khẩu mặc định 
-                    matKhauMoiMaHoa,
-                    loaiTaiKhoan
-                );
+                // Đổi mật khẩu lần đầu không cần kiểm tra mật khẩu cũ
+                return _DoiMatKhauDAL.DoiMatKhauLanDau(soDienThoai, matKhauMoi, loaiTaiKhoan);
             }
-            // Các lần đăng nhập sau
             else
             {
+                // Các lần đổi mật khẩu sau
                 // Kiểm tra mật khẩu cũ
-                if (!_DoiMatKhauDAL.KiemTraMatKhauCu(soDienThoai, matKhauCu, loaiTaiKhoan))
+                if (string.IsNullOrWhiteSpace(matKhauCu))
                 {
-                    throw new Exception("Mật khẩu cũ không chính xác");
+                    throw new Exception("Vui lòng nhập mật khẩu hiện tại");
                 }
 
-                // Mã hóa mật khẩu mới
-                string matKhauMoiMaHoa = PasswordHasher.HashPassword(matKhauMoi);
-
-                // Đổi mật khẩu
-                return _DoiMatKhauDAL.ThucHienDoiMatKhau(
+                return _DoiMatKhauDAL.DoiMatKhauThuong(
                     soDienThoai,
                     matKhauCu,
-                    matKhauMoiMaHoa,
+                    matKhauMoi,
                     loaiTaiKhoan
                 );
             }
         }
+
         // Validate mật khẩu
-        private bool ValidateMatKhau(string matKhau)
+        public bool ValidateMatKhau(string matKhau)
         {
             // Kiểm tra độ dài
-            if (matKhau.Length < 6)
+            if (matKhau.Length < 8 || matKhau.Length > 100)
             {
-                return false;
+                throw new Exception("Mật khẩu phải từ 8 đến 100 ký tự");
             }
 
-            // Kiểm tra có chứa ký tự hoa
-            bool coKyTuHoa = matKhau.Any(char.IsUpper);
-
-            // Kiểm tra có chứa ký tự số
-            bool coKyTuSo = matKhau.Any(char.IsDigit);
-
-            // Kiểm tra có ký tự đặc biệt
+            // Kiểm tra các điều kiện
             bool coKyTuDacBiet = matKhau.Any(c => !char.IsLetterOrDigit(c));
+            bool coChữHoa = matKhau.Any(char.IsUpper);
+            bool coChữThường = matKhau.Any(char.IsLower);
+            bool coSo = matKhau.Any(char.IsDigit);
 
-            return coKyTuHoa && coKyTuSo && coKyTuDacBiet;
+            if (!coKyTuDacBiet)
+                throw new Exception("Mật khẩu phải chứa ít nhất một ký tự đặc biệt");
+
+            if (!coChữHoa)
+                throw new Exception("Mật khẩu phải chứa ít nhất một chữ hoa");
+
+            if (!coChữThường)
+                throw new Exception("Mật khẩu phải chứa ít nhất một chữ thường");
+
+            if (!coSo)
+                throw new Exception("Mật khẩu phải chứa ít nhất một chữ số");
+
+            return true;
         }
         // Phương thức kiểm tra mật khẩu mặc định
         public bool KiemTraMatKhauMacDinh(string soDienThoai, string loaiTaiKhoan)

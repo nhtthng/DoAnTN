@@ -9,7 +9,9 @@ namespace DAL
 {
     public class DAL_DoiMatKhau
     {
-        public bool ThucHienDoiMatKhau(string soDienThoai, string matKhauCu, string matKhauMoi, string loaiTaiKhoan)
+
+        // Đổi mật khẩu lần đầu
+        public bool DoiMatKhauLanDau(string soDienThoai, string matKhauMoi, string loaiTaiKhoan)
         {
             SqlConnection conn = null;
             SqlTransaction transaction = null;
@@ -21,36 +23,146 @@ namespace DAL
                 transaction = conn.BeginTransaction();
 
                 string query = loaiTaiKhoan == "NhanVien"
-                    ? "UPDATE NhanVien SET MatKhau = @MatKhauMoi WHERE SoDT = @SoDienThoai AND MatKhau = @MatKhauCu"
-                    : "UPDATE BacSi SET MatKhau = @MatKhauMoi WHERE SoDT = @SoDienThoai AND MatKhau = @MatKhauCu";
+                    ? "UPDATE NhanVien SET MatKhau = @MatKhauMoi WHERE SoDT = @SoDienThoai"
+                    : "UPDATE BacSi SET MatKhau = @MatKhauMoi WHERE SoDT = @SoDienThoai";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn, transaction))
                 {
-                    // Thêm các tham số
+                    // Mã hóa mật khẩu mới
+                    string matKhauMoiMaHoa = PasswordHasher.HashPassword(matKhauMoi);
+
+                    cmd.Parameters.AddWithValue("@MatKhauMoi", matKhauMoiMaHoa);
                     cmd.Parameters.AddWithValue("@SoDienThoai", soDienThoai);
-                    cmd.Parameters.AddWithValue("@MatKhauCu", matKhauCu);
-                    cmd.Parameters.AddWithValue("@MatKhauMoi", matKhauMoi);
 
-                    // Thực thi và kiểm tra số dòng bị ảnh hưởng
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                    int ketQua = cmd.ExecuteNonQuery();
 
-                    // Nếu không có dòng nào bị ảnh hưởng, nghĩa là mật khẩu cũ không đúng
-                    if (rowsAffected == 0)
-                    {
-                        transaction.Rollback();
-                        return false;
-                    }
-
-                    // Commit giao dịch
                     transaction.Commit();
-                    return true;
+                    return ketQua > 0;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                // Rollback giao dịch nếu có lỗi
                 transaction?.Rollback();
-                throw new Exception($"Lỗi đổi mật khẩu: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                SqlConnectionData.CloseConnection(conn);
+            }
+        }
+        // Đổi mật khẩu các lần sau
+        public bool DoiMatKhauThuong(string soDienThoai, string matKhauCu, string matKhauMoi, string loaiTaiKhoan)
+        {
+            SqlConnection conn = null;
+            SqlTransaction transaction = null;
+
+            try
+            {
+                conn = SqlConnectionData.GetConnection();
+                conn.Open();
+                transaction = conn.BeginTransaction();
+
+                // Kiểm tra mật khẩu cũ
+                if (!KiemTraMatKhauHienTai(soDienThoai, matKhauCu, loaiTaiKhoan))
+                {
+                    throw new Exception("Mật khẩu hiện tại không chính xác");
+                }
+
+                string query = loaiTaiKhoan == "NhanVien"
+                    ? "UPDATE NhanVien SET MatKhau = @MatKhauMoi WHERE SoDT = @SoDienThoai"
+                    : "UPDATE BacSi SET MatKhau = @MatKhauMoi WHERE SoDT = @SoDienThoai";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn, transaction))
+                {
+                    // Mã hóa mật khẩu mới
+                    string matKhauMoiMaHoa = PasswordHasher.HashPassword(matKhauMoi);
+
+                    cmd.Parameters.AddWithValue("@MatKhauMoi", matKhauMoiMaHoa);
+                    cmd.Parameters.AddWithValue("@SoDienThoai", soDienThoai);
+
+                    int ketQua = cmd.ExecuteNonQuery();
+
+                    transaction.Commit();
+                    return ketQua > 0;
+                }
+            }
+            catch
+            {
+                transaction?.Rollback();
+                return false;
+            }
+            finally
+            {
+                SqlConnectionData.CloseConnection(conn);
+            }
+        }
+
+        // Kiểm tra mật khẩu hiện tại
+        public bool KiemTraMatKhauHienTai(string soDienThoai, string matKhauHienTai, string loaiTaiKhoan)
+        {
+            SqlConnection conn = null;
+            try
+            {
+                conn = SqlConnectionData.GetConnection();
+                conn.Open();
+
+                string query = loaiTaiKhoan == "NhanVien"
+                    ? "SELECT MatKhau FROM NhanVien WHERE SoDT = @SoDienThoai"
+                    : "SELECT MatKhau FROM BacSi WHERE SoDT = @SoDienThoai";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SoDienThoai", soDienThoai);
+
+                    object matKhauLuuTru = cmd.ExecuteScalar();
+
+                    if (matKhauLuuTru == null)
+                        return false;
+
+                    // So sánh mật khẩu đã hash
+                    return PasswordHasher.VerifyPassword(matKhauHienTai, matKhauLuuTru.ToString());
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                SqlConnectionData.CloseConnection(conn);
+            }
+        }
+
+        public bool ThucHienDoiMatKhau(string soDienThoai, string matKhauHienTai, string matKhauMoiMaHoa, string loaiTaiKhoan)
+        {
+            SqlConnection conn = null;
+            SqlTransaction transaction = null;
+
+            try
+            {
+                conn = SqlConnectionData.GetConnection();
+                conn.Open();
+                transaction = conn.BeginTransaction();
+
+                string query = loaiTaiKhoan == "NhanVien"
+                    ? "UPDATE NhanVien SET MatKhau = @MatKhauMoi WHERE SoDT = @SoDienThoai"
+                    : "UPDATE BacSi SET MatKhau = @MatKhauMoi WHERE SoDT = @SoDienThoai";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn, transaction))
+                {
+                    cmd.Parameters.AddWithValue("@MatKhauMoi", matKhauMoiMaHoa);
+                    cmd.Parameters.AddWithValue("@SoDienThoai", soDienThoai);
+
+                    int ketQua = cmd.ExecuteNonQuery();
+
+                    transaction.Commit();
+                    return ketQua > 0;
+                }
+            }
+            catch (Exception)
+            {
+                transaction?.Rollback();
+                return false;
             }
             finally
             {
@@ -97,7 +209,6 @@ namespace DAL
                 conn = SqlConnectionData.GetConnection();
                 conn.Open();
 
-                // Truy vấn để lấy mật khẩu hiện tại
                 string query = loaiTaiKhoan == "NhanVien"
                     ? "SELECT MatKhau FROM NhanVien WHERE SoDT = @SoDienThoai"
                     : "SELECT MatKhau FROM BacSi WHERE SoDT = @SoDienThoai";
@@ -106,36 +217,21 @@ namespace DAL
                 {
                     cmd.Parameters.AddWithValue("@SoDienThoai", soDienThoai);
 
-                    object result = cmd.ExecuteScalar();
+                    object matKhau = cmd.ExecuteScalar();
 
-                    if (result != null)
-                    {
-                        string matKhauHienTai = result.ToString();
-
-                        // Danh sách mật khẩu mặc định 
-                        string[] matKhauMacDinh = new string[]
-                        {
-                        "123456",           // Mật khẩu gốc
-                        "12345678",
-                        "password",
-                         "1"   // Thêm các mật khẩu mặc định khác nếu cần
-                        };
-
-                        // Kiểm tra mật khẩu hiện tại có nằm trong danh sách mật khẩu mặc định không
-                        return matKhauMacDinh.Contains(matKhauHienTai);
-                    }
+                    // So sánh với mật khẩu mặc định (ví dụ: mã hóa của "1")
+                    return matKhau != null &&
+                           matKhau.ToString() == PasswordHasher.HashPassword("1");
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception($"Lỗi kiểm tra mật khẩu mặc định: {ex.Message}");
+                return false;
             }
             finally
             {
                 SqlConnectionData.CloseConnection(conn);
             }
-
-            return false;
         }
     }
 }
