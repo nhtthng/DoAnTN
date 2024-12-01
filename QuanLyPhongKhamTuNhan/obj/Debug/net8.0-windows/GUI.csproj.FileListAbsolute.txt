@@ -94,3 +94,4 @@ D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\SixLabors.Fonts.dl
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\System.IO.Packaging.dll
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.BaoCao.resources
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.DoiMatKhau.resources
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.TiepNhan.resources

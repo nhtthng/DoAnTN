@@ -1,3 +1,4 @@
+using BLL;
 using GUI;
 using QuanLyPhongKham;
 
@@ -12,7 +13,7 @@ namespace QuanLyPhongKhamTuNhan
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            Application.Run(new DangNhap());
+            Application.Run(new TiepNhan());
         }
     }
 }

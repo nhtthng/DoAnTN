@@ -75,6 +75,7 @@
             btnTim.TabIndex = 2;
             btnTim.Text = "Tìm";
             btnTim.UseVisualStyleBackColor = true;
+            btnTim.Click += btnTim_Click;
             // 
             // label2
             // 
@@ -166,6 +167,7 @@
             btnThem.TabIndex = 9;
             btnThem.Text = "Thêm";
             btnThem.UseVisualStyleBackColor = true;
+            btnThem.Click += btnThem_Click;
             // 
             // btnXoa
             // 
@@ -175,6 +177,7 @@
             btnXoa.TabIndex = 9;
             btnXoa.Text = "Xóa";
             btnXoa.UseVisualStyleBackColor = true;
+            btnXoa.Click += btnXoa_Click;
             // 
             // btnSua
             // 
@@ -184,6 +187,7 @@
             btnSua.TabIndex = 9;
             btnSua.Text = "Sửa";
             btnSua.UseVisualStyleBackColor = true;
+            btnSua.Click += btnSua_Click;
             // 
             // btnReset
             // 
@@ -193,6 +197,7 @@
             btnReset.TabIndex = 9;
             btnReset.Text = "Reset";
             btnReset.UseVisualStyleBackColor = true;
+            btnReset.Click += btnReset_Click;
             // 
             // cboMaBenhNhan
             // 
