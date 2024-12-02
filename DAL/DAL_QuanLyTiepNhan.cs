@@ -134,5 +134,40 @@ namespace DAL
 
             return danhSachTiepNhan;
         }
+        public List<DTO_QuanLyTiepNhan> GetAllTiepNhanByNgay(DateTime ngayTiepNhan)
+        {
+            List<DTO_QuanLyTiepNhan> danhSachTiepNhan = new List<DTO_QuanLyTiepNhan>();
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                conn.Open();
+                string query = @"SELECT * FROM TiepNhanBenhNhan
+                             WHERE CAST(NgayTiepNhan AS DATE) = @NgayTiepNhan";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@NgayTiepNhan", ngayTiepNhan.Date);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            danhSachTiepNhan.Add(new DTO_QuanLyTiepNhan
+                            {
+                                MaTiepNhan = Convert.ToInt32(reader["MaTiepNhan"]),
+                                MaBenhNhan = Convert.ToInt32(reader["MaBenhNhan"]),
+                                NgayTiepNhan = Convert.ToDateTime(reader["NgayTiepNhan"]),
+                                GioTiepNhan = TimeSpan.Parse(reader["GioTiepNhan"].ToString()),
+                                TrangThai = reader["TrangThai"].ToString(),
+                                TrieuChung = reader["TrieuChung"].ToString(),
+                                MaPK = Convert.ToInt32(reader["MaPK"])
+                            });
+                        }
+                    }
+                }
+            }
+
+            return danhSachTiepNhan;
+        }
     }
 }

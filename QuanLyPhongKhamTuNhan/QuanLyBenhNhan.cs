@@ -1,5 +1,6 @@
 ﻿using BLL;
 using DTO;
+using GUI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,6 +21,68 @@ namespace QuanLyPhongKham
             this.StartPosition = FormStartPosition.CenterScreen;
             DGVBN.CellClick += DGVBN_CellClick;
             LoadAllPatients();
+            ContextMenuStrip contextMenu = new ContextMenuStrip();
+
+            ToolStripMenuItem receiveItem = new ToolStripMenuItem("Tiếp nhận");
+            receiveItem.Click += ReceiveItem_Click;
+            contextMenu.Items.Add(receiveItem);
+
+            ToolStripMenuItem invoiceItem = new ToolStripMenuItem("Hóa đơn");
+            invoiceItem.Click += InvoiceItem_Click;
+            contextMenu.Items.Add(invoiceItem);
+
+            ToolStripMenuItem appointmentItem = new ToolStripMenuItem("Lịch hẹn");
+            appointmentItem.Click += AppointmentItem_Click;
+            contextMenu.Items.Add(appointmentItem);
+
+            DGVBN.ContextMenuStrip = contextMenu;
+        }
+        // Xử lý sự kiện click trên các menu item
+        private void ReceiveItem_Click(object sender, EventArgs e)
+        {
+            if (DGVBN.SelectedRows.Count > 0)
+            {
+                int patientId = int.Parse(DGVBN.SelectedRows[0].Cells["MaBN"].Value.ToString());
+                OpenReceiveForm(patientId);
+            }
+        }
+        private void InvoiceItem_Click(object sender, EventArgs e)
+        {
+            if (DGVBN.SelectedRows.Count > 0)
+            {
+                int patientId = int.Parse(DGVBN.SelectedRows[0].Cells["MaBN"].Value.ToString());
+                OpenInvoiceForm(patientId);
+            }
+        }
+
+        private void AppointmentItem_Click(object sender, EventArgs e)
+        {
+            if (DGVBN.SelectedRows.Count > 0)
+            {
+                int patientId = int.Parse(DGVBN.SelectedRows[0].Cells["MaBN"].Value.ToString());
+                OpenAppointmentForm(patientId);
+            }
+        }
+        // Mở các form tương ứng và truyền mã bệnh nhân vào ComboBox
+        private void OpenReceiveForm(int patientId)
+        {
+            TiepNhan receiveForm = new TiepNhan();
+            receiveForm.SetPatientId(patientId);
+            receiveForm.Show();
+        }
+
+        private void OpenInvoiceForm(int patientId)
+        {
+            HoaDon invoiceForm = new HoaDon();
+            invoiceForm.SetPatientId(patientId);
+            invoiceForm.Show();
+        }
+
+        private void OpenAppointmentForm(int patientId)
+        {
+            QuanLyLichHen appointmentForm = new QuanLyLichHen();
+            appointmentForm.SetPatientId(patientId);
+            appointmentForm.Show();
         }
         private void LoadAllPatients()
         {

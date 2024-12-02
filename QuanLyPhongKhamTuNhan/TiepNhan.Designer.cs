@@ -98,9 +98,9 @@
             label3.AutoSize = true;
             label3.Location = new Point(565, 110);
             label3.Name = "label3";
-            label3.Size = new Size(103, 20);
+            label3.Size = new Size(81, 20);
             label3.TabIndex = 5;
-            label3.Text = "Mã bệnh nhân";
+            label3.Text = "Bệnh Nhân";
             // 
             // label4
             // 

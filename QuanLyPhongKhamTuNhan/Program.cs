@@ -13,7 +13,7 @@ namespace QuanLyPhongKhamTuNhan
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            Application.Run(new TiepNhan());
+            Application.Run(new QuanLyBenhNhan());
         }
     }
 }

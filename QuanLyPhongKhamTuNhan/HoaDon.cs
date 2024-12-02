@@ -35,7 +35,10 @@ namespace GUI
             // Chọn mặc định
             cboGiamGia.SelectedIndex = 0;
         }
-
+        public void SetPatientId(int patientId)
+        {
+            cboBenhNhan.SelectedValue = patientId;
+        }
         private void LoadDanhSachHoaDon()
         {
             try

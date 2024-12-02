@@ -27,6 +27,12 @@ namespace GUI
             DGVLichHen.CellClick += DGVLichHen_CellClick;
             errorProviderLH.BlinkStyle = ErrorBlinkStyle.NeverBlink;
         }
+
+        public void SetPatientId(int patientId)
+        {
+            cboMaBN.SelectedValue = patientId;
+        }
+
         private void LoadComboBoxBacSi()
         {
             var bacSiList = dataHelper.GetBacSiList();

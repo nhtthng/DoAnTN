@@ -12,8 +12,9 @@ namespace BLL
     public class BLL_KhamBenh
     {
         private DAL_KhamBenh dalKhamBenh = new DAL_KhamBenh();
-
-
+        private DAL_QuanLyLichHen dalLichHen = new DAL_QuanLyLichHen();
+        private DAL_QuanLyBenhNhan dalBenhNhan = new DAL_QuanLyBenhNhan();
+        private DAL_QuanLyTiepNhan dalTiepNhan = new DAL_QuanLyTiepNhan();
         // Validate thông tin khám bệnh
         private void ValidateKhamBenh(DTO_KhamBenh khamBenh)
         {
@@ -178,5 +179,64 @@ namespace BLL
                 throw;
             }
         }
+        public List<object> GetDanhSachBenhNhanTrongNgay(DateTime ngayKham)
+        {
+            // Lấy danh sách bệnh nhân tiếp nhận trong ngày
+            var danhSachTiepNhan = dalTiepNhan.GetAllTiepNhanByNgay(ngayKham);
+
+            // Lấy danh sách lịch hẹn trong ngày
+            var danhSachLichHen = dalLichHen.GetLichHenByNgay(ngayKham);
+
+            // Lấy thông tin chi tiết bệnh nhân
+            var danhSachBenhNhan = dalBenhNhan.GetAllPatients();
+
+            // Tạo danh sách kết quả
+            var danhSachKetQua = new List<object>();
+
+            // Xử lý bệnh nhân từ lịch hẹn
+            var benhNhanLichHen = danhSachLichHen.Select(lh =>
+            {
+                var benhNhan = danhSachBenhNhan.FirstOrDefault(bn => bn.MaBN == lh.MaBN);
+                return new
+                {
+                    MaBN = lh.MaBN,
+                    HoTenBN = benhNhan?.HoTenBN ?? "Không xác định",
+                    NgaySinh = benhNhan?.NgaySinh ?? DateTime.MinValue,
+                    SoDT = benhNhan?.SoDT ?? "Không có",
+                    TrieuChung = "Lịch hẹn khám",
+                    NgayTiepNhan = lh.NgayHen,
+                    GioTiepNhan = lh.ThoiGianHen.TimeOfDay
+                };
+            });
+
+            // Xử lý bệnh nhân từ tiếp nhận
+            var benhNhanTiepNhan = danhSachTiepNhan.Select(tn =>
+            {
+                var benhNhan = danhSachBenhNhan.FirstOrDefault(bn => bn.MaBN == tn.MaBenhNhan);
+                return new
+                {
+                    MaBN = tn.MaBenhNhan,
+                    HoTenBN = benhNhan?.HoTenBN ?? "Không xác định",
+                    NgaySinh = benhNhan?.NgaySinh ?? DateTime.MinValue,
+                    SoDT = benhNhan?.SoDT ?? "Không có",
+                    TrieuChung = tn.TrieuChung,
+                    NgayTiepNhan = tn.NgayTiepNhan,
+                    GioTiepNhan = tn.GioTiepNhan
+                };
+            });
+
+            // Kết hợp và trả về danh sách
+            danhSachKetQua.AddRange(benhNhanLichHen);
+            danhSachKetQua.AddRange(benhNhanTiepNhan);
+
+            // Loại bỏ các bản ghi trùng lặp nếu cần
+            danhSachKetQua = danhSachKetQua
+                .GroupBy(x => x.GetType().GetProperty("MaBN").GetValue(x))
+                .Select(g => g.First())
+                .ToList();
+
+            return danhSachKetQua;
+        }
+
     }
 }

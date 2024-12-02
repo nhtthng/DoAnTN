@@ -16,6 +16,7 @@ namespace GUI
     public partial class KhamBenh : Form
     {
         private BLL_KhamBenh bllKhamBenh = new BLL_KhamBenh();
+        private List<object> _danhSachBenhNhanTrongNgay;
         public KhamBenh()
         {
             InitializeComponent();
@@ -43,6 +44,104 @@ namespace GUI
 
             // Đặt giá trị mặc định là giờ hiện tại
             DTPNgayKham.Value = DateTime.Now;
+            ConfigureDataGridView();
+            LoadDanhSachBenhNhanTrongNgay();
+        }
+
+        private void ConfigureDataGridView()
+        {
+            // Vô hiệu hóa tự động sinh cột
+            DGVDSBenhNhanChuaKham.AutoGenerateColumns = false;
+
+            // Tạo các cột cho DataGridView
+            var columns = new[]
+            {
+            new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "MaBN",
+                HeaderText = "Mã BN",
+                Name = "colMaBN",
+                Width = 80
+            },
+            new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "HoTenBN",
+                HeaderText = "Họ Tên",
+                Name = "colHoTenBN",
+                Width = 150
+            },
+            new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "NgaySinh",
+                HeaderText = "Ngày Sinh",
+                Name = "colNgaySinh",
+                Width = 100,
+                DefaultCellStyle = { Format = "dd/MM/yyyy" }
+            },
+            new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "SoDT",
+                HeaderText = "Số ĐT",
+                Name = "colSoDT",
+                Width = 100
+            },
+            new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "TrieuChung",
+                HeaderText = "Triệu Chứng",
+                Name = "colTrieuChung",
+                Width = 200
+            },
+            new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "NgayTiepNhan",
+                HeaderText = "Ngày Tiếp Nhận",
+                Name = "colNgayTiepNhan",
+                Width = 120,
+                DefaultCellStyle = { Format = "dd/MM/yyyy" }
+            }
+        };
+
+            // Thêm các cột vào DataGridView
+            DGVDSBenhNhanChuaKham.Columns.AddRange(columns);
+        }
+        private void LoadDanhSachBenhNhanTrongNgay()
+        {
+            try
+            {
+                // Lấy danh sách bệnh nhân trong ngày
+                _danhSachBenhNhanTrongNgay = bllKhamBenh.GetDanhSachBenhNhanTrongNgay(DateTime.Today);
+
+                // Kiểm tra và hiển thị dữ liệu
+                if (_danhSachBenhNhanTrongNgay != null && _danhSachBenhNhanTrongNgay.Count > 0)
+                {
+                    // Liên kết dữ liệu với DataGridView
+                    DGVDSBenhNhanChuaKham.DataSource = _danhSachBenhNhanTrongNgay;
+
+                    // Cập nhật label tổng số bệnh nhân
+                    //lblTongSoBenhNhan.Text = $"Tổng số bệnh nhân: {_danhSachBenhNhanTrongNgay.Count}";
+                }
+                else
+                {
+                    // Thông báo không có bệnh nhân
+                    MessageBox.Show(
+                        "Không có bệnh nhân trong ngày hôm nay.",
+                        "Thông Báo",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ
+                MessageBox.Show(
+                    $"Lỗi tải danh sách bệnh nhân: {ex.Message}",
+                    "Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
         private void LoadKhamBenhData()
         {
@@ -393,6 +492,20 @@ namespace GUI
             );
 
             DTPNgayKham.Value = selectedDateTime;
+        }
+
+        private void DGVDSBenhNhanChuaKham_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = DGVDSBenhNhanChuaKham.Rows[e.RowIndex];
+                //txtBoxLSKB.Text = row.Cells["MaLSKB"].Value.ToString();
+                //cboMaBacSi.SelectedValue = row.Cells["MaBS"].Value;
+                cboMaBenhNhan.SelectedValue = row.Cells["MaBN"].Value;
+                //DTPNgayKham.Value = (DateTime)row.Cells["NgayKham"].Value;
+                //txtBoxChuanDoan.Text = row.Cells["ChuanDoan"].Value.ToString();
+                //cboMaPK.SelectedValue = row.Cells["MaPK"].Value;
+            }
         }
     }
 }

@@ -228,5 +228,39 @@ namespace DAL
             }
             return null;
         }
+        public List<DTO_LichHen> GetLichHenByNgay(DateTime ngayHen)
+        {
+            List<DTO_LichHen> danhSachLichHen = new List<DTO_LichHen>();
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                conn.Open();
+                string query = @"SELECT * FROM LichHen 
+                             WHERE CAST(NgayHen AS DATE) = @NgayHen";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@NgayHen", ngayHen.Date);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            danhSachLichHen.Add(new DTO_LichHen
+                            {
+                                MaLH = Convert.ToInt32(reader["MaLH"]),
+                                MaBS = Convert.ToInt32(reader["MaBS"]),
+                                MaBN = Convert.ToInt32(reader["MaBN"]),
+                                ThoiGianHen = Convert.ToDateTime(reader["ThoiGianHen"]),
+                                NgayHen = Convert.ToDateTime(reader["NgayHen"]),
+                                TinhTrang = reader["TinhTrang"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+
+            return danhSachLichHen;
+        }
     }
 }

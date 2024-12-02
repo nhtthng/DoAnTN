@@ -21,13 +21,21 @@ namespace GUI
             InitializeComponent();
             DataHelper dbhelper = new DataHelper();
             List<DTO_QuanLyBenhNhan> benhNhanList = dbhelper.GetBenhNhanList();
+            cboMaBenhNhan.DataSource = benhNhanList;
             cboMaBenhNhan.DisplayMember = "HoTenBN";
             cboMaBenhNhan.ValueMember = "MaBN";
             List<DTO_QuanLyPhongKham> phongKhamList = dbhelper.GetPhongKhamList();
+            cboPhongKham.DataSource = phongKhamList;
             cboPhongKham.DisplayMember = "TenPK";
             cboPhongKham.ValueMember = "MaPK";
         }
         // Hiển thị danh sách tất cả các bệnh nhân đã tiếp nhận
+
+        public void SetPatientId(int patientId)
+        {
+            cboMaBenhNhan.SelectedValue = patientId;
+        }
+
         private void LoadAllTiepNhan()
         {
             try
