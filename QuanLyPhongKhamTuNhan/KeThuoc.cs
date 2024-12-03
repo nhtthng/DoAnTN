@@ -24,7 +24,10 @@ namespace GUI
 
 
         }
-
+        public void SetPatientId(string patientId)
+        {
+            txtMaBenhNhan.Text = patientId;
+        }
         private void label9_Click(object sender, EventArgs e)
         {
 

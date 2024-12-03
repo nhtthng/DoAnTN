@@ -40,6 +40,12 @@ namespace GUI
             cboMaBacSi.DisplayMember = "TenBS";
             cboMaBacSi.ValueMember = "MaBS";
         }
+
+        public void SetPatientId(int patientId)
+        {
+            cboBenhNhan.SelectedValue = patientId;
+        }
+
         // Load danh sách Chi Tiết Sử Dụng Dịch Vụ
         private void LoadDanhSachChiTietSuDungDV()
         {

@@ -37,6 +37,12 @@ namespace QuanLyPhongKham
 
             DGVBN.ContextMenuStrip = contextMenu;
         }
+
+        public void SetPatientId(string patientId)
+        {
+            txtboxMaBenhNhan.Text = patientId;
+        }
+
         // Xử lý sự kiện click trên các menu item
         private void ReceiveItem_Click(object sender, EventArgs e)
         {
