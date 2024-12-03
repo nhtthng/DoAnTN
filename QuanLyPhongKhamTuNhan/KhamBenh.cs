@@ -9,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -528,52 +529,36 @@ namespace GUI
 
         private void btnTimSDTBN_Click(object sender, EventArgs e)
         {
-            try
+            // Lấy số điện thoại từ TextBox
+            string soDienThoai = txtBoxSDTBN.Text.Trim();
+
+            // Kiểm tra số điện thoại
+            if (string.IsNullOrWhiteSpace(soDienThoai))
             {
-                // 1. Kiểm tra số điện thoại
-                if (string.IsNullOrWhiteSpace(txtBoxSDTBN.Text))
-                {
-                    errorProviderKB.SetError(txtBoxSDTBN, "Vui lòng nhập số điện thoại.");
-                    return;
-                }
-
-                // 2. Thực hiện tìm kiếm bệnh nhân trong lịch hẹn
-                List<DTO_QuanLyBenhNhan> danhSachBenhNhanLichHen =
-                    bllKhamBenh.SearchBenhNhanInLichHenBySDT(txtBoxSDTBN.Text.Trim());
-
-                if (danhSachBenhNhanLichHen != null && danhSachBenhNhanLichHen.Count > 0)
-                {
-                    // Nạp danh sách bệnh nhân vào ComboBox
-                    cboMaBenhNhan.DataSource = danhSachBenhNhanLichHen;
-                    cboMaBenhNhan.DisplayMember = "HoTenBN";
-                    cboMaBenhNhan.ValueMember = "MaBN";
-
-                    // Hiển thị thông báo số lượng kết quả
-                    MessageBox.Show($"Tìm thấy {danhSachBenhNhanLichHen.Count} bệnh nhân trong lịch hẹn.",
-                        "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Nếu chỉ có 1 kết quả, tự động chọn
-                    if (danhSachBenhNhanLichHen.Count == 1)
-                    {
-                        cboMaBenhNhan.SelectedIndex = 0;
-                    }
-
-                    return;
-                }
-
-                // 3. Nếu không tìm thấy bệnh nhân
-                MessageBox.Show("Không tìm thấy bệnh nhân với số điện thoại này trong lịch hẹn.",
-                    "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Reset ComboBox 
-                ResetBenhNhanComboBox();
+                MessageBox.Show("Vui lòng nhập số điện thoại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
-            catch (Exception ex)
+
+            // Kiểm tra định dạng số điện thoại
+            if (!IsValidPhoneNumber(soDienThoai))
             {
-                // Xử lý ngoại lệ
-                MessageBox.Show($"Lỗi tìm kiếm: {ex.Message}",
-                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Số điện thoại không hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
+
+            // Gọi hàm GetThongTinBenhNhanBySDT() để lấy danh sách bệnh nhân
+            var danhSachBenhNhan = bllKhamBenh.GetThongTinBenhNhanBySDT(DateTime.Today, soDienThoai);
+
+            // Đổ dữ liệu vào DataGridView
+            DGVDSBenhNhanChuaKham.DataSource = danhSachBenhNhan;
+        }
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            // Mẫu Regex để kiểm tra số điện thoại Việt Nam
+            string pattern = @"^0\d{9}$";
+
+            // Sử dụng Regex để kiểm tra số điện thoại
+            return Regex.IsMatch(phoneNumber, pattern);
         }
         // Phương thức reset ComboBox Bệnh Nhân
         private void ResetBenhNhanComboBox()

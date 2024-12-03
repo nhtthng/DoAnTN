@@ -13,45 +13,49 @@ namespace DAL
 
         public List<DTO_QuanLyBenhNhan> GetAllPatients()
         {
-            var patients = new List<DTO_QuanLyBenhNhan>();
+            List<DTO_QuanLyBenhNhan> danhSachBenhNhan = new List<DTO_QuanLyBenhNhan>();
+
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                try
-                {
-                    conn.Open();
+                conn.Open();
+                string query = @"SELECT 
+                            MaBN,
+                            HoTenBN,
+                            NgaySinh,
+                            GioiTinh,
+                            Email,
+                            SoBHYT,
+                            SoDT,
+                            DiaChi
+                        FROM BenhNhan";
 
-                    // Tạo câu lệnh truy vấn
-                    string query = "SELECT * FROM BenhNhan";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        // Thực hiện truy vấn và đọc dữ liệu
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
+                            DTO_QuanLyBenhNhan benhNhan = new DTO_QuanLyBenhNhan
                             {
-                                DTO_QuanLyBenhNhan patient = new DTO_QuanLyBenhNhan
-                                {
-                                    MaBN = Convert.ToInt32(reader["MaBN"]),
-                                    HoTenBN = reader["HoTenBN"].ToString(),
-                                    NgaySinh = Convert.ToDateTime(reader["NgaySinh"]),
-                                    GioiTinh = reader["GioiTinh"].ToString(),
-                                    Email = reader["Email"].ToString(),
-                                    SoBHYT = reader["SoBHYT"].ToString(),
-                                    SoDT = reader["SoDT"].ToString(),
-                                    DiaChi = reader["DiaChi"].ToString(),
-                                };
-                                patients.Add(patient);
-                            }
+                                MaBN = Convert.ToInt32(reader["MaBN"]),
+                                HoTenBN = reader["HoTenBN"].ToString(),
+                                NgaySinh = Convert.ToDateTime(reader["NgaySinh"]),
+                                GioiTinh = reader["GioiTinh"].ToString(),
+                                Email = reader["Email"].ToString(),
+                                SoBHYT = reader["SoBHYT"].ToString(),
+                                SoDT = reader["SoDT"].ToString(),
+                                DiaChi = reader["DiaChi"].ToString()
+                            };
+
+                            danhSachBenhNhan.Add(benhNhan);
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    // Xử lý ngoại lệ nếu cần, ví dụ ghi log lỗi
-                    Console.WriteLine("Lỗi khi load bệnh nhân: " + ex.Message);
-                }
+
+                SqlConnectionData.CloseConnection(conn);
             }
-            return patients;
+
+            return danhSachBenhNhan;
         }
         public bool AddPatient(DTO_QuanLyBenhNhan patient)
         {

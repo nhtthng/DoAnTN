@@ -258,6 +258,9 @@ namespace BLL
             // Lấy thông tin chi tiết bệnh nhân
             var danhSachBenhNhan = dalBenhNhan.GetAllPatients();
 
+            // Lấy danh sách lịch sử khám bệnh
+            var danhSachLichSuKham = dalKhamBenh.GetLichSuKhamBenhByNgay(ngayKham);
+
             // Tạo danh sách kết quả
             var danhSachKetQua = new List<object>();
 
@@ -281,17 +284,22 @@ namespace BLL
             var benhNhanTiepNhan = danhSachTiepNhan.Select(tn =>
             {
                 var benhNhan = danhSachBenhNhan.FirstOrDefault(bn => bn.MaBN == tn.MaBenhNhan);
-                return new
+                var daKham = danhSachLichSuKham.Any(lskb => lskb.MaBN == tn.MaBenhNhan && lskb.NgayKham == ngayKham);
+                if (!daKham)
                 {
-                    MaBN = tn.MaBenhNhan,
-                    HoTenBN = benhNhan?.HoTenBN ?? "Không xác định",
-                    NgaySinh = benhNhan?.NgaySinh ?? DateTime.MinValue,
-                    SoDT = benhNhan?.SoDT ?? "Không có",
-                    TrieuChung = tn.TrieuChung,
-                    NgayTiepNhan = tn.NgayTiepNhan,
-                    GioTiepNhan = tn.GioTiepNhan
-                };
-            });
+                    return new
+                    {
+                        MaBN = tn.MaBenhNhan,
+                        HoTenBN = benhNhan?.HoTenBN ?? "Không xác định",
+                        NgaySinh = benhNhan?.NgaySinh ?? DateTime.MinValue,
+                        SoDT = benhNhan?.SoDT ?? "Không có",
+                        TrieuChung = tn.TrieuChung,
+                        NgayTiepNhan = tn.NgayTiepNhan,
+                        GioTiepNhan = tn.GioTiepNhan
+                    };
+                }
+                return null;
+            }).Where(x => x != null);
 
             // Kết hợp và trả về danh sách
             danhSachKetQua.AddRange(benhNhanLichHen);

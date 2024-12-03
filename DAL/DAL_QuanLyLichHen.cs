@@ -235,8 +235,15 @@ namespace DAL
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
                 conn.Open();
-                string query = @"SELECT * FROM LichHen 
-                             WHERE CAST(NgayHen AS DATE) = @NgayHen";
+                string query = @"SELECT 
+                            MaLH,
+                            MaBS,
+                            MaBN,
+                            ThoiGianHen,
+                            NgayHen,
+                            TinhTrang
+                        FROM LichHen
+                        WHERE CAST(NgayHen AS DATE) = @NgayHen";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -246,7 +253,7 @@ namespace DAL
                     {
                         while (reader.Read())
                         {
-                            danhSachLichHen.Add(new DTO_LichHen
+                            DTO_LichHen lichHen = new DTO_LichHen
                             {
                                 MaLH = Convert.ToInt32(reader["MaLH"]),
                                 MaBS = Convert.ToInt32(reader["MaBS"]),
@@ -254,10 +261,14 @@ namespace DAL
                                 ThoiGianHen = Convert.ToDateTime(reader["ThoiGianHen"]),
                                 NgayHen = Convert.ToDateTime(reader["NgayHen"]),
                                 TinhTrang = reader["TinhTrang"].ToString()
-                            });
+                            };
+
+                            danhSachLichHen.Add(lichHen);
                         }
                     }
                 }
+
+                SqlConnectionData.CloseConnection(conn);
             }
 
             return danhSachLichHen;

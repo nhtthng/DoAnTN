@@ -252,5 +252,51 @@ namespace DAL
         //    }
         //    return exists;
         //}
-    }
+        public List<DTO_KhamBenh> GetLichSuKhamBenhByNgay(DateTime ngayKham)
+        {
+            List<DTO_KhamBenh> danhSachLichSuKham = new List<DTO_KhamBenh>();
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                conn.Open();
+                string query = @"SELECT 
+                            MaLSKB,
+                            MaBS,
+                            MaBN,
+                            NgayKham,
+                            ChuanDoan,
+                            MaPK
+                        FROM LichSuKhamBenh
+                        WHERE CAST(NgayKham AS DATE) = @NgayKham";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@NgayKham", ngayKham.Date);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            DTO_KhamBenh lichSuKham = new DTO_KhamBenh
+                            {
+                                MaLSKB = Convert.ToInt32(reader["MaLSKB"]),
+                                MaBS = Convert.ToInt32(reader["MaBS"]),
+                                MaBN = Convert.ToInt32(reader["MaBN"]),
+                                NgayKham = Convert.ToDateTime(reader["NgayKham"]),
+                                ChuanDoan = reader["ChuanDoan"].ToString(),
+                                MaPK = Convert.ToInt32(reader["MaPK"])
+                            };
+
+                            danhSachLichSuKham.Add(lichSuKham);
+                        }
+                    }
+                }
+
+                SqlConnectionData.CloseConnection(conn);
+            }
+
+            return danhSachLichSuKham;
+        }
+        }
+    
 }

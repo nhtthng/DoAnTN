@@ -142,7 +142,7 @@ namespace DAL
             {
                 conn.Open();
                 string query = @"SELECT * FROM TiepNhanBenhNhan
-                             WHERE CAST(NgayTiepNhan AS DATE) = @NgayTiepNhan";
+                        WHERE CAST(NgayTiepNhan AS DATE) = @NgayTiepNhan";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -165,6 +165,8 @@ namespace DAL
                         }
                     }
                 }
+
+                SqlConnectionData.CloseConnection(conn);
             }
 
             return danhSachTiepNhan;
