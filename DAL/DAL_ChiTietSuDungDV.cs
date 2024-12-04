@@ -13,134 +13,87 @@ namespace DAL
         // Thêm chi tiết sử dụng dịch vụ
         public bool AddChiTietSuDungDV(DTO_ChiTietSuDungDV chiTiet)
         {
-            SqlConnection conn = null;
-            try
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                conn = SqlConnectionData.GetConnection();
                 conn.Open();
-
                 string query = @"
-            INSERT INTO CTSDDV 
-            (MaHD, MaDV, SoLuong, Gia, MaBN, NgayLap,MaBS)
-            VALUES 
-            (@MaHD, @MaDV, @SoLuong, @Gia, @MaBN, @NgayLap,@MaBS)";
+                INSERT INTO CTSDDV 
+                (MaLSKB, MaDV, SoLuong, Gia, NgayLap)
+                VALUES 
+                (@MaLSKB, @MaDV, @SoLuong, @Gia, @NgayLap)";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@MaHD", chiTiet.MaHD);
+                    cmd.Parameters.AddWithValue("@MaLSKB", chiTiet.MaLSKB);
                     cmd.Parameters.AddWithValue("@MaDV", chiTiet.MaDV);
                     cmd.Parameters.AddWithValue("@SoLuong", chiTiet.SoLuong);
                     cmd.Parameters.AddWithValue("@Gia", chiTiet.Gia);
-                    cmd.Parameters.AddWithValue("@MaBN", chiTiet.MaBN);
                     cmd.Parameters.AddWithValue("@NgayLap", chiTiet.NgayLap);
-                    cmd.Parameters.AddWithValue("@MaBS", chiTiet.MaBS);
                     return cmd.ExecuteNonQuery() > 0;
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Lỗi thêm chi tiết sử dụng dịch vụ: " + ex.Message);
-            }
-            finally
-            {
-                SqlConnectionData.CloseConnection(conn);
             }
         }
         // Xóa chi tiết sử dụng dịch vụ
-        public bool DeleteChiTietSuDungDV(int maHD, int maDV, int maBN)
+        public bool DeleteChiTietSuDungDV(int maChiTietSDDV)
         {
-            SqlConnection conn = null;
-            try
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                conn = SqlConnectionData.GetConnection();
                 conn.Open();
-
                 string query = @"
-            DELETE FROM CTSDDV 
-            WHERE MaHD = @MaHD AND MaDV = @MaDV AND MaBN = @MaBN";
+                DELETE FROM CTSDDV 
+                WHERE MaChiTietSDDV = @MaChiTietSDDV";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@MaHD", maHD);
-                    cmd.Parameters.AddWithValue("@MaDV", maDV);
-                    cmd.Parameters.AddWithValue("@MaBN", maBN);
-
+                    cmd.Parameters.AddWithValue("@MaChiTietSDDV", maChiTietSDDV);
                     return cmd.ExecuteNonQuery() > 0;
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Lỗi xóa chi tiết sử dụng dịch vụ: " + ex.Message);
-            }
-            finally
-            {
-                SqlConnectionData.CloseConnection(conn);
             }
         }
         // Sửa chi tiết sử dụng dịch vụ
         public bool UpdateChiTietSuDungDV(DTO_ChiTietSuDungDV chiTiet)
         {
-            SqlConnection conn = null;
-            try
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                conn = SqlConnectionData.GetConnection();
                 conn.Open();
-
                 string query = @"
-            UPDATE CTSDDV 
-            SET SoLuong = @SoLuong, 
-                Gia = @Gia, 
-                NgayLap = @NgayLap,
-                MaBS = @MaBS
-            WHERE MaHD = @MaHD AND MaDV = @MaDV AND MaBN = @MaBN";
+                UPDATE CTSDDV 
+                SET SoLuong = @SoLuong, 
+                    Gia = @Gia, 
+                    NgayLap = @NgayLap
+                WHERE MaChiTietSDDV = @MaChiTietSDDV";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@MaHD", chiTiet.MaHD);
-                    cmd.Parameters.AddWithValue("@MaDV", chiTiet.MaDV);
+                    cmd.Parameters.AddWithValue("@MaChiTietSDDV", chiTiet.MaChiTietSDDV);
                     cmd.Parameters.AddWithValue("@SoLuong", chiTiet.SoLuong);
                     cmd.Parameters.AddWithValue("@Gia", chiTiet.Gia);
-                    cmd.Parameters.AddWithValue("@MaBN", chiTiet.MaBN);
                     cmd.Parameters.AddWithValue("@NgayLap", chiTiet.NgayLap);
-                    cmd.Parameters.AddWithValue("@MaBS", chiTiet.MaBS);
                     return cmd.ExecuteNonQuery() > 0;
                 }
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Lỗi sửa chi tiết sử dụng dịch vụ: " + ex.Message);
-            }
-            finally
-            {
-                SqlConnectionData.CloseConnection(conn);
-            }
         }
-        // Tìm kiếm chi tiết sử dụng dịch vụ theo mã hóa đơn
-        public List<DTO_ChiTietSuDungDV> SearchChiTietSuDungDV(int maBN)
+        // Tìm kiếm chi tiết sử dụng dịch vụ theo mã lịch khám
+        public List<DTO_ChiTietSuDungDV> SearchChiTietSuDungDV(int maLSKB)
         {
             List<DTO_ChiTietSuDungDV> danhSachChiTiet = new List<DTO_ChiTietSuDungDV>();
-            SqlConnection conn = null;
-
-            try
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                conn = SqlConnectionData.GetConnection();
                 conn.Open();
-
                 string query = @"
-            SELECT 
-                MaHD, 
-                MaDV, 
-                SoLuong, 
-                Gia, 
-                MaBN, 
-                NgayLap,
-                MaBS
-            FROM CTSDDV 
-            WHERE MaBN = @MaBN";
+                SELECT 
+                    MaChiTietSDDV, 
+                    MaLSKB, 
+                    MaDV, 
+                    SoLuong, 
+                    Gia, 
+                    NgayLap
+                FROM CTSDDV 
+                WHERE MaLSKB = @MaLSKB";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@MaBN", maBN);
+                    cmd.Parameters.AddWithValue("@MaLSKB", maLSKB);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -148,49 +101,34 @@ namespace DAL
                         {
                             danhSachChiTiet.Add(new DTO_ChiTietSuDungDV
                             {
-                                MaHD = reader.GetInt32(reader.GetOrdinal("MaHD")),
+                                MaChiTietSDDV = reader.GetInt32(reader.GetOrdinal("MaChiTietSDDV")),
+                                MaLSKB = reader.GetInt32(reader.GetOrdinal("MaLSKB")),
                                 MaDV = reader.GetInt32(reader.GetOrdinal("MaDV")),
                                 SoLuong = reader.GetInt32(reader.GetOrdinal("SoLuong")),
                                 Gia = reader.GetDecimal(reader.GetOrdinal("Gia")),
-                                MaBN = reader.GetInt32(reader.GetOrdinal("MaBN")),
-                                NgayLap = reader.GetDateTime(reader.GetOrdinal("NgayLap")),
-                                MaBS = reader.GetInt32(reader.GetOrdinal("MaBS"))
+                                NgayLap = reader.GetDateTime(reader.GetOrdinal("NgayLap"))
                             });
                         }
                     }
                 }
-
-                return danhSachChiTiet;
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Lỗi tìm chi tiết sử dụng dịch vụ theo mã bệnh nhân: " + ex.Message);
-            }
-            finally
-            {
-                SqlConnectionData.CloseConnection(conn);
-            }
+            return danhSachChiTiet;
         }
         public List<DTO_ChiTietSuDungDV> GetAllChiTietSuDungDV()
         {
             List<DTO_ChiTietSuDungDV> danhSachChiTiet = new List<DTO_ChiTietSuDungDV>();
-            SqlConnection conn = null;
-
-            try
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
-                conn = SqlConnectionData.GetConnection();
                 conn.Open();
-
                 string query = @"
-            SELECT 
-                MaHD, 
-                MaDV, 
-                SoLuong, 
-                Gia, 
-                MaBN, 
-                NgayLap,
-                MaBS
-            FROM CTSDDV";
+                SELECT 
+                    MaChiTietSDDV, 
+                    MaLSKB, 
+                    MaDV, 
+                    SoLuong, 
+                    Gia, 
+                    NgayLap
+                FROM CTSDDV";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -200,28 +138,18 @@ namespace DAL
                         {
                             danhSachChiTiet.Add(new DTO_ChiTietSuDungDV
                             {
-                                MaHD = reader.GetInt32(reader.GetOrdinal("MaHD")),
+                                MaChiTietSDDV = reader.GetInt32(reader.GetOrdinal("MaChiTietSDDV")),
+                                MaLSKB = reader.GetInt32(reader.GetOrdinal("MaLSKB")),
                                 MaDV = reader.GetInt32(reader.GetOrdinal("MaDV")),
                                 SoLuong = reader.GetInt32(reader.GetOrdinal("SoLuong")),
                                 Gia = reader.GetDecimal(reader.GetOrdinal("Gia")),
-                                MaBN = reader.GetInt32(reader.GetOrdinal("MaBN")),
-                                NgayLap = reader.GetDateTime(reader.GetOrdinal("NgayLap")),
-                                MaBS = reader.GetInt32(reader.GetOrdinal("MaBS"))
+                                NgayLap = reader.GetDateTime(reader.GetOrdinal("NgayLap"))
                             });
                         }
                     }
                 }
-
-                return danhSachChiTiet;
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Lỗi lấy danh sách chi tiết sử dụng dịch vụ: " + ex.Message);
-            }
-            finally
-            {
-                SqlConnectionData.CloseConnection(conn);
-            }
+            return danhSachChiTiet;
         }
         // Lấy hóa đơn mới nhất của bệnh nhân chưa thanh toán
         public DTO_HoaDon LayHoaDonMoiNhatChuaThanhToan(int maBN)

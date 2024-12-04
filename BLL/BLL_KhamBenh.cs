@@ -264,8 +264,13 @@ namespace BLL
             // Tạo danh sách kết quả
             var danhSachKetQua = new List<object>();
 
+            // Lấy danh sách mã bệnh nhân đã khám
+            var maBenhNhanDaKham = new HashSet<int>(
+                danhSachLichSuKham.Select(ls => ls.MaBN)
+            );
+
             // Xử lý bệnh nhân từ lịch hẹn
-            var benhNhanLichHen = danhSachLichHen.Select(lh =>
+            var benhNhanLichHen = danhSachLichHen.Where(lh => !maBenhNhanDaKham.Contains(lh.MaBN)).Select(lh =>
             {
                 var benhNhan = danhSachBenhNhan.FirstOrDefault(bn => bn.MaBN == lh.MaBN);
                 return new
@@ -274,32 +279,27 @@ namespace BLL
                     HoTenBN = benhNhan?.HoTenBN ?? "Không xác định",
                     NgaySinh = benhNhan?.NgaySinh ?? DateTime.MinValue,
                     SoDT = benhNhan?.SoDT ?? "Không có",
-                    TrieuChung = "Lịch hẹn khám",
+                    TrieuChung = lh.TinhTrang,
                     NgayTiepNhan = lh.NgayHen,
                     GioTiepNhan = lh.ThoiGianHen.TimeOfDay
                 };
             });
 
             // Xử lý bệnh nhân từ tiếp nhận
-            var benhNhanTiepNhan = danhSachTiepNhan.Select(tn =>
+            var benhNhanTiepNhan = danhSachTiepNhan.Where(tn => !maBenhNhanDaKham.Contains(tn.MaBenhNhan)).Select(tn =>
             {
                 var benhNhan = danhSachBenhNhan.FirstOrDefault(bn => bn.MaBN == tn.MaBenhNhan);
-                var daKham = danhSachLichSuKham.Any(lskb => lskb.MaBN == tn.MaBenhNhan && lskb.NgayKham == ngayKham);
-                if (!daKham)
+                return new
                 {
-                    return new
-                    {
-                        MaBN = tn.MaBenhNhan,
-                        HoTenBN = benhNhan?.HoTenBN ?? "Không xác định",
-                        NgaySinh = benhNhan?.NgaySinh ?? DateTime.MinValue,
-                        SoDT = benhNhan?.SoDT ?? "Không có",
-                        TrieuChung = tn.TrieuChung,
-                        NgayTiepNhan = tn.NgayTiepNhan,
-                        GioTiepNhan = tn.GioTiepNhan
-                    };
-                }
-                return null;
-            }).Where(x => x != null);
+                    MaBN = tn.MaBenhNhan,
+                    HoTenBN = benhNhan?.HoTenBN ?? "Không xác định",
+                    NgaySinh = benhNhan?.NgaySinh ?? DateTime.MinValue,
+                    SoDT = benhNhan?.SoDT ?? "Không có",
+                    TrieuChung = tn.TrieuChung,
+                    NgayTiepNhan = tn.NgayTiepNhan,
+                    GioTiepNhan = tn.GioTiepNhan
+                };
+            });
 
             // Kết hợp và trả về danh sách
             danhSachKetQua.AddRange(benhNhanLichHen);

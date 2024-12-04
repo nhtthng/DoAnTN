@@ -66,7 +66,7 @@ namespace GUI
 
             // Gán ContextMenuStrip cho DataGridView
             DGVDSBenhNhanChuaKham.ContextMenuStrip = contextMenu;
-            DGVDSBenhNhanChuaKham.RowHeadersVisible = false;
+            //DGVDSBenhNhanChuaKham.RowHeadersVisible = false;
             DGVDSBenhNhanChuaKham.AllowUserToAddRows = false;
         }
 
@@ -75,9 +75,9 @@ namespace GUI
             if (DGVDSBenhNhanChuaKham.SelectedRows.Count > 0)
             {
                 // Kiểm tra xem cột "MaBN" có giá trị hay không
-                if (DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["MaBN"].Value != null && !string.IsNullOrEmpty(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["MaBN"].Value.ToString()))
+                if (DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value != null && !string.IsNullOrEmpty(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString()))
                 {
-                    int patientId = int.Parse(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["MaBN"].Value.ToString());
+                    int patientId = int.Parse(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString());
                     OpenServiceForm(patientId);
                 }
                 else
@@ -96,9 +96,9 @@ namespace GUI
             if (DGVDSBenhNhanChuaKham.SelectedRows.Count > 0)
             {
                 // Kiểm tra xem cột "MaBN" có giá trị hay không
-                if (DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["MaBN"].Value != null && !string.IsNullOrEmpty(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["MaBN"].Value.ToString()))
+                if (DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value != null && !string.IsNullOrEmpty(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString()))
                 {
-                    string patientId = DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["MaBN"].Value.ToString();
+                    string patientId = DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString();
                     OpenPrescriptionForm(patientId);
                 }
                 else
@@ -118,9 +118,9 @@ namespace GUI
             if (DGVDSBenhNhanChuaKham.SelectedRows.Count > 0)
             {
                 // Kiểm tra xem cột "MaBN" có giá trị hay không
-                if (DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["MaBN"].Value != null && !string.IsNullOrEmpty(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["MaBN"].Value.ToString()))
+                if (DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value != null && !string.IsNullOrEmpty(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString()))
                 {
-                    string patientId = DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["MaBN"].Value.ToString();
+                    string patientId = DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString();
                     OpenPatientForm(patientId);
                 }
                 else
@@ -247,7 +247,7 @@ namespace GUI
                     DGVDSBenhNhanChuaKham.DataSource = _danhSachBenhNhanTrongNgay;
 
                     // Cập nhật label tổng số bệnh nhân
-                    //lblTongSoBenhNhan.Text = $"Tổng số bệnh nhân: {_danhSachBenhNhanTrongNgay.Count}";
+                    // lblTongSoBenhNhan.Text = $"Tổng số bệnh nhân: {_danhSachBenhNhanTrongNgay.Count}";
                 }
                 else
                 {
@@ -337,6 +337,7 @@ namespace GUI
                 {
                     MessageBox.Show("Thêm thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadKhamBenhData();
+                    LoadDanhSachBenhNhanTrongNgay();
                 }
                 else
                 {
