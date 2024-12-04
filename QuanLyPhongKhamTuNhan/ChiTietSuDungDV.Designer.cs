@@ -43,16 +43,12 @@
             btnXoa = new Button();
             btnSua = new Button();
             label6 = new Label();
-            cboBenhNhan = new ComboBox();
             label7 = new Label();
             DTPNgayLap = new DateTimePicker();
-            cboMaHD = new ComboBox();
             btnReset = new Button();
-            label8 = new Label();
-            txtBoxTimSDTBN = new TextBox();
-            btnTimSDTBN = new Button();
-            label9 = new Label();
-            cboMaBacSi = new ComboBox();
+            txtBoxMaCTSDDV = new TextBox();
+            btnInChiDinh = new Button();
+            cboMaLSKB = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)numericSoLuong).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DGVCTSDDV).BeginInit();
             SuspendLayout();
@@ -88,9 +84,9 @@
             label2.AutoSize = true;
             label2.Location = new Point(12, 89);
             label2.Name = "label2";
-            label2.Size = new Size(89, 20);
+            label2.Size = new Size(90, 20);
             label2.TabIndex = 3;
-            label2.Text = "Mã hóa đơn";
+            label2.Text = "Mã CTSDDV";
             // 
             // label3
             // 
@@ -154,7 +150,7 @@
             // 
             // btnThem
             // 
-            btnThem.Location = new Point(84, 319);
+            btnThem.Location = new Point(23, 319);
             btnThem.Name = "btnThem";
             btnThem.Size = new Size(94, 29);
             btnThem.TabIndex = 11;
@@ -164,7 +160,7 @@
             // 
             // btnXoa
             // 
-            btnXoa.Location = new Point(330, 319);
+            btnXoa.Location = new Point(209, 319);
             btnXoa.Name = "btnXoa";
             btnXoa.Size = new Size(94, 29);
             btnXoa.TabIndex = 11;
@@ -174,7 +170,7 @@
             // 
             // btnSua
             // 
-            btnSua.Location = new Point(562, 319);
+            btnSua.Location = new Point(415, 319);
             btnSua.Name = "btnSua";
             btnSua.Size = new Size(94, 29);
             btnSua.TabIndex = 11;
@@ -187,17 +183,9 @@
             label6.AutoSize = true;
             label6.Location = new Point(308, 184);
             label6.Name = "label6";
-            label6.Size = new Size(81, 20);
+            label6.Size = new Size(67, 20);
             label6.TabIndex = 12;
-            label6.Text = "Bệnh Nhân";
-            // 
-            // cboBenhNhan
-            // 
-            cboBenhNhan.FormattingEnabled = true;
-            cboBenhNhan.Location = new Point(392, 181);
-            cboBenhNhan.Name = "cboBenhNhan";
-            cboBenhNhan.Size = new Size(151, 28);
-            cboBenhNhan.TabIndex = 13;
+            label6.Text = "Mã LSKB";
             // 
             // label7
             // 
@@ -215,17 +203,9 @@
             DTPNgayLap.Size = new Size(250, 27);
             DTPNgayLap.TabIndex = 14;
             // 
-            // cboMaHD
-            // 
-            cboMaHD.FormattingEnabled = true;
-            cboMaHD.Location = new Point(107, 86);
-            cboMaHD.Name = "cboMaHD";
-            cboMaHD.Size = new Size(151, 28);
-            cboMaHD.TabIndex = 15;
-            // 
             // btnReset
             // 
-            btnReset.Location = new Point(786, 319);
+            btnReset.Location = new Point(602, 319);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(94, 29);
             btnReset.TabIndex = 16;
@@ -233,64 +213,41 @@
             btnReset.UseVisualStyleBackColor = true;
             btnReset.Click += btnReset_Click;
             // 
-            // label8
+            // txtBoxMaCTSDDV
             // 
-            label8.AutoSize = true;
-            label8.Location = new Point(12, 256);
-            label8.Name = "label8";
-            label8.Size = new Size(107, 20);
-            label8.TabIndex = 17;
-            label8.Text = "Tìm bệnh nhân";
+            txtBoxMaCTSDDV.Location = new Point(108, 86);
+            txtBoxMaCTSDDV.Name = "txtBoxMaCTSDDV";
+            txtBoxMaCTSDDV.Size = new Size(150, 27);
+            txtBoxMaCTSDDV.TabIndex = 22;
             // 
-            // txtBoxTimSDTBN
+            // btnInChiDinh
             // 
-            txtBoxTimSDTBN.Location = new Point(125, 253);
-            txtBoxTimSDTBN.Name = "txtBoxTimSDTBN";
-            txtBoxTimSDTBN.Size = new Size(185, 27);
-            txtBoxTimSDTBN.TabIndex = 18;
-            txtBoxTimSDTBN.KeyPress += txtBoxTimSDTBN_KeyPress;
+            btnInChiDinh.Location = new Point(787, 319);
+            btnInChiDinh.Name = "btnInChiDinh";
+            btnInChiDinh.Size = new Size(94, 29);
+            btnInChiDinh.TabIndex = 24;
+            btnInChiDinh.Text = "In";
+            btnInChiDinh.UseVisualStyleBackColor = true;
+            btnInChiDinh.Click += btnInChiDinh_Click;
             // 
-            // btnTimSDTBN
+            // cboMaLSKB
             // 
-            btnTimSDTBN.Location = new Point(330, 251);
-            btnTimSDTBN.Name = "btnTimSDTBN";
-            btnTimSDTBN.Size = new Size(94, 29);
-            btnTimSDTBN.TabIndex = 19;
-            btnTimSDTBN.Text = "Tìm";
-            btnTimSDTBN.UseVisualStyleBackColor = true;
-            btnTimSDTBN.Click += btnTimSDTBN_Click;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(584, 256);
-            label9.Name = "label9";
-            label9.Size = new Size(72, 20);
-            label9.TabIndex = 20;
-            label9.Text = "Mã bác sĩ";
-            // 
-            // cboMaBacSi
-            // 
-            cboMaBacSi.FormattingEnabled = true;
-            cboMaBacSi.Location = new Point(664, 253);
-            cboMaBacSi.Name = "cboMaBacSi";
-            cboMaBacSi.Size = new Size(248, 28);
-            cboMaBacSi.TabIndex = 21;
+            cboMaLSKB.FormattingEnabled = true;
+            cboMaLSKB.Location = new Point(395, 181);
+            cboMaLSKB.Name = "cboMaLSKB";
+            cboMaLSKB.Size = new Size(151, 28);
+            cboMaLSKB.TabIndex = 25;
             // 
             // ChiTietSuDungDV
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(926, 552);
-            Controls.Add(cboMaBacSi);
-            Controls.Add(label9);
-            Controls.Add(btnTimSDTBN);
-            Controls.Add(txtBoxTimSDTBN);
-            Controls.Add(label8);
+            Controls.Add(cboMaLSKB);
+            Controls.Add(btnInChiDinh);
+            Controls.Add(txtBoxMaCTSDDV);
             Controls.Add(btnReset);
-            Controls.Add(cboMaHD);
             Controls.Add(DTPNgayLap);
-            Controls.Add(cboBenhNhan);
             Controls.Add(label7);
             Controls.Add(label6);
             Controls.Add(btnSua);
@@ -332,15 +289,11 @@
         private Button btnXoa;
         private Button btnSua;
         private Label label6;
-        private ComboBox cboBenhNhan;
         private Label label7;
         private DateTimePicker DTPNgayLap;
-        private ComboBox cboMaHD;
         private Button btnReset;
-        private Label label8;
-        private TextBox txtBoxTimSDTBN;
-        private Button btnTimSDTBN;
-        private Label label9;
-        private ComboBox cboMaBacSi;
+        private TextBox txtBoxMaCTSDDV;
+        private Button btnInChiDinh;
+        private ComboBox cboMaLSKB;
     }
 }

@@ -244,6 +244,29 @@ namespace DAL
                 }
             }
         }
+        public int GetLatestMedicalHistoryId(int patientId)
+        {
+            int latestMedicalHistoryId = 0;
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                conn.Open();
+                string query = @"
+SELECT TOP 1 MaLSKB 
+FROM LichSuKhamBenh 
+WHERE MaBN = @MaBN 
+ORDER BY NgayKham DESC";
 
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaBN", patientId);
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        latestMedicalHistoryId = Convert.ToInt32(result);
+                    }
+                }
+            }
+            return latestMedicalHistoryId;
+        }
     }
 }

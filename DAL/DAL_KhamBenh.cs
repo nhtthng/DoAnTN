@@ -297,6 +297,39 @@ namespace DAL
 
             return danhSachLichSuKham;
         }
+        // Lấy danh sách bệnh nhân chưa khám theo ngày
+        public List<DTO_QuanLyBenhNhan> GetPatientsNotExamined(DateTime date)
+        {
+            List<DTO_QuanLyBenhNhan> patients = new List<DTO_QuanLyBenhNhan>();
+            string query = @"
+            SELECT bn.MaBN, bn.HoTenBN, bn.NgaySinh, bn.SoDT, tn.TrieuChung, tn.NgayTiepNhan
+            FROM BenhNhan bn
+            JOIN TiepNhanBenhNhan tn ON bn.MaBN = tn.MaBenhNhan
+            LEFT JOIN LichSuKhamBenh kb ON bn.MaBN = kb.MaBN AND kb.NgayKham = @Date
+            WHERE tn.NgayTiepNhan = @Date AND kb.MaLSKB IS NULL";
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Date", date.Date);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    patients.Add(new DTO_QuanLyBenhNhan
+                    {
+                        MaBN = (int)reader["MaBN"],
+                        HoTenBN = reader["HoTenBN"].ToString(),
+                        NgaySinh = (DateTime)reader["NgaySinh"],
+                        SoDT = reader["SoDT"].ToString(),
+                        // Giả sử bạn có thêm trường triệu chứng và ngày tiếp nhận trong DTO
+                        // TrieuChung = reader["TrieuChung"].ToString(), // Nếu có trường này
+                        // NgayTiepNhan = (DateTime)reader["NgayTiepNhan"], // Nếu có trường này
+                    });
+                }
+            }
+            return patients;
         }
-    
+    }
 }

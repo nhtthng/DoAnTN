@@ -149,5 +149,28 @@ namespace BLL
             string pattern = @"^(0[3|5|7|8|9])+([0-9]{8})$";
             return System.Text.RegularExpressions.Regex.IsMatch(soDienThoai, pattern);
         }
+        public List<DTO_ChiTietSuDungDV> TimChiTietSuDungDVTheoSDT(string soDienThoai)
+        {
+            return _ChiTietSuDungDVDAL.TimChiTietSuDungDVTheoSDT(soDienThoai);
+        }
+        public string GetDoctorName(int maLSKB)
+        {
+            return _ChiTietSuDungDVDAL.GetDoctorName(maLSKB);
+        }
+        public string GetServiceName(string maDichVu)
+        {
+            // Gọi phương thức từ DAL để lấy tên dịch vụ
+            return _ChiTietSuDungDVDAL.GetServiceName(maDichVu);
+        }
+        public (string tenBN, DateTime? ngaySinh, string soDT) GetPatientInfo(int maBN)
+        {
+            // Gọi phương thức từ DAL để lấy thông tin bệnh nhân
+            return _ChiTietSuDungDVDAL.GetPatientInfo(maBN);
+        }
+        public int GetPatientIdFromCTSDDV(int maCTSDDV)
+        {
+            // Giả sử bạn có phương thức trong DAL để lấy thông tin này
+            return _ChiTietSuDungDVDAL.GetPatientIdFromCTSDDV(maCTSDDV);
+        }
     }
 }

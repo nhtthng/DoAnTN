@@ -48,10 +48,10 @@
             label6 = new Label();
             txtBoxMaHoaDon = new TextBox();
             label7 = new Label();
-            txtBoxSDT = new TextBox();
+            txtBoxMaLSKB = new TextBox();
             label8 = new Label();
-            txtBoxTimSDTBN = new TextBox();
-            btnTimSDTBN = new Button();
+            cboPTTT = new ComboBox();
+            btnInHoaDon = new Button();
             ((System.ComponentModel.ISupportInitialize)DGVHD).BeginInit();
             SuspendLayout();
             // 
@@ -130,7 +130,6 @@
             cboBenhNhan.Name = "cboBenhNhan";
             cboBenhNhan.Size = new Size(151, 28);
             cboBenhNhan.TabIndex = 5;
-            cboBenhNhan.SelectedIndexChanged += cboBenhNhan_SelectedIndexChanged;
             // 
             // label5
             // 
@@ -146,7 +145,7 @@
             cboGiamGia.FormattingEnabled = true;
             cboGiamGia.Location = new Point(90, 194);
             cboGiamGia.Name = "cboGiamGia";
-            cboGiamGia.Size = new Size(151, 28);
+            cboGiamGia.Size = new Size(250, 28);
             cboGiamGia.TabIndex = 7;
             // 
             // DGVHD
@@ -171,7 +170,7 @@
             // 
             // btnXoa
             // 
-            btnXoa.Location = new Point(220, 321);
+            btnXoa.Location = new Point(184, 321);
             btnXoa.Name = "btnXoa";
             btnXoa.Size = new Size(94, 29);
             btnXoa.TabIndex = 9;
@@ -181,7 +180,7 @@
             // 
             // btnSua
             // 
-            btnSua.Location = new Point(465, 321);
+            btnSua.Location = new Point(508, 321);
             btnSua.Name = "btnSua";
             btnSua.Size = new Size(94, 29);
             btnSua.TabIndex = 9;
@@ -230,52 +229,53 @@
             label7.AutoSize = true;
             label7.Location = new Point(735, 197);
             label7.Name = "label7";
-            label7.Size = new Size(36, 20);
+            label7.Size = new Size(67, 20);
             label7.TabIndex = 6;
-            label7.Text = "SĐT";
+            label7.Text = "Mã LSKB";
             // 
-            // txtBoxSDT
+            // txtBoxMaLSKB
             // 
-            txtBoxSDT.Location = new Point(844, 190);
-            txtBoxSDT.Name = "txtBoxSDT";
-            txtBoxSDT.Size = new Size(157, 27);
-            txtBoxSDT.TabIndex = 11;
+            txtBoxMaLSKB.Location = new Point(844, 194);
+            txtBoxMaLSKB.Name = "txtBoxMaLSKB";
+            txtBoxMaLSKB.Size = new Size(151, 27);
+            txtBoxMaLSKB.TabIndex = 15;
             // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(12, 266);
+            label8.Location = new Point(12, 264);
             label8.Name = "label8";
-            label8.Size = new Size(107, 20);
-            label8.TabIndex = 12;
-            label8.Text = "Tìm bệnh nhân";
+            label8.Size = new Size(41, 20);
+            label8.TabIndex = 16;
+            label8.Text = "PTTT";
             // 
-            // txtBoxTimSDTBN
+            // cboPTTT
             // 
-            txtBoxTimSDTBN.Location = new Point(125, 263);
-            txtBoxTimSDTBN.Name = "txtBoxTimSDTBN";
-            txtBoxTimSDTBN.Size = new Size(189, 27);
-            txtBoxTimSDTBN.TabIndex = 13;
+            cboPTTT.FormattingEnabled = true;
+            cboPTTT.Items.AddRange(new object[] { "Chuyển khoản", "Tiền mặt" });
+            cboPTTT.Location = new Point(90, 261);
+            cboPTTT.Name = "cboPTTT";
+            cboPTTT.Size = new Size(250, 28);
+            cboPTTT.TabIndex = 17;
             // 
-            // btnTimSDTBN
+            // btnInHoaDon
             // 
-            btnTimSDTBN.Location = new Point(354, 262);
-            btnTimSDTBN.Name = "btnTimSDTBN";
-            btnTimSDTBN.Size = new Size(94, 29);
-            btnTimSDTBN.TabIndex = 14;
-            btnTimSDTBN.Text = "Tìm";
-            btnTimSDTBN.UseVisualStyleBackColor = true;
-            btnTimSDTBN.Click += btnTimSDTBN_Click;
+            btnInHoaDon.Location = new Point(352, 321);
+            btnInHoaDon.Name = "btnInHoaDon";
+            btnInHoaDon.Size = new Size(94, 29);
+            btnInHoaDon.TabIndex = 18;
+            btnInHoaDon.Text = "In";
+            btnInHoaDon.UseVisualStyleBackColor = true;
             // 
             // HoaDon
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1007, 615);
-            Controls.Add(btnTimSDTBN);
-            Controls.Add(txtBoxTimSDTBN);
+            Controls.Add(btnInHoaDon);
+            Controls.Add(cboPTTT);
             Controls.Add(label8);
-            Controls.Add(txtBoxSDT);
+            Controls.Add(txtBoxMaLSKB);
             Controls.Add(txtBoxMaHoaDon);
             Controls.Add(btnReset);
             Controls.Add(btnCapNhat);
@@ -325,9 +325,9 @@
         private Label label6;
         private TextBox txtBoxMaHoaDon;
         private Label label7;
-        private TextBox txtBoxSDT;
+        private TextBox txtBoxMaLSKB;
         private Label label8;
-        private TextBox txtBoxTimSDTBN;
-        private Button btnTimSDTBN;
+        private ComboBox cboPTTT;
+        private Button btnInHoaDon;
     }
 }

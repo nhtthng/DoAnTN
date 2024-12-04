@@ -137,6 +137,9 @@ namespace BLL
             // Regex kiểm tra số BHYT
             return Regex.IsMatch(soBHYT, @"^[A-Z]{2}\d{13}$");
         }
-
+        public int GetLatestMedicalHistoryId(int patientId)
+        {
+            return _patientDAL.GetLatestMedicalHistoryId(patientId);
+        }
     }
 }

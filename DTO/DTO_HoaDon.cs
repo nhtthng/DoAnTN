@@ -8,12 +8,21 @@ namespace DTO
 {
     public class DTO_HoaDon
     {
+        //public int MaHD {  get; set; }
+        //public DateTime NgayLapHD { get; set; }
+        //public int MaNV {  get; set; }
+        //public int MaBN { get; set; }
+        //public decimal TongTien {  get; set; }
+        //public string TrangThai { get; set; }
+        //public int GiamGia {  get; set; }
         public int MaHD {  get; set; }
-        public DateTime NgayLapHD { get; set; }
-        public int MaNV {  get; set; }
+        public int MaLSKB {  get; set; }
         public int MaBN { get; set; }
-        public decimal TongTien {  get; set; }
+        public DateTime NgayLapHD { get; set; }
+        public int MaNV { get; set; }
+        public decimal TongTien { get; set; }
         public string TrangThai { get; set; }
-        public int GiamGia {  get; set; }
+        public decimal GiamGia { get; set; }
+        public string PhuongThucThanhToan { get; set; }
     }
 }

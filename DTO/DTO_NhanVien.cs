@@ -15,6 +15,6 @@ namespace DTO
         public string SoDT { get; set; }       // Số điện thoại
         public int MaPB { get; set; }       // Mã phòng ban
         public string MatKhau { get; set; }    // Mật khẩu
-        public int Quyen { get; set; }
+        //public int Quyen { get; set; }
     }
 }

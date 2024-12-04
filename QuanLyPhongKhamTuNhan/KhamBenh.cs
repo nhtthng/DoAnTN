@@ -1,5 +1,6 @@
 ﻿using BLL;
 using DAL;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DTO;
 using QuanLyPhongKham;
 using System;
@@ -65,24 +66,25 @@ namespace GUI
             contextMenu.Items.Add(patientItem);
 
             // Gán ContextMenuStrip cho DataGridView
-            DGVDSBenhNhanChuaKham.ContextMenuStrip = contextMenu;
+            DGVKB.ContextMenuStrip = contextMenu;
             //DGVDSBenhNhanChuaKham.RowHeadersVisible = false;
+            DGVKB.AllowUserToAddRows = false;
             DGVDSBenhNhanChuaKham.AllowUserToAddRows = false;
         }
 
         private void ServiceItem_Click(object sender, EventArgs e)
         {
-            if (DGVDSBenhNhanChuaKham.SelectedRows.Count > 0)
+            if (DGVKB.SelectedRows.Count > 0)
             {
-                // Kiểm tra xem cột "MaBN" có giá trị hay không
-                if (DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value != null && !string.IsNullOrEmpty(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString()))
+                // Lấy mã LSKB từ dòng được chọn
+                if (DGVKB.SelectedRows[0].Cells["MaLSKB"].Value != null)
                 {
-                    int patientId = int.Parse(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString());
-                    OpenServiceForm(patientId);
+                    int maLSKB = (int)DGVKB.SelectedRows[0].Cells["MaLSKB"].Value;
+                    OpenServiceForm(maLSKB);
                 }
                 else
                 {
-                    MessageBox.Show("Không thể lấy được mã bệnh nhân.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Không thể lấy được mã lịch sử khám bệnh.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -93,13 +95,13 @@ namespace GUI
 
         private void PrescriptionItem_Click(object sender, EventArgs e)
         {
-            if (DGVDSBenhNhanChuaKham.SelectedRows.Count > 0)
+            if (DGVKB.SelectedRows.Count > 0)
             {
-                // Kiểm tra xem cột "MaBN" có giá trị hay không
-                if (DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value != null && !string.IsNullOrEmpty(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString()))
+                // Lấy mã BN từ dòng được chọn
+                if (DGVKB.SelectedRows[0].Cells["MaBN"].Value != null)
                 {
-                    string patientId = DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString();
-                    OpenPrescriptionForm(patientId);
+                    int maBN = (int)DGVKB.SelectedRows[0].Cells["MaBN"].Value;
+                    OpenPrescriptionForm(maBN);
                 }
                 else
                 {
@@ -109,18 +111,17 @@ namespace GUI
             else
             {
                 MessageBox.Show("Vui lòng chọn một bệnh nhân từ danh sách.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
             }
         }
 
         private void PatientItem_Click(object sender, EventArgs e)
         {
-            if (DGVDSBenhNhanChuaKham.SelectedRows.Count > 0)
+            if (DGVKB.SelectedRows.Count > 0)
             {
                 // Kiểm tra xem cột "MaBN" có giá trị hay không
-                if (DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value != null && !string.IsNullOrEmpty(DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString()))
+                if (DGVKB.SelectedRows[0].Cells["MaBN"].Value != null && !string.IsNullOrEmpty(DGVKB.SelectedRows[0].Cells["MaBN"].Value.ToString()))
                 {
-                    string patientId = DGVDSBenhNhanChuaKham.SelectedRows[0].Cells["colMaBN"].Value.ToString();
+                    string patientId = DGVKB.SelectedRows[0].Cells["MaBN"].Value.ToString();
                     OpenPatientForm(patientId);
                 }
                 else
@@ -148,13 +149,14 @@ namespace GUI
             }
         }
 
-        private void OpenPrescriptionForm(string patientId)
+        private void OpenPrescriptionForm(int patientId)
         {
-            if (!string.IsNullOrEmpty(patientId))
+            // Kiểm tra xem patientId có hợp lệ hay không
+            if (patientId > 0) // Kiểm tra nếu patientId là một số dương
             {
                 KeThuoc prescriptionForm = new KeThuoc();
-                prescriptionForm.SetPatientId(patientId);
-                prescriptionForm.Show();
+                prescriptionForm.SetPatientId(patientId); // Truyền đúng mã bệnh nhân vào form
+                prescriptionForm.Show(); // Hiển thị form kê thuốc
             }
             else
             {
@@ -607,18 +609,25 @@ namespace GUI
             DTPNgayKham.Value = selectedDateTime;
         }
 
-        private void DGVDSBenhNhanChuaKham_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DGVDSBenhNhanChuaKham_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = DGVDSBenhNhanChuaKham.Rows[e.RowIndex];
                 //txtBoxLSKB.Text = row.Cells["MaLSKB"].Value.ToString();
                 //cboMaBacSi.SelectedValue = row.Cells["MaBS"].Value;
-                cboMaBenhNhan.SelectedValue = row.Cells["MaBN"].Value;
+                cboMaBenhNhan.SelectedValue = row.Cells["colMaBN"].Value;
                 //DTPNgayKham.Value = (DateTime)row.Cells["NgayKham"].Value;
                 //txtBoxChuanDoan.Text = row.Cells["ChuanDoan"].Value.ToString();
                 //cboMaPK.SelectedValue = row.Cells["MaPK"].Value;
             }
+        }
+
+        private void btnLocBN_Click(object sender, EventArgs e)
+        {
+            DateTime selectedDate = DTPLocBN.Value.Date;
+            var patients = bllKhamBenh.GetPatientsNotExamined(selectedDate);
+            DGVDSBenhNhanChuaKham.DataSource = patients;
         }
     }
 }

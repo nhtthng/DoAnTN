@@ -24,9 +24,9 @@ namespace GUI
 
 
         }
-        public void SetPatientId(string patientId)
+        public void SetPatientId(int patientId)
         {
-            txtMaBenhNhan.Text = patientId;
+            txtMaBenhNhan.Text = patientId.ToString();
         }
         private void label9_Click(object sender, EventArgs e)
         {

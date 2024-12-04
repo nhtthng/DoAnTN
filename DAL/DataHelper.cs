@@ -340,47 +340,47 @@ namespace DAL
 
             return hoaDonList;
         }
-        public List<DTO_ChiTietSuDungDV> GetHoaDonByMaBN(int maBN)
-        {
-            List<DTO_ChiTietSuDungDV> danhSachHoaDon = new List<DTO_ChiTietSuDungDV>();
-            SqlConnection conn = SqlConnectionData.GetConnection();
+        //public List<DTO_ChiTietSuDungDV> GetHoaDonByMaBN(int maBN)
+        //{
+        //    List<DTO_ChiTietSuDungDV> danhSachHoaDon = new List<DTO_ChiTietSuDungDV>();
+        //    SqlConnection conn = SqlConnectionData.GetConnection();
 
-            try
-            {
-                conn.Open();
-                string query = @"
-            SELECT DISTINCT MaHD, MaBN, NgayLap 
-            FROM CTSDDV 
-            WHERE MaBN = @MaBN";
+        //    try
+        //    {
+        //        conn.Open();
+        //        string query = @"
+        //    SELECT DISTINCT MaHD, MaBN, NgayLap 
+        //    FROM CTSDDV 
+        //    WHERE MaBN = @MaBN";
 
-                SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@MaBN", maBN);
+        //        SqlCommand command = new SqlCommand(query, conn);
+        //        command.Parameters.AddWithValue("@MaBN", maBN);
 
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        DTO_ChiTietSuDungDV chiTiet = new DTO_ChiTietSuDungDV()
-                        {
-                            MaHD = reader.GetInt32(0),
-                            MaBN = reader.GetInt32(1),
-                            NgayLap = reader.GetDateTime(2)
-                        };
-                        danhSachHoaDon.Add(chiTiet);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Lỗi: " + ex.Message);
-            }
-            finally
-            {
-                SqlConnectionData.CloseConnection(conn);
-            }
+        //        using (SqlDataReader reader = command.ExecuteReader())
+        //        {
+        //            while (reader.Read())
+        //            {
+        //                DTO_ChiTietSuDungDV chiTiet = new DTO_ChiTietSuDungDV()
+        //                {
+        //                    MaHD = reader.GetInt32(0),
+        //                    MaBN = reader.GetInt32(1),
+        //                    NgayLap = reader.GetDateTime(2)
+        //                };
+        //                danhSachHoaDon.Add(chiTiet);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("Lỗi: " + ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        SqlConnectionData.CloseConnection(conn);
+        //    }
 
-            return danhSachHoaDon;
-        }
+        //    return danhSachHoaDon;
+        //}
         public DTO_QuanLyBenhNhan GetThongTinBenhNhanByMaBN(int maBN)
         {
             DTO_QuanLyBenhNhan benhNhan = null;
@@ -455,6 +455,35 @@ namespace DAL
 
             return phongBanList;
         }
+        public List<int> GetAllMaLSKB()
+        {
+            List<int> maLSKBList = new List<int>();
+            SqlConnection conn = SqlConnectionData.GetConnection();
 
+            try
+            {
+                conn.Open();
+                string query = "SELECT MaLSKB FROM LichSuKhamBenh"; // Giả sử bảng KhamBenh có trường MaLSKB
+                SqlCommand command = new SqlCommand(query, conn);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        maLSKBList.Add(reader.GetInt32(0)); // Lấy từng mã LSKB và thêm vào danh sách
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi: " + ex.Message);
+            }
+            finally
+            {
+                SqlConnectionData.CloseConnection(conn);
+            }
+
+            return maLSKBList;
+        }
     }
 }

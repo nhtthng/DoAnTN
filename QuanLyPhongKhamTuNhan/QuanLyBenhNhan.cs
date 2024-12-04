@@ -79,8 +79,11 @@ namespace QuanLyPhongKham
 
         private void OpenInvoiceForm(int patientId)
         {
+            BLL_QuanLyBenhNhan _PatientBLL = new BLL_QuanLyBenhNhan();
+            int latestMedicalHistoryId = _PatientBLL.GetLatestMedicalHistoryId(patientId);
             HoaDon invoiceForm = new HoaDon();
             invoiceForm.SetPatientId(patientId);
+            invoiceForm.SetMedicalHistoryId(latestMedicalHistoryId);
             invoiceForm.Show();
         }
 

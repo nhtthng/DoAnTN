@@ -54,8 +54,8 @@
             btnTimSDTBN = new Button();
             btnReset = new Button();
             groupBox1 = new GroupBox();
-            button1 = new Button();
-            dateTimePicker1 = new DateTimePicker();
+            btnLocBN = new Button();
+            DTPLocBN = new DateTimePicker();
             label9 = new Label();
             DGVDSBenhNhanChuaKham = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)DGVKB).BeginInit();
@@ -272,8 +272,8 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(button1);
-            groupBox1.Controls.Add(dateTimePicker1);
+            groupBox1.Controls.Add(btnLocBN);
+            groupBox1.Controls.Add(DTPLocBN);
             groupBox1.Controls.Add(label9);
             groupBox1.Controls.Add(DGVDSBenhNhanChuaKham);
             groupBox1.Controls.Add(label8);
@@ -286,21 +286,22 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "DS Bệnh Nhân Chưa Khám";
             // 
-            // button1
+            // btnLocBN
             // 
-            button1.Location = new Point(621, 136);
-            button1.Name = "button1";
-            button1.Size = new Size(94, 29);
-            button1.TabIndex = 19;
-            button1.Text = "Lọc";
-            button1.UseVisualStyleBackColor = true;
+            btnLocBN.Location = new Point(621, 136);
+            btnLocBN.Name = "btnLocBN";
+            btnLocBN.Size = new Size(94, 29);
+            btnLocBN.TabIndex = 19;
+            btnLocBN.Text = "Lọc";
+            btnLocBN.UseVisualStyleBackColor = true;
+            btnLocBN.Click += btnLocBN_Click;
             // 
-            // dateTimePicker1
+            // DTPLocBN
             // 
-            dateTimePicker1.Location = new Point(124, 134);
-            dateTimePicker1.Name = "dateTimePicker1";
-            dateTimePicker1.Size = new Size(475, 27);
-            dateTimePicker1.TabIndex = 18;
+            DTPLocBN.Location = new Point(124, 134);
+            DTPLocBN.Name = "DTPLocBN";
+            DTPLocBN.Size = new Size(475, 27);
+            DTPLocBN.TabIndex = 18;
             // 
             // label9
             // 
@@ -319,7 +320,7 @@
             DGVDSBenhNhanChuaKham.RowHeadersWidth = 51;
             DGVDSBenhNhanChuaKham.Size = new Size(709, 413);
             DGVDSBenhNhanChuaKham.TabIndex = 16;
-            //DGVDSBenhNhanChuaKham.DoubleClick += DGVDSBenhNhanChuaKham_DoubleClick;
+            DGVDSBenhNhanChuaKham.CellClick += DGVDSBenhNhanChuaKham_CellClick_1;
             // 
             // KhamBenh
             // 
@@ -386,8 +387,8 @@
         private Button btnReset;
         private GroupBox groupBox1;
         private DataGridView DGVDSBenhNhanChuaKham;
-        private DateTimePicker dateTimePicker1;
+        private DateTimePicker DTPLocBN;
         private Label label9;
-        private Button button1;
+        private Button btnLocBN;
     }
 }

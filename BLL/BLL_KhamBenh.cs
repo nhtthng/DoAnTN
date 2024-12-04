@@ -1,4 +1,5 @@
 ﻿using DAL;
+using DocumentFormat.OpenXml.Bibliography;
 using DTO;
 using System;
 using System.Collections.Generic;
@@ -191,14 +192,20 @@ namespace BLL
             // Lấy thông tin chi tiết bệnh nhân
             var danhSachBenhNhan = dalBenhNhan.GetAllPatients();
 
+            // Lấy danh sách lịch sử khám bệnh
+            var danhSachLichSuKham = dalKhamBenh.GetLichSuKhamBenhByNgay(ngayKham);
+
             // Tạo danh sách kết quả
             var danhSachKetQua = new List<object>();
+
+            // Lấy mã bệnh nhân đã khám trong ngày
+            var maBNDaKhamTrongNgay = danhSachLichSuKham.Select(ls => ls.MaBN).ToList();
 
             // Xử lý bệnh nhân từ lịch hẹn
             var benhNhanLichHen = danhSachLichHen.Where(lh =>
             {
                 var benhNhan = danhSachBenhNhan.FirstOrDefault(bn => bn.MaBN == lh.MaBN);
-                return benhNhan != null && benhNhan.SoDT == soDienThoai;
+                return benhNhan != null && benhNhan.SoDT == soDienThoai && !maBNDaKhamTrongNgay.Contains(benhNhan.MaBN);
             }).Select(lh =>
             {
                 var benhNhan = danhSachBenhNhan.FirstOrDefault(bn => bn.MaBN == lh.MaBN);
@@ -218,7 +225,7 @@ namespace BLL
             var benhNhanTiepNhan = danhSachTiepNhan.Where(tn =>
             {
                 var benhNhan = danhSachBenhNhan.FirstOrDefault(bn => bn.MaBN == tn.MaBenhNhan);
-                return benhNhan != null && benhNhan.SoDT == soDienThoai;
+                return benhNhan != null && benhNhan.SoDT == soDienThoai && !maBNDaKhamTrongNgay.Contains(benhNhan.MaBN);
             }).Select(tn =>
             {
                 var benhNhan = danhSachBenhNhan.FirstOrDefault(bn => bn.MaBN == tn.MaBenhNhan);
@@ -313,6 +320,9 @@ namespace BLL
 
             return danhSachKetQua;
         }
-
+        public List<DTO_QuanLyBenhNhan> GetPatientsNotExamined(DateTime date)
+        {
+            return dalKhamBenh.GetPatientsNotExamined(date);
+        }
     }
 }

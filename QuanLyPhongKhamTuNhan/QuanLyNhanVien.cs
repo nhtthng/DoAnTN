@@ -50,7 +50,7 @@ namespace GUI
                     NgaySinh = DTPNgaySinh.Value,
                     SoDT = txtBoxSDT.Text,
                     MaPB = (int)cboMaPhongBan.SelectedValue,
-                    Quyen = 1 // Quyền mặc định
+                    //Quyen = 1 // Quyền mặc định
                 };
 
                 if (bllNhanVien.AddNhanVien(nhanVien))

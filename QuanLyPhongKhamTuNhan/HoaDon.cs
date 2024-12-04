@@ -25,7 +25,7 @@ namespace GUI
             cboNhanVien.DataSource = dsNhanVien;
             cboNhanVien.DisplayMember = "HoTen";
             cboNhanVien.ValueMember = "MaNV";
-            var dsBenhNhan = new DataHelper().GetBenhNhanListFromCTSDDV();
+            var dsBenhNhan = new DataHelper().GetBenhNhanList();
             cboBenhNhan.DataSource = dsBenhNhan;
             cboBenhNhan.DisplayMember = "HoTenBN";
             cboBenhNhan.ValueMember = "MaBN";
@@ -38,6 +38,10 @@ namespace GUI
         public void SetPatientId(int patientId)
         {
             cboBenhNhan.SelectedValue = patientId;
+        }
+        public void SetMedicalHistoryId(int medicalHistoryId)
+        {
+            txtBoxMaLSKB.Text = medicalHistoryId.ToString(); // Gán giá trị vào TextBox
         }
         private void LoadDanhSachHoaDon()
         {
@@ -67,7 +71,10 @@ namespace GUI
                 {
                     NgayLapHD = DTPNgayLap.Value,
                     MaNV = Convert.ToInt32(cboNhanVien.SelectedValue),
-                    GiamGia = Convert.ToInt32(cboGiamGia.SelectedItem)
+                    GiamGia = Convert.ToInt32(cboGiamGia.SelectedValue),
+                    MaBN = Convert.ToInt32(cboBenhNhan.SelectedValue),
+                    MaLSKB = Convert.ToInt32(txtBoxMaLSKB.Text),
+                    PhuongThucThanhToan = cboPTTT.SelectedItem.ToString()
                 };
 
                 // Nếu có chọn bệnh nhân, thêm MaBN
@@ -284,158 +291,158 @@ namespace GUI
             }
         }
 
-        private void cboBenhNhan_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                // Kiểm tra xem có bệnh nhân được chọn không
-                if (cboBenhNhan.SelectedItem == null)
-                {
-                    ResetBenhNhanControls();
-                    return;
-                }
+        //private void cboBenhNhan_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        // Kiểm tra xem có bệnh nhân được chọn không
+        //        if (cboBenhNhan.SelectedItem == null)
+        //        {
+        //            ResetBenhNhanControls();
+        //            return;
+        //        }
 
-                // Lấy bệnh nhân được chọn
-                DTO_QuanLyBenhNhan benhNhanChon = cboBenhNhan.SelectedItem as DTO_QuanLyBenhNhan;
+        //        // Lấy bệnh nhân được chọn
+        //        DTO_QuanLyBenhNhan benhNhanChon = cboBenhNhan.SelectedItem as DTO_QuanLyBenhNhan;
 
-                if (benhNhanChon == null)
-                {
-                    ResetBenhNhanControls();
-                    return;
-                }
+        //        if (benhNhanChon == null)
+        //        {
+        //            ResetBenhNhanControls();
+        //            return;
+        //        }
 
-                // Lấy mã bệnh nhân
-                int maBN = benhNhanChon.MaBN;
+        //        // Lấy mã bệnh nhân
+        //        int maBN = benhNhanChon.MaBN;
 
-                // Khởi tạo DataHelper
-                DataHelper dataHelper = new DataHelper();
+        //        // Khởi tạo DataHelper
+        //        DataHelper dataHelper = new DataHelper();
 
-                // Lấy danh sách Hóa Đơn của Bệnh Nhân
-                List<DTO_ChiTietSuDungDV> danhSachHoaDon = dataHelper.GetHoaDonByMaBN(maBN);
+        //        // Lấy danh sách Hóa Đơn của Bệnh Nhân
+        //        List<DTO_ChiTietSuDungDV> danhSachHoaDon = dataHelper.GetHoaDonByMaBN(maBN);
 
-                // Kiểm tra và xử lý hóa đơn
-                if (danhSachHoaDon != null && danhSachHoaDon.Count > 0)
-                {
-                    // Hiển thị mã hóa đơn đầu tiên
-                    txtBoxMaHoaDon.Text = danhSachHoaDon[0].MaHD.ToString();
-                }
-                else
-                {
-                    // Nếu không có hóa đơn, xóa mã hóa đơn
-                    txtBoxMaHoaDon.Clear();
-                }
+        //        // Kiểm tra và xử lý hóa đơn
+        //        if (danhSachHoaDon != null && danhSachHoaDon.Count > 0)
+        //        {
+        //            // Hiển thị mã hóa đơn đầu tiên
+        //            txtBoxMaHoaDon.Text = danhSachHoaDon[0].MaHD.ToString();
+        //        }
+        //        else
+        //        {
+        //            // Nếu không có hóa đơn, xóa mã hóa đơn
+        //            txtBoxMaHoaDon.Clear();
+        //        }
 
-                // Lấy thông tin chi tiết bệnh nhân
-                DTO_QuanLyBenhNhan benhNhanChiTiet = dataHelper.GetThongTinBenhNhanByMaBN(maBN);
+        //        // Lấy thông tin chi tiết bệnh nhân
+        //        DTO_QuanLyBenhNhan benhNhanChiTiet = dataHelper.GetThongTinBenhNhanByMaBN(maBN);
 
-                if (benhNhanChiTiet != null)
-                {
-                    // Điền số điện thoại
-                    txtBoxSDT.Text = benhNhanChiTiet.SoDT;
-                    txtBoxSDT.ReadOnly = true;
-                }
-                else
-                {
-                    // Nếu không tìm thấy thông tin
-                    txtBoxSDT.Clear();
-                    txtBoxSDT.ReadOnly = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                // Xử lý ngoại lệ
-                MessageBox.Show($"Lỗi khi chọn bệnh nhân: {ex.Message}",
-                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        if (benhNhanChiTiet != null)
+        //        {
+        //            // Điền số điện thoại
+        //            txtBoxSDT.Text = benhNhanChiTiet.SoDT;
+        //            txtBoxSDT.ReadOnly = true;
+        //        }
+        //        else
+        //        {
+        //            // Nếu không tìm thấy thông tin
+        //            txtBoxSDT.Clear();
+        //            txtBoxSDT.ReadOnly = false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Xử lý ngoại lệ
+        //        MessageBox.Show($"Lỗi khi chọn bệnh nhân: {ex.Message}",
+        //            "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                // Reset các control
-                ResetBenhNhanControls();
-            }
-        }
-        private void TimKiemBenhNhanTheoSDT()
-        {
-            // Lấy số điện thoại và loại bỏ khoảng trắng
-            string soDienThoai = txtBoxTimSDTBN.Text.Trim();
+        //        // Reset các control
+        //        ResetBenhNhanControls();
+        //    }
+        //}
+        //private void TimKiemBenhNhanTheoSDT()
+        //{
+        //    // Lấy số điện thoại và loại bỏ khoảng trắng
+        //    string soDienThoai = txtBoxTimSDTBN.Text.Trim();
 
-            // Kiểm tra số điện thoại có rỗng không
-            if (string.IsNullOrWhiteSpace(soDienThoai))
-            {
-                MessageBox.Show("Vui lòng nhập số điện thoại", "Thông báo",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtBoxTimSDTBN.Focus(); // Đưa con trỏ về ô nhập
-                return;
-            }
+        //    // Kiểm tra số điện thoại có rỗng không
+        //    if (string.IsNullOrWhiteSpace(soDienThoai))
+        //    {
+        //        MessageBox.Show("Vui lòng nhập số điện thoại", "Thông báo",
+        //            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        txtBoxTimSDTBN.Focus(); // Đưa con trỏ về ô nhập
+        //        return;
+        //    }
 
-            // Kiểm tra định dạng số điện thoại 
-            // Bạn có thể điều chỉnh Regex phù hợp với quy tắc số điện thoại của bạn
-            if (!System.Text.RegularExpressions.Regex.IsMatch(soDienThoai, @"^(0[1-9]|84[1-9])[0-9]{8,9}$"))
-            {
-                MessageBox.Show("Số điện thoại không đúng định dạng", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtBoxTimSDTBN.SelectAll(); // Chọn toàn bộ text để dễ xóa
-                txtBoxTimSDTBN.Focus();
-                return;
-            }
+        //    // Kiểm tra định dạng số điện thoại 
+        //    // Bạn có thể điều chỉnh Regex phù hợp với quy tắc số điện thoại của bạn
+        //    if (!System.Text.RegularExpressions.Regex.IsMatch(soDienThoai, @"^(0[1-9]|84[1-9])[0-9]{8,9}$"))
+        //    {
+        //        MessageBox.Show("Số điện thoại không đúng định dạng", "Lỗi",
+        //            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        txtBoxTimSDTBN.SelectAll(); // Chọn toàn bộ text để dễ xóa
+        //        txtBoxTimSDTBN.Focus();
+        //        return;
+        //    }
 
-            try
-            {
-                // Gọi phương thức từ BLL để tìm kiếm bệnh nhân
-                List<DTO_QuanLyBenhNhan> danhSachBenhNhan = _HoaDonBLL.TimBenhNhanTheoSDT(soDienThoai);
+        //    try
+        //    {
+        //        // Gọi phương thức từ BLL để tìm kiếm bệnh nhân
+        //        List<DTO_QuanLyBenhNhan> danhSachBenhNhan = _HoaDonBLL.TimBenhNhanTheoSDT(soDienThoai);
 
-                // Kiểm tra kết quả tìm kiếm
-                if (danhSachBenhNhan == null || danhSachBenhNhan.Count == 0)
-                {
-                    // Không tìm thấy bệnh nhân
-                    MessageBox.Show("Không tìm thấy bệnh nhân với số điện thoại này",
-                        "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //        // Kiểm tra kết quả tìm kiếm
+        //        if (danhSachBenhNhan == null || danhSachBenhNhan.Count == 0)
+        //        {
+        //            // Không tìm thấy bệnh nhân
+        //            MessageBox.Show("Không tìm thấy bệnh nhân với số điện thoại này",
+        //                "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Làm sạch ComboBox
-                    cboBenhNhan.DataSource = null;
-                    cboBenhNhan.Items.Clear();
+        //            // Làm sạch ComboBox
+        //            cboBenhNhan.DataSource = null;
+        //            cboBenhNhan.Items.Clear();
 
-                    // Reset các control liên quan
-                    txtBoxMaHoaDon.Clear();
-                    txtBoxSDT.Clear();
-                    return;
-                }
+        //            // Reset các control liên quan
+        //            txtBoxMaHoaDon.Clear();
+        //            txtBoxSDT.Clear();
+        //            return;
+        //        }
 
-                // Cấu hình DataSource cho ComboBox
-                cboBenhNhan.DataSource = danhSachBenhNhan;
-                cboBenhNhan.DisplayMember = "HoTenBN"; // Hiển thị tên
-                cboBenhNhan.ValueMember = "MaBN"; // Giá trị là mã bệnh nhân
+        //        // Cấu hình DataSource cho ComboBox
+        //        cboBenhNhan.DataSource = danhSachBenhNhan;
+        //        cboBenhNhan.DisplayMember = "HoTenBN"; // Hiển thị tên
+        //        cboBenhNhan.ValueMember = "MaBN"; // Giá trị là mã bệnh nhân
 
-                // Nếu chỉ có 1 bệnh nhân thì chọn luôn
-                if (danhSachBenhNhan.Count == 1)
-                {
-                    cboBenhNhan.SelectedIndex = 0;
-                }
-                else
-                {
-                    // Nếu nhiều bệnh nhân thì mở dropdown
-                    cboBenhNhan.DroppedDown = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                // Xử lý ngoại lệ
-                MessageBox.Show($"Lỗi tìm kiếm: {ex.Message}", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        // Nếu chỉ có 1 bệnh nhân thì chọn luôn
+        //        if (danhSachBenhNhan.Count == 1)
+        //        {
+        //            cboBenhNhan.SelectedIndex = 0;
+        //        }
+        //        else
+        //        {
+        //            // Nếu nhiều bệnh nhân thì mở dropdown
+        //            cboBenhNhan.DroppedDown = true;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Xử lý ngoại lệ
+        //        MessageBox.Show($"Lỗi tìm kiếm: {ex.Message}", "Lỗi",
+        //            MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                // Reset các control
-                cboBenhNhan.DataSource = null;
-                txtBoxMaHoaDon.Clear();
-                txtBoxSDT.Clear();
-            }
-        }
+        //        // Reset các control
+        //        cboBenhNhan.DataSource = null;
+        //        txtBoxMaHoaDon.Clear();
+        //        txtBoxSDT.Clear();
+        //    }
+        //}
 
-        private void btnTimSDTBN_Click(object sender, EventArgs e)
-        {
-            TimKiemBenhNhanTheoSDT();
-        }
-        private void ResetBenhNhanControls()
-        {
-            txtBoxMaHoaDon.Clear();
-            txtBoxSDT.Clear();
-            txtBoxSDT.ReadOnly = false;
-        }
+        //private void btnTimSDTBN_Click(object sender, EventArgs e)
+        //{
+        //    TimKiemBenhNhanTheoSDT();
+        //}
+        //private void ResetBenhNhanControls()
+        //{
+        //    txtBoxMaHoaDon.Clear();
+        //    txtBoxSDT.Clear();
+        //    txtBoxSDT.ReadOnly = false;
+        //}
     }
 }

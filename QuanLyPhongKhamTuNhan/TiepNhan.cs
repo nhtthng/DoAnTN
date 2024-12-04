@@ -28,6 +28,7 @@ namespace GUI
             cboPhongKham.DataSource = phongKhamList;
             cboPhongKham.DisplayMember = "TenPK";
             cboPhongKham.ValueMember = "MaPK";
+            LoadAllTiepNhan();
         }
         // Hiển thị danh sách tất cả các bệnh nhân đã tiếp nhận
 

@@ -22,7 +22,7 @@ namespace DAL
                 conn.Open();
 
                 string query = @"
-                SELECT MaNV, HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau, Quyen 
+                SELECT MaNV, HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau 
                 FROM NhanVien";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -40,7 +40,7 @@ namespace DAL
                                 SoDT = reader.GetString(reader.GetOrdinal("SoDT")),
                                 MaPB = reader.GetInt32(reader.GetOrdinal("MaPB")),
                                 MatKhau = reader.GetString(reader.GetOrdinal("MatKhau")),
-                                Quyen = reader.GetInt32(reader.GetOrdinal("Quyen"))
+                                //Quyen = reader.GetInt32(reader.GetOrdinal("Quyen"))
                             };
 
                             danhSachNhanVien.Add(nhanVien);
@@ -71,9 +71,9 @@ namespace DAL
 
                 string query = @"
                 INSERT INTO NhanVien 
-                (HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau, Quyen) 
+                (HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau) 
                 VALUES 
-                (@HoTen, @GioiTinh, @NgaySinh, @SoDT, @MaPB, 1, @Quyen)";
+                (@HoTen, @GioiTinh, @NgaySinh, @SoDT, @MaPB, 1)";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -82,7 +82,7 @@ namespace DAL
                     cmd.Parameters.AddWithValue("@NgaySinh", nhanVien.NgaySinh);
                     cmd.Parameters.AddWithValue("@SoDT", nhanVien.SoDT);
                     cmd.Parameters.AddWithValue("@MaPB", nhanVien.MaPB);
-                    cmd.Parameters.AddWithValue("@Quyen", nhanVien.Quyen);
+                    //cmd.Parameters.AddWithValue("@Quyen", nhanVien.Quyen);
 
                     int result = cmd.ExecuteNonQuery();
                     return result > 0;
@@ -114,8 +114,7 @@ namespace DAL
                     NgaySinh = @NgaySinh, 
                     SoDT = @SoDT, 
                     MaPB = @MaPB, 
-                    MatKhau = @MatKhau, 
-                    Quyen = @Quyen 
+                    MatKhau = @MatKhau 
                 WHERE MaNV = @MaNV";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -127,7 +126,7 @@ namespace DAL
                     cmd.Parameters.AddWithValue("@SoDT", nhanVien.SoDT);
                     cmd.Parameters.AddWithValue("@MaPB", nhanVien.MaPB);
                     cmd.Parameters.AddWithValue("@MatKhau", nhanVien.MatKhau);
-                    cmd.Parameters.AddWithValue("@Quyen", nhanVien.Quyen);
+                    //cmd.Parameters.AddWithValue("@Quyen", nhanVien.Quyen);
 
                     int result = cmd.ExecuteNonQuery();
                     return result > 0;
@@ -183,7 +182,7 @@ namespace DAL
                 conn.Open();
 
                 string query = @"
-                SELECT MaNV, HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau, Quyen 
+                SELECT MaNV, HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau
                 FROM NhanVien 
                 WHERE SoDT LIKE @SoDT";
 
@@ -204,7 +203,7 @@ namespace DAL
                                 SoDT = reader.GetString(reader.GetOrdinal("SoDT")),
                                 MaPB = reader.GetInt32(reader.GetOrdinal("MaPB")),
                                 MatKhau = reader.GetString(reader.GetOrdinal("MatKhau")),
-                                Quyen = reader.GetInt32(reader.GetOrdinal("Quyen"))
+                                //Quyen = reader.GetInt32(reader.GetOrdinal("Quyen"))
                             };
 
                             danhSachNhanVien.Add(nhanVien);
