@@ -67,6 +67,9 @@ namespace DAL
                 }
             }
         }
+
+
+
         public bool LuuChiTietToaThuoc(string maTT, string maThuoc, string maBS, string cachDung, string lieuLuong, string maBN, string maLSKB)
         {
             string query = @"
@@ -345,7 +348,102 @@ namespace DAL
 
             return true; // Hoặc kiểm tra và trả về kết quả xóa
         }
+        public DataTable LayLichSuKhamBenhTheoNgay(DateTime selectedDate)
+        {
+            string query = @"
+SELECT LichSuKhamBenh.MaLSKB, benhnhan.MaBN, benhnhan.HoTenBN, LichSuKhamBenh.MaBS
+FROM LichSuKhamBenh
+INNER JOIN benhnhan ON LichSuKhamBenh.MaBN = benhnhan.MaBN
+WHERE LichSuKhamBenh.NgayKham = @NgayKham";
 
+
+            var parameters = new Dictionary<string, object>
+    {
+        { "@NgayKham", selectedDate.ToString("yyyy-MM-dd") }
+    };
+
+            DataTable result = new DataTable();
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                try
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        foreach (var param in parameters)
+                        {
+                            cmd.Parameters.AddWithValue(param.Key, param.Value);
+                        }
+
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(result);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+            }
+
+            return result;
+        }
+
+        public DataTable LayThongTinToaThuocVaChiTiet(string maTT)
+        {
+            DataTable dt = new DataTable();
+            string query = @"
+    SELECT 
+        ToaThuoc.MaTT, 
+        LichSuKhamBenh.MaBS, 
+        benhnhan.MaBN, 
+        benhnhan.HoTenBN, 
+        benhnhan.NgaySinh,  
+        benhnhan.GioiTinh,  
+        benhnhan.DiaChi,    
+        Thuoc.TenThuoc, 
+        Thuoc.BietDuoc, 
+        ChiTietToaThuoc.LieuLuong, 
+        ChiTietToaThuoc.CachDung, 
+        ToaThuoc.LoiDanBS, 
+        ToaThuoc.NgayKeToa,
+        ChiTietToaThuoc.MaThuoc  
+    FROM 
+        ToaThuoc
+    INNER JOIN 
+        LichSuKhamBenh ON ToaThuoc.MaLSKB = LichSuKhamBenh.MaLSKB
+    INNER JOIN 
+        benhnhan ON LichSuKhamBenh.MaBN = benhnhan.MaBN
+    INNER JOIN 
+        ChiTietToaThuoc ON ToaThuoc.MaTT = ChiTietToaThuoc.MaTT
+    INNER JOIN 
+        Thuoc ON ChiTietToaThuoc.MaThuoc = Thuoc.MaThuoc
+    WHERE 
+        ToaThuoc.MaTT = @MaTT";
+
+            try
+            {
+                using (SqlConnection conn = SqlConnectionData.GetConnection())
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.Add("@MaTT", SqlDbType.VarChar).Value = maTT;  // Chỉ rõ kiểu dữ liệu
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(dt);  // Lấy dữ liệu vào DataTable
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi nếu cần
+                Console.WriteLine("Lỗi: " + ex.Message);
+            }
+            return dt;
+        }
 
 
 

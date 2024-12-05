@@ -45,7 +45,7 @@ namespace GUI
             {
                 DTO_Thuoc thuoc = new DTO_Thuoc
                 {
-                    MaThuoc = int.Parse(txtMaThuoc.Text), // Đảm bảo txtMaThuoc có giá trị hợp lệ
+                    //MaThuoc = int.Parse(txtMaThuoc.Text), // Đảm bảo txtMaThuoc có giá trị hợp lệ
                     TenThuoc = txtTenThuoc.Text,
                     BietDuoc = txtBietDuoc.Text,
                     CongDung = txtCongDung.Text,

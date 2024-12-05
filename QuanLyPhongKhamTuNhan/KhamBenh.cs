@@ -101,7 +101,7 @@ namespace GUI
                 if (DGVKB.SelectedRows[0].Cells["MaBN"].Value != null)
                 {
                     int maBN = (int)DGVKB.SelectedRows[0].Cells["MaBN"].Value;
-                    OpenPrescriptionForm(maBN);
+                    OpenPrescriptionForm(maBN.ToString());
                 }
                 else
                 {
@@ -149,10 +149,10 @@ namespace GUI
             }
         }
 
-        private void OpenPrescriptionForm(int patientId)
+        private void OpenPrescriptionForm(string patientId)
         {
             // Kiểm tra xem patientId có hợp lệ hay không
-            if (patientId > 0) // Kiểm tra nếu patientId là một số dương
+            if (!string.IsNullOrEmpty(patientId)) // Kiểm tra nếu patientId là một số dương
             {
                 KeThuoc prescriptionForm = new KeThuoc();
                 prescriptionForm.SetPatientId(patientId); // Truyền đúng mã bệnh nhân vào form

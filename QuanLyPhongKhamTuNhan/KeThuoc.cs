@@ -1,9 +1,11 @@
-﻿using DAL;
+﻿using ClosedXML.Excel;
+using DAL;
 using DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -24,9 +26,9 @@ namespace GUI
 
 
         }
-        public void SetPatientId(int patientId)
+        public void SetPatientId(string patientId)
         {
-            txtMaBenhNhan.Text = patientId.ToString();
+            txtMaBenhNhan.Text = patientId;
         }
         private void label9_Click(object sender, EventArgs e)
         {
@@ -343,13 +345,83 @@ namespace GUI
             txtLieuLuong.Text = string.Empty; // Xóa liều lượng
             txtLoiDan.Text = string.Empty; // Xóa lời dặn bác sĩ
             txtMaTT.Text = string.Empty;
-           
-                                         
+
+
         }
 
         private void dataGridViewDSBenhNhan_SelectionChanged(object sender, EventArgs e)
         {
-           
+
         }
+
+        private void dateTimeNgayKham_ValueChanged(object sender, EventArgs e)
+        {
+            DateTime selectedDate = dateTimeNgayKham.Value;
+
+            // Gọi phương thức để lấy danh sách bệnh nhân theo ngày khám
+            DataTable patientHistory = dal_KeThuoc.LayLichSuKhamBenhTheoNgay(selectedDate);
+
+            // Hiển thị kết quả trong DataGridView
+            dataGridViewDSBenhNhan.DataSource = patientHistory;
+        }
+
+        private void btnInToaThuoc_Click(object sender, EventArgs e)
+        {
+            // Tạo một workbook mới
+            using (var workbook = new XLWorkbook())
+            {
+                // Tạo một worksheet mới với tên là "Toa Thuoc"
+                var worksheet = workbook.Worksheets.Add("Toa Thuoc");
+
+                // Định dạng tiêu đề cột
+                for (int i = 0; i < dataGridViewDSToaThuoc.Columns.Count; i++)
+                {
+                    var cell = worksheet.Cell(1, i + 1);
+                    cell.Value = dataGridViewDSToaThuoc.Columns[i].HeaderText;
+                    cell.Style.Font.Bold = true; // In đậm
+                    cell.Style.Fill.BackgroundColor = XLColor.LightGray; // Tô màu nền nhẹ
+                    cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center; // Căn giữa
+                    cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center; // Căn giữa dọc
+                    cell.Style.Border.BottomBorder = XLBorderStyleValues.Thin; // Đường viền dưới
+                }
+
+                // Lặp qua các hàng trong DataGridView và chép dữ liệu vào Excel
+                for (int i = 0; i < dataGridViewDSToaThuoc.Rows.Count; i++)
+                {
+                    for (int j = 0; j < dataGridViewDSToaThuoc.Columns.Count; j++)
+                    {
+                        var cell = worksheet.Cell(i + 2, j + 1);
+                        // Kiểm tra nếu dữ liệu ô có giá trị
+                        if (dataGridViewDSToaThuoc.Rows[i].Cells[j].Value != null)
+                        {
+                            cell.Value = dataGridViewDSToaThuoc.Rows[i].Cells[j].Value.ToString();
+                        }
+
+                        // Định dạng các ô dữ liệu
+                        cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                        cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin; // Đường viền ngoài
+                        cell.Style.Border.InsideBorder = XLBorderStyleValues.Thin; // Đường viền trong
+                    }
+                }
+
+                // Căn chỉnh kích thước cột tự động
+                worksheet.Columns().AdjustToContents();
+
+                // Lưu file Excel
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "Excel Files|*.xlsx",
+                    FileName = "ToaThuoc_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
+                };
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    workbook.SaveAs(saveFileDialog.FileName);
+                    MessageBox.Show("Xuất Excel thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+        
     }
 }

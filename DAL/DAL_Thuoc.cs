@@ -62,10 +62,10 @@ namespace DAL
                 }
 
                 // Nếu không tồn tại, thực hiện thêm thuốc
-                string query = "INSERT INTO Thuoc (MaThuoc, TenThuoc, BietDuoc, CongDung, LuuY, DonGia, DonViTinh, SoLuong) " +
-                               "VALUES (@MaThuoc, @TenThuoc, @BietDuoc, @CongDung, @LuuY, @DonGia, @DonViTinh, @SoLuong)";
+                string query = "INSERT INTO Thuoc ( TenThuoc, BietDuoc, CongDung, LuuY, DonGia, DonViTinh, SoLuong) " +
+                               "VALUES ( @TenThuoc, @BietDuoc, @CongDung, @LuuY, @DonGia, @DonViTinh, @SoLuong)";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaThuoc", thuoc.MaThuoc);
+                //cmd.Parameters.AddWithValue("@MaThuoc", thuoc.MaThuoc);
                 cmd.Parameters.AddWithValue("@TenThuoc", thuoc.TenThuoc);
                 cmd.Parameters.AddWithValue("@BietDuoc", thuoc.BietDuoc);
                 cmd.Parameters.AddWithValue("@CongDung", thuoc.CongDung);

@@ -41,6 +41,7 @@
             phòngBanToolStripMenuItem = new ToolStripMenuItem();
             tiếpNhậnToolStripMenuItem = new ToolStripMenuItem();
             khámBệnhToolStripMenuItem = new ToolStripMenuItem();
+            cTSDDVToolStripMenuItem = new ToolStripMenuItem();
             lịchHẹnToolStripMenuItem = new ToolStripMenuItem();
             KeThuocMenuItem1 = new ToolStripMenuItem();
             HoaDoaStripMenuItem1 = new ToolStripMenuItem();
@@ -48,7 +49,7 @@
             thoátToolStripMenuItem = new ToolStripMenuItem();
             panel1 = new Panel();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            cTSDDVToolStripMenuItem = new ToolStripMenuItem();
+            lSKBToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -152,13 +153,22 @@
             // 
             // khámBệnhToolStripMenuItem
             // 
-            khámBệnhToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cTSDDVToolStripMenuItem });
+            khámBệnhToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cTSDDVToolStripMenuItem, lSKBToolStripMenuItem });
             khámBệnhToolStripMenuItem.Image = (Image)resources.GetObject("khámBệnhToolStripMenuItem.Image");
             khámBệnhToolStripMenuItem.ImageAlign = ContentAlignment.MiddleLeft;
             khámBệnhToolStripMenuItem.Name = "khámBệnhToolStripMenuItem";
             khámBệnhToolStripMenuItem.Size = new Size(171, 35);
             khámBệnhToolStripMenuItem.Text = "Khám Bệnh";
-            khámBệnhToolStripMenuItem.Click += khámBệnhToolStripMenuItem_Click;
+            khámBệnhToolStripMenuItem.DoubleClick += khámBệnhToolStripMenuItem_DoubleClick;
+            khámBệnhToolStripMenuItem.MouseHover += khámBệnhToolStripMenuItem_MouseHover;
+            // 
+            // cTSDDVToolStripMenuItem
+            // 
+            cTSDDVToolStripMenuItem.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            cTSDDVToolStripMenuItem.Name = "cTSDDVToolStripMenuItem";
+            cTSDDVToolStripMenuItem.Size = new Size(224, 34);
+            cTSDDVToolStripMenuItem.Text = "CTSDDV";
+            cTSDDVToolStripMenuItem.Click += cTSDDVToolStripMenuItem_Click_1;
             // 
             // lịchHẹnToolStripMenuItem
             // 
@@ -213,13 +223,13 @@
             panel1.TabIndex = 1;
             panel1.Paint += panel1_Paint;
             // 
-            // cTSDDVToolStripMenuItem
+            // lSKBToolStripMenuItem
             // 
-            cTSDDVToolStripMenuItem.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
-            cTSDDVToolStripMenuItem.Name = "cTSDDVToolStripMenuItem";
-            cTSDDVToolStripMenuItem.Size = new Size(224, 30);
-            cTSDDVToolStripMenuItem.Text = "CTSDDV";
-            cTSDDVToolStripMenuItem.Click += cTSDDVToolStripMenuItem_Click;
+            lSKBToolStripMenuItem.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            lSKBToolStripMenuItem.Name = "lSKBToolStripMenuItem";
+            lSKBToolStripMenuItem.Size = new Size(224, 34);
+            lSKBToolStripMenuItem.Text = "LSKB";
+            lSKBToolStripMenuItem.Click += lSKBToolStripMenuItem_Click;
             // 
             // TrangChu
             // 
@@ -260,5 +270,6 @@
         private ToolStripMenuItem KeThuocMenuItem1;
         private ToolStripMenuItem saoLưuToolStripMenuItem;
         private ToolStripMenuItem cTSDDVToolStripMenuItem;
+        private ToolStripMenuItem lSKBToolStripMenuItem;
     }
 }

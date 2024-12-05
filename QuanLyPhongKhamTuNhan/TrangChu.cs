@@ -33,6 +33,29 @@ namespace GUI
             {
                 HienThiMenuBacSi();
             }
+            // Tạo MenuStrip
+            //MenuStrip menuStrip = new MenuStrip();
+            //this.MainMenuStrip = menuStrip; // Gán cho form
+            //this.Controls.Add(menuStrip); // Thêm vào form
+
+            // Tạo mục menu "Khám Bệnh"
+            //ToolStripMenuItem khamBenhMenuItem = new ToolStripMenuItem("Khám Bệnh");
+
+            //// Tạo menu con "CTSDDV"
+            //ToolStripMenuItem ctSDDVMenuItem = new ToolStripMenuItem("CTSDDV");
+
+            //// Thêm menu con vào mục "Khám Bệnh"
+            //khámBệnhToolStripMenuItem.DropDownItems.Add(ctSDDVMenuItem);
+
+            //// Thêm mục "Khám Bệnh" vào menuStrip
+            ////menuStrip.Items.Add(khamBenhMenuItem);
+
+            //// Xử lý sự kiện click cho CTSDDV
+            //ctSDDVMenuItem.Click += (sender, e) =>
+            //{
+            //    ChiTietSuDungDV formChiTiet = new ChiTietSuDungDV();
+            //    formChiTiet.Show(); // Mở form chi tiết
+            //};
         }
 
         private void CauHinhMenuNhanVien(int maPB)
@@ -237,8 +260,7 @@ namespace GUI
 
         private void khámBệnhToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KhamBenh kb = new KhamBenh();
-            kb.Show();
+
         }
 
         private void danhMụcDịchVụToolStripMenuItem_Click(object sender, EventArgs e)
@@ -280,6 +302,28 @@ namespace GUI
         {
             ChiTietSuDungDV ctsddv = new ChiTietSuDungDV();
             ctsddv.Show();
+        }
+
+        private void khámBệnhToolStripMenuItem_DoubleClick(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void cTSDDVToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            ChiTietSuDungDV ctsddv = new ChiTietSuDungDV();
+            ctsddv.Show();
+        }
+
+        private void khámBệnhToolStripMenuItem_MouseHover(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lSKBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KhamBenh kb = new KhamBenh();
+            kb.Show();
         }
     }
 }

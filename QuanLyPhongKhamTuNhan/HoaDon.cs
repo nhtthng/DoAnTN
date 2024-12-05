@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -263,6 +264,8 @@ namespace GUI
                     MaNV = Convert.ToInt32(cboNhanVien.SelectedValue),
                     MaBN = Convert.ToInt32(cboBenhNhan.SelectedValue),
                     GiamGia = Convert.ToInt32(cboGiamGia.SelectedItem),
+                    MaLSKB = Convert.ToInt32(txtBoxMaLSKB.Text),
+                    PhuongThucThanhToan = cboPTTT.SelectedItem.ToString()
                 };
 
                 // Gọi phương thức cập nhật từ BLL
@@ -288,6 +291,64 @@ namespace GUI
             {
                 MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void PrintInvoice(InvoiceDetails invoiceDetails)
+        {
+            // Tạo đối tượng PrintDocument
+            PrintDocument printDoc = new PrintDocument();
+
+            // Đăng ký sự kiện PrintPage
+            printDoc.PrintPage += (sender, e) =>
+            {
+                // Tạo một chuỗi để chứa thông tin hóa đơn
+                StringBuilder invoiceText = new StringBuilder();
+                invoiceText.AppendLine("HÓA ĐƠN");
+                invoiceText.AppendLine("-------------------------");
+                invoiceText.AppendLine($"Mã Hóa Đơn: {invoiceDetails.HoaDon.MaHD}");
+                invoiceText.AppendLine($"Mã Bệnh Nhân: {invoiceDetails.HoaDon.MaBN}");
+                invoiceText.AppendLine($"Mã Nhân Viên: {invoiceDetails.HoaDon.MaNV}");
+                invoiceText.AppendLine($"Ngày Lập Hóa Đơn: {invoiceDetails.HoaDon.NgayLapHD}");
+                invoiceText.AppendLine($"Giảm Giá: {invoiceDetails.HoaDon.GiamGia}");
+                invoiceText.AppendLine($"Trạng Thái: {invoiceDetails.HoaDon.TrangThai}");
+                invoiceText.AppendLine($"Mã Lịch Sử Khám Bệnh: {invoiceDetails.HoaDon.MaLSKB}");
+                invoiceText.AppendLine($"Tổng Tiền: {invoiceDetails.HoaDon.TongTien}");
+                invoiceText.AppendLine($"Họ Tên Bệnh Nhân: {invoiceDetails.HoTenBN}");
+                invoiceText.AppendLine($"Ngày Sinh: {invoiceDetails.NgaySinh}");
+                invoiceText.AppendLine($"Số Điện Thoại: {invoiceDetails.SoDT}");
+
+                // Vẽ thông tin hóa đơn lên trang in
+                e.Graphics.DrawString(invoiceText.ToString(), new Font("Arial", 12), Brushes.Black, new PointF(10, 10));
+            };
+
+            // Hiển thị hộp thoại in
+            PrintDialog printDialog = new PrintDialog();
+            printDialog.Document = printDoc;
+
+            if (printDialog.ShowDialog() == DialogResult.OK)
+            {
+                printDoc.Print();
+            }
+        }
+
+        private void btnInHoaDon_Click(object sender, EventArgs e)
+        {
+            if (DGVHD.SelectedRows.Count > 0)
+            {
+                DataGridViewRow selectedRow = DGVHD.SelectedRows[0];
+                int maHD = Convert.ToInt32(selectedRow.Cells["MaHD"].Value);
+
+                // Khởi tạo BLL
+                //HoaDonBLL hoaDonBLL = new HoaDonBLL();
+                InvoiceDetails invoiceDetails = _HoaDonBLL.GetInvoiceDetails(maHD);
+
+                // Gọi phương thức in hóa đơn
+                PrintInvoice(invoiceDetails);
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một hóa đơn để in.");
             }
         }
 

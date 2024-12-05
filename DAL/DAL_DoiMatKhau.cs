@@ -221,7 +221,7 @@ namespace DAL
 
                     // So sánh với mật khẩu mặc định (ví dụ: mã hóa của "1")
                     return matKhau != null &&
-                           matKhau.ToString() == PasswordHasher.HashPassword("1");
+                           matKhau.ToString() == /*PasswordHasher.HashPassword(*/"1"/*)*/;
                 }
             }
             catch
@@ -231,6 +231,35 @@ namespace DAL
             finally
             {
                 SqlConnectionData.CloseConnection(conn);
+            }
+        }
+        public bool KiemTraMatKhauMacDinhh(string soDienThoai)
+        {
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                conn.Open();
+                string query = "SELECT MatKhau FROM NhanVien WHERE SoDT = @SoDienThoai";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SoDienThoai", soDienThoai);
+                    object matKhau = cmd.ExecuteScalar();
+                    return matKhau != null && matKhau.ToString() == "1"; // Kiểm tra mật khẩu mặc định
+                }
+            }
+        }
+        public bool DoiMatKhau(string soDienThoai, string matKhauMoi)
+        {
+            string hashedPassword = PasswordHasher.HashPassword(matKhauMoi);
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                conn.Open();
+                string query = "UPDATE NhanVien SET MatKhau = @MatKhau WHERE SoDT = @SoDienThoai";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MatKhau", hashedPassword);
+                    cmd.Parameters.AddWithValue("@SoDienThoai", soDienThoai);
+                    return cmd.ExecuteNonQuery() > 0; // Trả về true nếu cập nhật thành công
+                }
             }
         }
     }

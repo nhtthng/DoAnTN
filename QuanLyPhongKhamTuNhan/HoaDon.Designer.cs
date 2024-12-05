@@ -266,6 +266,7 @@
             btnInHoaDon.TabIndex = 18;
             btnInHoaDon.Text = "In";
             btnInHoaDon.UseVisualStyleBackColor = true;
+            btnInHoaDon.Click += btnInHoaDon_Click;
             // 
             // HoaDon
             // 

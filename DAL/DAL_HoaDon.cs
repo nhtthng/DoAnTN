@@ -335,5 +335,60 @@ ORDER BY NgayLapHD DESC";
                 SqlConnectionData.CloseConnection(conn);
             }
         }
+        public InvoiceDetails GetInvoiceDetails(int maHD)
+        {
+            InvoiceDetails invoiceDetails = new InvoiceDetails();
+            invoiceDetails.HoaDon = new DTO_HoaDon();
+
+            string query = @"
+        SELECT 
+            HD.MaHD,
+            HD.MaBN,
+            HD.MaNV,
+            HD.NgayLapHD,
+            HD.GiamGia,
+            HD.TrangThai,
+            HD.MaLSKB,
+            (SELECT SUM(ThanhTien) FROM CTSDDV WHERE MaLSKB = HD.MaLSKB) + 
+            (SELECT SUM(ThanhTien) FROM CTHD WHERE MaLSKB = HD.MaLSKB) AS TongTien,
+            BN.HoTenBN,
+            BN.NgaySinh,
+            BN.SoDT
+        FROM 
+            HoaDon HD
+        JOIN 
+            BenhNhan BN ON HD.MaBN = BN.MaBN
+        WHERE 
+            HD.MaHD = @MaHD;";
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaHD", maHD);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        invoiceDetails.HoaDon.MaHD = Convert.ToInt32(reader["MaHD"]);
+                        invoiceDetails.HoaDon.MaBN = Convert.ToInt32(reader["MaBN"]);
+                        invoiceDetails.HoaDon.MaNV = Convert.ToInt32(reader["MaNV"]);
+                        invoiceDetails.HoaDon.NgayLapHD = Convert.ToDateTime(reader["NgayLapHD"]);
+                        invoiceDetails.HoaDon.GiamGia = Convert.ToDecimal(reader["GiamGia"]);
+                        invoiceDetails.HoaDon.TrangThai = reader["TrangThai"].ToString();
+                        invoiceDetails.HoaDon.MaLSKB = Convert.ToInt32(reader["MaLSKB"]);
+                        //invoiceDetails.HoaDon.TongTien = Convert.ToDecimal(reader["TongTien"]);
+
+                        // Lưu thông tin bệnh nhân
+                        invoiceDetails.HoTenBN = reader["HoTenBN"].ToString();
+                        invoiceDetails.NgaySinh = Convert.ToDateTime(reader["NgaySinh"]);
+                        invoiceDetails.SoDT = reader["SoDT"].ToString();
+                    }
+                }
+            }
+
+            return invoiceDetails;
+        }
     }
 }

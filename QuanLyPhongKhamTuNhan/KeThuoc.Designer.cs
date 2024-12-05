@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeThuoc));
             panelDSBenhNhan = new Panel();
+            label14 = new Label();
+            dateTimeNgayKham = new DateTimePicker();
             dataGridViewDSBenhNhan = new DataGridView();
             label1 = new Label();
             panelKeThuoc = new Panel();
@@ -60,6 +62,7 @@
             label5 = new Label();
             label3 = new Label();
             label2 = new Label();
+            btnInToaThuoc = new Button();
             panelDSBenhNhan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewDSBenhNhan).BeginInit();
             panelKeThuoc.SuspendLayout();
@@ -69,19 +72,38 @@
             // panelDSBenhNhan
             // 
             panelDSBenhNhan.BorderStyle = BorderStyle.FixedSingle;
+            panelDSBenhNhan.Controls.Add(label14);
+            panelDSBenhNhan.Controls.Add(dateTimeNgayKham);
             panelDSBenhNhan.Controls.Add(dataGridViewDSBenhNhan);
             panelDSBenhNhan.Location = new Point(12, 33);
             panelDSBenhNhan.Name = "panelDSBenhNhan";
             panelDSBenhNhan.Size = new Size(440, 485);
             panelDSBenhNhan.TabIndex = 0;
             // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(69, 39);
+            label14.Name = "label14";
+            label14.Size = new Size(84, 20);
+            label14.TabIndex = 2;
+            label14.Text = "Ngày khám";
+            // 
+            // dateTimeNgayKham
+            // 
+            dateTimeNgayKham.Location = new Point(174, 34);
+            dateTimeNgayKham.Name = "dateTimeNgayKham";
+            dateTimeNgayKham.Size = new Size(250, 27);
+            dateTimeNgayKham.TabIndex = 1;
+            dateTimeNgayKham.ValueChanged += dateTimeNgayKham_ValueChanged;
+            // 
             // dataGridViewDSBenhNhan
             // 
             dataGridViewDSBenhNhan.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewDSBenhNhan.Location = new Point(12, 34);
+            dataGridViewDSBenhNhan.Location = new Point(12, 78);
             dataGridViewDSBenhNhan.Name = "dataGridViewDSBenhNhan";
             dataGridViewDSBenhNhan.RowHeadersWidth = 51;
-            dataGridViewDSBenhNhan.Size = new Size(412, 435);
+            dataGridViewDSBenhNhan.Size = new Size(412, 391);
             dataGridViewDSBenhNhan.TabIndex = 0;
             dataGridViewDSBenhNhan.CellClick += dataGridViewDSBenhNhan_CellClick;
             dataGridViewDSBenhNhan.CellContentClick += dataGridViewDSBenhNhan_CellContentClick;
@@ -101,6 +123,7 @@
             // panelKeThuoc
             // 
             panelKeThuoc.BorderStyle = BorderStyle.FixedSingle;
+            panelKeThuoc.Controls.Add(btnInToaThuoc);
             panelKeThuoc.Controls.Add(txtMaTT);
             panelKeThuoc.Controls.Add(dateTimeNgayKee);
             panelKeThuoc.Controls.Add(btnXoa);
@@ -151,7 +174,7 @@
             // 
             btnXoa.Image = (Image)resources.GetObject("btnXoa.Image");
             btnXoa.ImageAlign = ContentAlignment.MiddleLeft;
-            btnXoa.Location = new Point(677, 424);
+            btnXoa.Location = new Point(569, 424);
             btnXoa.Name = "btnXoa";
             btnXoa.Size = new Size(106, 45);
             btnXoa.TabIndex = 3;
@@ -163,7 +186,7 @@
             // 
             btnSua.Image = (Image)resources.GetObject("btnSua.Image");
             btnSua.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSua.Location = new Point(510, 424);
+            btnSua.Location = new Point(402, 424);
             btnSua.Name = "btnSua";
             btnSua.Size = new Size(106, 45);
             btnSua.TabIndex = 3;
@@ -175,7 +198,7 @@
             // 
             btnLuu.Image = (Image)resources.GetObject("btnLuu.Image");
             btnLuu.ImageAlign = ContentAlignment.MiddleLeft;
-            btnLuu.Location = new Point(332, 424);
+            btnLuu.Location = new Point(224, 424);
             btnLuu.Name = "btnLuu";
             btnLuu.Size = new Size(106, 45);
             btnLuu.TabIndex = 3;
@@ -381,6 +404,18 @@
             label2.TabIndex = 0;
             label2.Text = "Kê Thuốc";
             // 
+            // btnInToaThuoc
+            // 
+            btnInToaThuoc.Image = (Image)resources.GetObject("btnInToaThuoc.Image");
+            btnInToaThuoc.ImageAlign = ContentAlignment.MiddleLeft;
+            btnInToaThuoc.Location = new Point(745, 424);
+            btnInToaThuoc.Name = "btnInToaThuoc";
+            btnInToaThuoc.Size = new Size(106, 45);
+            btnInToaThuoc.TabIndex = 6;
+            btnInToaThuoc.Text = "       In Toa";
+            btnInToaThuoc.UseVisualStyleBackColor = true;
+            btnInToaThuoc.Click += btnInToaThuoc_Click;
+            // 
             // KeThuoc
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -394,6 +429,7 @@
             Text = "KeThuoc";
             Load += KeThuoc_Load;
             panelDSBenhNhan.ResumeLayout(false);
+            panelDSBenhNhan.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewDSBenhNhan).EndInit();
             panelKeThuoc.ResumeLayout(false);
             panelKeThuoc.PerformLayout();
@@ -435,5 +471,8 @@
         private Label label12;
         private TextBox txtMaThuoc;
         private Label label13;
+        private Label label14;
+        private DateTimePicker dateTimeNgayKham;
+        private Button btnInToaThuoc;
     }
 }

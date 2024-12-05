@@ -168,5 +168,14 @@ namespace BLL
             string pattern = @"^(0[1-9]|84[1-9])[0-9]{8}$";
             return System.Text.RegularExpressions.Regex.IsMatch(soDienThoai, pattern);
         }
+        public InvoiceDetails GetInvoiceDetails(int maHD)
+        {
+            // Gọi hàm từ lớp DAL
+            InvoiceDetails invoiceDetails = _dalHoaDonDAL.GetInvoiceDetails(maHD);
+
+            // Có thể thêm logic xử lý dữ liệu ở đây nếu cần
+
+            return invoiceDetails;
+        }
     }
 }
