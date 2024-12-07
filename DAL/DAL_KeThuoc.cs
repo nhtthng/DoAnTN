@@ -11,358 +11,232 @@ namespace DAL
 {
     public class DAL_KeThuoc
     {
-        public DataTable LayThongTinBenhNhan()
+        // Thêm chi tiết toa thuốc
+        public List<DTO_ChiTietToaThuoc> GetAllChiTietToaThuoc()
         {
-            DataTable dt = new DataTable();
-            string query = @"
-        SELECT LichSuKhamBenh.MaLSKB, benhnhan.MaBN, benhnhan.HoTenBN, LichSuKhamBenh.MaBS
-        FROM LichSuKhamBenh
-        INNER JOIN benhnhan ON LichSuKhamBenh.MaBN = benhnhan.MaBN";
+            List<DTO_ChiTietToaThuoc> listChiTietToaThuoc = new List<DTO_ChiTietToaThuoc>();
 
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            using (SqlConnection connection = SqlConnectionData.GetConnection())
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                string query = "SELECT * FROM ChiTietToaThuoc"; // Thay đổi tên bảng theo cơ sở dữ liệu của bạn
+                SqlCommand cmd = new SqlCommand(query, connection);
+                connection.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    try
+                    DTO_ChiTietToaThuoc chiTiet = new DTO_ChiTietToaThuoc
                     {
-                        conn.Open(); // Mở kết nối
-                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                        adapter.Fill(dt); // Điền dữ liệu vào DataTable
-                    }
-                    catch (Exception ex)
-                    {
-                        // Xử lý lỗi (có thể log hoặc thông báo)
-                        Console.WriteLine(ex.Message);
-                    }
+                        MaLSKB = reader.GetInt32(reader.GetOrdinal("MaLSKB")),
+                        MaThuoc = reader.GetInt32(reader.GetOrdinal("MaThuoc")),
+                        CachDung = reader.GetString(reader.GetOrdinal("CachDung")),
+                        LieuLuong = reader.GetString(reader.GetOrdinal("LieuLuong")),
+                        NgayKeToa = reader.GetDateTime(reader.GetOrdinal("NgayKeToa")),
+                        MaBS = reader.GetInt32(reader.GetOrdinal("MaBS"))
+                    };
+                    listChiTietToaThuoc.Add(chiTiet);
                 }
             }
-            return dt;
+
+            return listChiTietToaThuoc;
         }
-        public string LuuToaThuoc(string maTT, string maLSKB, DateTime ngayKeToa, string loiDanBS)
+        public bool AddChiTietToaThuoc(DTO_ChiTietToaThuoc chiTietToaThuoc)
         {
-            string query = @"
-        INSERT INTO ToaThuoc (MaTT, MaLSKB, NgayKeToa, LoiDanBS)
-        VALUES (@MaTT, @MaLSKB, @NgayKeToa, @LoiDanBS)";
-
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            using (SqlConnection connection = SqlConnectionData.GetConnection())
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@MaTT", maTT);
-                    cmd.Parameters.AddWithValue("@MaLSKB", maLSKB);
-                    cmd.Parameters.AddWithValue("@NgayKeToa", ngayKeToa);
-                    cmd.Parameters.AddWithValue("@LoiDanBS", loiDanBS);
+                string query = "INSERT INTO ChiTietToaThuoc (MaLSKB, MaThuoc, CachDung, LieuLuong, NgayKeToa, LoiDanBS, MaBS) " +
+                               "VALUES (@MaLSKB, @MaThuoc, @CachDung, @LieuLuong, @NgayKeToa, @LoiDanBS, @MaBS)";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@MaLSKB", chiTietToaThuoc.MaLSKB);
+                command.Parameters.AddWithValue("@MaThuoc", chiTietToaThuoc.MaThuoc);
+                command.Parameters.AddWithValue("@CachDung", chiTietToaThuoc.CachDung);
+                command.Parameters.AddWithValue("@LieuLuong", chiTietToaThuoc.LieuLuong);
+                command.Parameters.AddWithValue("@NgayKeToa", chiTietToaThuoc.NgayKeToa);
+                command.Parameters.AddWithValue("@LoiDanBS", chiTietToaThuoc.LoiDanBS);
+                command.Parameters.AddWithValue("@MaBS", chiTietToaThuoc.MaBS);
 
-                    try
-                    {
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        return maTT; // Trả về MaTT để sử dụng cho việc lưu chi tiết
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        return null; // Trả về null nếu có lỗi
-                    }
+                try
+                {
+                    connection.Open();
+                    int result = command.ExecuteNonQuery();
+                    return result > 0; // Trả về true nếu thêm thành công
                 }
-            }
-        }
-
-
-
-        public bool LuuChiTietToaThuoc(string maTT, string maThuoc, string maBS, string cachDung, string lieuLuong, string maBN, string maLSKB)
-        {
-            string query = @"
-        INSERT INTO ChiTietToaThuoc (MaTT, MaThuoc, MaBS, CachDung, LieuLuong, MaBN, MaLSKB)
-        VALUES (@MaTT, @MaThuoc, @MaBS, @CachDung, @LieuLuong, @MaBN, @MaLSKB)";
-
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
-            {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                catch (Exception ex)
                 {
-                    cmd.Parameters.AddWithValue("@MaTT", maTT);
-                    cmd.Parameters.AddWithValue("@MaThuoc", maThuoc);
-                    cmd.Parameters.AddWithValue("@MaBS", maBS);
-                    cmd.Parameters.AddWithValue("@CachDung", cachDung);
-                    cmd.Parameters.AddWithValue("@LieuLuong", lieuLuong);
-                    cmd.Parameters.AddWithValue("@MaBN", maBN);
-                    cmd.Parameters.AddWithValue("@MaLSKB", maLSKB);
-
-                    try
-                    {
-                        conn.Open();
-                        int result = cmd.ExecuteNonQuery();
-                        return result > 0; // Trả về true nếu lưu thành công
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        return false; // Trả về false nếu có lỗi
-                    }
+                    // Xử lý lỗi (có thể ghi log hoặc thông báo)
+                    Console.WriteLine(ex.Message);
+                    return false;
                 }
             }
         }
 
-
-        public DataTable LayDSToaThuoc()
+        // Sửa chi tiết toa thuốc
+        public bool UpdateChiTietToaThuoc(DTO_ChiTietToaThuoc chiTietToaThuoc)
         {
-            DataTable dt = new DataTable();
-            string query = @"
-        SELECT 
-            ToaThuoc.MaTT, 
-            LichSuKhamBenh.MaBS, 
-            benhnhan.MaBN, 
-            benhnhan.HoTenBN, 
-            Thuoc.TenThuoc, 
-            Thuoc.BietDuoc, 
-            ChiTietToaThuoc.LieuLuong, 
-            ChiTietToaThuoc.CachDung, 
-            ToaThuoc.LoiDanBS, 
-            ToaThuoc.NgayKeToa,
-            ChiTietToaThuoc.MaThuoc  -- Thêm MaThuoc vào truy vấn
-        FROM 
-            ToaThuoc
-        INNER JOIN 
-            LichSuKhamBenh ON ToaThuoc.MaLSKB = LichSuKhamBenh.MaLSKB
-        INNER JOIN 
-            benhnhan ON LichSuKhamBenh.MaBN = benhnhan.MaBN
-        INNER JOIN 
-            ChiTietToaThuoc ON ToaThuoc.MaTT = ChiTietToaThuoc.MaTT
-        INNER JOIN 
-            Thuoc ON ChiTietToaThuoc.MaThuoc = Thuoc.MaThuoc";
-
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            using (SqlConnection connection = SqlConnectionData.GetConnection())
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                string query = "UPDATE ChiTietToaThuoc SET CachDung = @CachDung, LieuLuong = @LieuLuong, " +
+                               "NgayKeToa = @NgayKeToa, LoiDanBS = @LoiDanBS, MaBS = @MaBS " +
+                               "WHERE MaLSKB = @MaLSKB AND MaThuoc = @MaThuoc";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@MaLSKB", chiTietToaThuoc.MaLSKB);
+                command.Parameters.AddWithValue("@MaThuoc", chiTietToaThuoc.MaThuoc);
+                command.Parameters.AddWithValue("@CachDung", chiTietToaThuoc.CachDung);
+                command.Parameters.AddWithValue("@LieuLuong", chiTietToaThuoc.LieuLuong);
+                command.Parameters.AddWithValue("@NgayKeToa", chiTietToaThuoc.NgayKeToa);
+                command.Parameters.AddWithValue("@LoiDanBS", chiTietToaThuoc.LoiDanBS);
+                command.Parameters.AddWithValue("@MaBS", chiTietToaThuoc.MaBS);
+
+                try
                 {
-                    try
-                    {
-                        conn.Open();
-                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                        adapter.Fill(dt); // Điền dữ liệu vào DataTable
-                    }
-                    catch (Exception ex)
-                    {
-                        // Xử lý lỗi (có thể log hoặc thông báo lỗi)
-                        Console.WriteLine(ex.Message);
-                    }
+                    connection.Open();
+                    int result = command.ExecuteNonQuery();
+                    return result > 0; // Trả về true nếu sửa thành công
                 }
-            }
-
-            return dt;
-        }
-
-        public DataTable LayDSToaThuocByMaBN(string maBN)
-        {
-            DataTable dt = new DataTable();
-            string query = @"
-        SELECT 
-            ToaThuoc.MaTT, 
-            LichSuKhamBenh.MaBS, 
-            benhnhan.MaBN, 
-            benhnhan.HoTenBN, 
-            Thuoc.TenThuoc, 
-            Thuoc.BietDuoc, 
-            ChiTietToaThuoc.LieuLuong, 
-            ChiTietToaThuoc.CachDung, 
-            ToaThuoc.LoiDanBS, 
-            ToaThuoc.NgayKeToa,
-            ChiTietToaThuoc.MaThuoc  -- Thêm MaThuoc vào truy vấn
-        FROM 
-            ToaThuoc
-        INNER JOIN 
-            LichSuKhamBenh ON ToaThuoc.MaLSKB = LichSuKhamBenh.MaLSKB
-        INNER JOIN 
-            benhnhan ON LichSuKhamBenh.MaBN = benhnhan.MaBN
-        INNER JOIN 
-            ChiTietToaThuoc ON ToaThuoc.MaTT = ChiTietToaThuoc.MaTT
-        INNER JOIN 
-            Thuoc ON ChiTietToaThuoc.MaThuoc = Thuoc.MaThuoc
-        WHERE 
-            benhnhan.MaBN = @MaBN"; // Thêm điều kiện để lọc theo MaBN
-
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
-            {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                catch (Exception ex)
                 {
-                    cmd.Parameters.AddWithValue("@MaBN", maBN); // Thêm tham số vào câu lệnh SQL
-                    try
-                    {
-                        conn.Open(); // Mở kết nối
-                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                        adapter.Fill(dt); // Điền dữ liệu vào DataTable
-                    }
-                    catch (Exception ex)
-                    {
-                        // Xử lý lỗi (có thể log hoặc thông báo)
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-            }
-            return dt; // Trả về DataTable chứa danh sách toa thuốc
-        }
-
-        public bool KiemTraMaTT(string maTT)
-        {
-            string query = "SELECT COUNT(*) FROM ToaThuoc WHERE MaTT = @MaTT";
-
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
-            {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@MaTT", maTT);
-                    conn.Open();
-                    int count = (int)cmd.ExecuteScalar();
-                    return count > 0; // Trả về true nếu mã toa thuốc đã tồn tại
+                    // Xử lý lỗi (có thể ghi log hoặc thông báo)
+                    Console.WriteLine(ex.Message);
+                    return false;
                 }
             }
         }
-        public DataTable LayThongTinThuoc(string maThuoc)
-        {
-            DataTable dt = new DataTable();
-            string query = @"
-    SELECT 
-        TenThuoc, 
-        BietDuoc 
-    FROM 
-        Thuoc 
-    WHERE 
-        MaThuoc = @MaThuoc";
 
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
+        // Xóa chi tiết toa thuốc
+        public bool DeleteChiTietToaThuoc(int maLSKB, int maThuoc)
+        {
+            using (SqlConnection connection = SqlConnectionData.GetConnection())
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                string query = "DELETE FROM ChiTietToaThuoc WHERE MaLSKB = @MaLSKB AND MaThuoc = @MaThuoc";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@MaLSKB", maLSKB);
+                command.Parameters.AddWithValue("@MaThuoc", maThuoc);
+
+                try
                 {
-                    cmd.Parameters.AddWithValue("@MaThuoc", maThuoc); // Thêm tham số vào câu lệnh SQL
-                    try
-                    {
-                        conn.Open(); // Mở kết nối
-                        SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                        adapter.Fill(dt); // Điền dữ liệu vào DataTable
-                    }
-                    catch (Exception ex)
-                    {
-                        // Xử lý lỗi (có thể log hoặc thông báo)
-                        Console.WriteLine(ex.Message);
-                    }
+                    connection.Open();
+                    int result = command.ExecuteNonQuery();
+                    return result > 0; // Trả về true nếu xóa thành công
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi (có thể ghi log hoặc thông báo)
+                    Console.WriteLine(ex.Message);
+                    return false;
                 }
             }
-            return dt; // Trả về DataTable chứa thông tin thuốc
         }
-
-        public bool CapNhatToaThuocVaChiTiet(DTO_ToaThuoc toaThuoc, List<DTO_ChiTietToaThuoc> chiTietToaThuocs)
+        // Tìm kiếm thông tin chi tiết toa thuốc bằng số điện thoại của bệnh nhân
+        public List<DTO_ChiTietToaThuoc> SearchChiTietToaThuocByPhone(string phoneNumber)
         {
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
-            {
-                conn.Open();
-                using (SqlTransaction transaction = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        // Cập nhật thông tin toa thuốc
-                        string queryToaThuoc = @"
-                UPDATE ToaThuoc
-                SET MaLSKB = @MaLSKB, NgayKeToa = @NgayKeToa, LoiDanBS = @LoiDanBS
-                WHERE MaTT = @MaTT";
+            List<DTO_ChiTietToaThuoc> chiTietToaThuocs = new List<DTO_ChiTietToaThuoc>();
+            int maBN = GetMaBNByPhone(phoneNumber);
+            if (maBN == 0) return chiTietToaThuocs; // Nếu không tìm thấy bệnh nhân
 
-                        using (SqlCommand cmdToaThuoc = new SqlCommand(queryToaThuoc, conn, transaction))
+            List<int> maLSKBs = GetMaLSKBsByMaBN(maBN);
+            foreach (int maLSKB in maLSKBs)
+            {
+                chiTietToaThuocs.AddRange(GetChiTietToaThuocByMaLSKB(maLSKB));
+            }
+
+            return chiTietToaThuocs;
+        }
+        // Lấy Mã Bệnh Nhân từ số điện thoại
+        private int GetMaBNByPhone(string phoneNumber)
+        {
+            using (SqlConnection connection = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT MaBN FROM BenhNhan WHERE SoDT = @SoDT";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SoDT", phoneNumber);
+
+                try
+                {
+                    connection.Open();
+                    object result = command.ExecuteScalar();
+                    return result != null ? Convert.ToInt32(result) : 0; // Trả về 0 nếu không tìm thấy
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return 0;
+                }
+            }
+        }
+        // Lấy danh sách Mã Lịch Sử Khám Bệnh từ Mã Bệnh Nhân
+        private List<int> GetMaLSKBsByMaBN(int maBN)
+        {
+            List<int> maLSKBs = new List<int>();
+            using (SqlConnection connection = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT MaLSKB FROM LichSuKhamBenh WHERE MaBN = @MaBN";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@MaBN", maBN);
+
+                try
+                {
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
                         {
-                            cmdToaThuoc.Parameters.AddWithValue("@MaTT", toaThuoc.MaTT);
-                            cmdToaThuoc.Parameters.AddWithValue("@MaLSKB", toaThuoc.MaLSKB);
-                            cmdToaThuoc.Parameters.AddWithValue("@NgayKeToa", toaThuoc.NgayKeToa);
-                            cmdToaThuoc.Parameters.AddWithValue("@LoiDanBS", toaThuoc.LoiDanBS);
-                            cmdToaThuoc.ExecuteNonQuery();
+                            maLSKBs.Add(reader.GetInt32(0));
                         }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return maLSKBs;
+        }
+        // Lấy chi tiết toa thuốc từ Mã Lịch Sử Khám Bệnh
+        private List<DTO_ChiTietToaThuoc> GetChiTietToaThuocByMaLSKB(int maLSKB)
+        {
+            List<DTO_ChiTietToaThuoc> chiTietToaThuocs = new List<DTO_ChiTietToaThuoc>();
+            using (SqlConnection connection = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT * FROM ChiTietToaThuoc WHERE MaLSKB = @MaLSKB";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@MaLSKB", maLSKB);
 
-                        
-                        string deleteChiTiet = "DELETE FROM ChiTietToaThuoc WHERE MaTT = @MaTT";
-                        using (SqlCommand cmdDeleteChiTiet = new SqlCommand(deleteChiTiet, conn, transaction))
+                try
+                {
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
                         {
-                            cmdDeleteChiTiet.Parameters.AddWithValue("@MaTT", toaThuoc.MaTT);
-                            cmdDeleteChiTiet.ExecuteNonQuery();
-                        }
-
-                        // Thêm chi tiết toa thuốc mới
-                        string queryChiTiet = @"
-                INSERT INTO ChiTietToaThuoc (MaTT, MaThuoc, MaBS, CachDung, LieuLuong, MaBN, MaLSKB)
-                VALUES (@MaTT, @MaThuoc, @MaBS, @CachDung, @LieuLuong, @MaBN, @MaLSKB)";
-
-                        foreach (var chiTiet in chiTietToaThuocs)
-                        {
-                            using (SqlCommand cmdChiTiet = new SqlCommand(queryChiTiet, conn, transaction))
+                            DTO_ChiTietToaThuoc chiTiet = new DTO_ChiTietToaThuoc
                             {
-                                cmdChiTiet.Parameters.AddWithValue("@MaTT", chiTiet.MaTT);
-                                cmdChiTiet.Parameters.AddWithValue("@MaThuoc", chiTiet.MaThuoc);
-                                cmdChiTiet.Parameters.AddWithValue("@MaBS", chiTiet.MaBS);
-                                cmdChiTiet.Parameters.AddWithValue("@CachDung", chiTiet.CachDung);
-                                cmdChiTiet.Parameters.AddWithValue("@LieuLuong", chiTiet.LieuLuong);
-                                cmdChiTiet.Parameters.AddWithValue("@MaBN", chiTiet.MaBN);
-                                cmdChiTiet.Parameters.AddWithValue("@MaLSKB", chiTiet.MaLSKB);
-                                cmdChiTiet.ExecuteNonQuery();
-                            }
+                                MaLSKB = reader.GetInt32(0),
+                                MaThuoc = reader.GetInt32(1),
+                                CachDung = reader.GetString(2),
+                                LieuLuong = reader.GetString(3),
+                                NgayKeToa = reader.GetDateTime(4),
+                                LoiDanBS = reader.GetString(5),
+                                MaBS = reader.GetInt32(6)
+                            };
+                            chiTietToaThuocs.Add(chiTiet);
                         }
-
-                        // Nếu tất cả thành công, commit giao dịch
-                        transaction.Commit();
-                        return true; // Trả về true nếu cập nhật thành công
-                    }
-                    catch (Exception ex)
-                    {
-                        // Nếu có lỗi, rollback giao dịch
-                        transaction.Rollback();
-                        Console.WriteLine(ex.Message);
-                        return false; // Trả về false nếu có lỗi
                     }
                 }
-            }
-        }
-
-
-
-        public bool XoaToaThuocVaChiTiet(string maTT)
-        {
-            // Xóa các chi tiết toa thuốc trước
-            string queryChiTiet = "DELETE FROM ChiTietToaThuoc WHERE MaTT = @MaTT";
-
-            // Xóa toa thuốc
-            string queryToaThuoc = "DELETE FROM ToaThuoc WHERE MaTT = @MaTT";
-
-            using (SqlConnection conn = SqlConnectionData.GetConnection())
-            {
-                conn.Open();
-
-                // Xóa chi tiết toa thuốc
-                using (SqlCommand cmdChiTiet = new SqlCommand(queryChiTiet, conn))
+                catch (Exception ex)
                 {
-                    cmdChiTiet.Parameters.AddWithValue("@MaTT", maTT);
-                    cmdChiTiet.ExecuteNonQuery();
-                }
-
-                // Xóa toa thuốc
-                using (SqlCommand cmdToaThuoc = new SqlCommand(queryToaThuoc, conn))
-                {
-                    cmdToaThuoc.Parameters.AddWithValue("@MaTT", maTT);
-                    cmdToaThuoc.ExecuteNonQuery();
+                    Console.WriteLine(ex.Message);
                 }
             }
-
-            return true; // Hoặc kiểm tra và trả về kết quả xóa
+            return chiTietToaThuocs;
         }
-        public DataTable LayLichSuKhamBenhTheoNgay(DateTime selectedDate)
+        // Lấy danh sách bệnh nhân từ lịch sử khám bệnh
+        public List<DTO_QuanLyBenhNhan> GetAllBenhNhanFromLichSuKham()
         {
+            List<DTO_QuanLyBenhNhan> danhSachBenhNhan = new List<DTO_QuanLyBenhNhan>();
             string query = @"
-SELECT LichSuKhamBenh.MaLSKB, benhnhan.MaBN, benhnhan.HoTenBN, LichSuKhamBenh.MaBS
-FROM LichSuKhamBenh
-INNER JOIN benhnhan ON LichSuKhamBenh.MaBN = benhnhan.MaBN
-WHERE LichSuKhamBenh.NgayKham = @NgayKham";
-
-
-            var parameters = new Dictionary<string, object>
-    {
-        { "@NgayKham", selectedDate.ToString("yyyy-MM-dd") }
-    };
-
-            DataTable result = new DataTable();
+            SELECT BN.HoTenBN, BN.NgaySinh, BN.SoDT
+            FROM BenhNhan BN
+            JOIN LichSuKhamBenh LSKB ON BN.MaBN = LSKB.MaBN";
 
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
@@ -371,82 +245,30 @@ WHERE LichSuKhamBenh.NgayKham = @NgayKham";
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        foreach (var param in parameters)
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            cmd.Parameters.AddWithValue(param.Key, param.Value);
-                        }
-
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                        {
-                            adapter.Fill(result);
+                            while (reader.Read())
+                            {
+                                DTO_QuanLyBenhNhan benhNhan = new DTO_QuanLyBenhNhan
+                                {
+                                    HoTenBN = reader["HoTenBN"].ToString(),
+                                    NgaySinh = Convert.ToDateTime(reader["NgaySinh"]),
+                                    SoDT = reader["SoDT"].ToString()
+                                };
+                                danhSachBenhNhan.Add(benhNhan);
+                            }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error: " + ex.Message);
+                    // Xử lý lỗi (có thể ghi log hoặc ném ra ngoại lệ)
+                    throw new Exception("Lỗi khi lấy danh sách bệnh nhân: " + ex.Message);
                 }
             }
 
-            return result;
+            return danhSachBenhNhan;
         }
-
-        public DataTable LayThongTinToaThuocVaChiTiet(string maTT)
-        {
-            DataTable dt = new DataTable();
-            string query = @"
-    SELECT 
-        ToaThuoc.MaTT, 
-        LichSuKhamBenh.MaBS, 
-        benhnhan.MaBN, 
-        benhnhan.HoTenBN, 
-        benhnhan.NgaySinh,  
-        benhnhan.GioiTinh,  
-        benhnhan.DiaChi,    
-        Thuoc.TenThuoc, 
-        Thuoc.BietDuoc, 
-        ChiTietToaThuoc.LieuLuong, 
-        ChiTietToaThuoc.CachDung, 
-        ToaThuoc.LoiDanBS, 
-        ToaThuoc.NgayKeToa,
-        ChiTietToaThuoc.MaThuoc  
-    FROM 
-        ToaThuoc
-    INNER JOIN 
-        LichSuKhamBenh ON ToaThuoc.MaLSKB = LichSuKhamBenh.MaLSKB
-    INNER JOIN 
-        benhnhan ON LichSuKhamBenh.MaBN = benhnhan.MaBN
-    INNER JOIN 
-        ChiTietToaThuoc ON ToaThuoc.MaTT = ChiTietToaThuoc.MaTT
-    INNER JOIN 
-        Thuoc ON ChiTietToaThuoc.MaThuoc = Thuoc.MaThuoc
-    WHERE 
-        ToaThuoc.MaTT = @MaTT";
-
-            try
-            {
-                using (SqlConnection conn = SqlConnectionData.GetConnection())
-                {
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.Add("@MaTT", SqlDbType.VarChar).Value = maTT;  // Chỉ rõ kiểu dữ liệu
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
-                        {
-                            adapter.Fill(dt);  // Lấy dữ liệu vào DataTable
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log lỗi nếu cần
-                Console.WriteLine("Lỗi: " + ex.Message);
-            }
-            return dt;
-        }
-
-
-
-
     }
 }
+

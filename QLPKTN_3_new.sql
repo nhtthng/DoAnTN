@@ -1,4 +1,7 @@
-﻿
+﻿DROP DATABASE QuanLyPKTN_Final_4
+
+Create database QuanLyPKTN_Final_4
+use QuanLyPKTN_Final_4
 
 -- Bảng ChuyenKhoa
 CREATE TABLE ChuyenKhoa (
@@ -70,6 +73,7 @@ CREATE TABLE NhanVien (
     NgaySinh DATE,
     SoDT NVARCHAR(15),
     MaPB INT,
+	MatKhau NVARCHAR(255),
     FOREIGN KEY (MaPB) REFERENCES PhongBan(MaPB)
 );
 
@@ -130,7 +134,8 @@ CREATE TABLE Thuoc (
     CongDung NVARCHAR(255),
     LuuY NVARCHAR(255),
     DonGia DECIMAL(18, 0),
-    DonViTinh NVARCHAR(50)
+    DonViTinh NVARCHAR(50),
+	SoLuong int
 );
 
 -- Bảng CTHD (Chi Tiết Hóa Đơn)
@@ -158,28 +163,18 @@ CREATE TABLE LichHen (
     FOREIGN KEY (MaBN) REFERENCES BenhNhan(MaBN)
 );
 
--- Bảng ToaThuoc
-CREATE TABLE ToaThuoc (
-    MaTT INT PRIMARY KEY IDENTITY(1,1),
-    MaLSKB INT,
-    NgayKeToa DATE,
-    LoiDanBS NVARCHAR(255),
-    FOREIGN KEY (MaLSKB) REFERENCES LichSuKhamBenh(MaLSKB)
-);
 
 -- Bảng ChiTietToaThuoc
 CREATE TABLE ChiTietToaThuoc (
-    MaTT INT,
     MaThuoc INT,
     MaBS INT,
     CachDung NVARCHAR(255),
     LieuLuong NVARCHAR(255),
-    MaBN INT,
     MaLSKB INT,
-    PRIMARY KEY (MaTT, MaThuoc),
-    FOREIGN KEY (MaTT) REFERENCES ToaThuoc(MaTT),
+	NgayKeToa Date,
+	LoiDanBS Nvarchar(255),
+    PRIMARY KEY (MaLSKB, MaThuoc),
     FOREIGN KEY (MaThuoc) REFERENCES Thuoc(MaThuoc),
     FOREIGN KEY (MaBS) REFERENCES BacSi(MaBS),
-    FOREIGN KEY (MaBN) REFERENCES BenhNhan(MaBN),
     FOREIGN KEY (MaLSKB) REFERENCES LichSuKhamBenh(MaLSKB)
 );

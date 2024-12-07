@@ -35,7 +35,9 @@
             dataGridViewDSBenhNhan = new DataGridView();
             label1 = new Label();
             panelKeThuoc = new Panel();
-            txtMaTT = new TextBox();
+            txtBoxMaThuoc = new TextBox();
+            btnInToaThuoc = new Button();
+            txtBoxMaLSKB = new TextBox();
             dateTimeNgayKee = new DateTimePicker();
             btnXoa = new Button();
             btnSua = new Button();
@@ -45,9 +47,7 @@
             txtBietDuoc = new TextBox();
             txtLoiDan = new TextBox();
             txtCachDung = new TextBox();
-            txtMaThuoc = new TextBox();
             txtTenThuoc = new TextBox();
-            txtMaBS = new TextBox();
             txtMaBenhNhan = new TextBox();
             dataGridViewDSToaThuoc = new DataGridView();
             label4 = new Label();
@@ -62,7 +62,7 @@
             label5 = new Label();
             label3 = new Label();
             label2 = new Label();
-            btnInToaThuoc = new Button();
+            cboMaBS = new ComboBox();
             panelDSBenhNhan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewDSBenhNhan).BeginInit();
             panelKeThuoc.SuspendLayout();
@@ -95,7 +95,6 @@
             dateTimeNgayKham.Name = "dateTimeNgayKham";
             dateTimeNgayKham.Size = new Size(250, 27);
             dateTimeNgayKham.TabIndex = 1;
-            dateTimeNgayKham.ValueChanged += dateTimeNgayKham_ValueChanged;
             // 
             // dataGridViewDSBenhNhan
             // 
@@ -105,8 +104,6 @@
             dataGridViewDSBenhNhan.RowHeadersWidth = 51;
             dataGridViewDSBenhNhan.Size = new Size(412, 391);
             dataGridViewDSBenhNhan.TabIndex = 0;
-            dataGridViewDSBenhNhan.CellClick += dataGridViewDSBenhNhan_CellClick;
-            dataGridViewDSBenhNhan.CellContentClick += dataGridViewDSBenhNhan_CellContentClick;
             dataGridViewDSBenhNhan.SelectionChanged += dataGridViewDSBenhNhan_SelectionChanged;
             // 
             // label1
@@ -123,8 +120,10 @@
             // panelKeThuoc
             // 
             panelKeThuoc.BorderStyle = BorderStyle.FixedSingle;
+            panelKeThuoc.Controls.Add(cboMaBS);
+            panelKeThuoc.Controls.Add(txtBoxMaThuoc);
             panelKeThuoc.Controls.Add(btnInToaThuoc);
-            panelKeThuoc.Controls.Add(txtMaTT);
+            panelKeThuoc.Controls.Add(txtBoxMaLSKB);
             panelKeThuoc.Controls.Add(dateTimeNgayKee);
             panelKeThuoc.Controls.Add(btnXoa);
             panelKeThuoc.Controls.Add(btnSua);
@@ -134,9 +133,7 @@
             panelKeThuoc.Controls.Add(txtBietDuoc);
             panelKeThuoc.Controls.Add(txtLoiDan);
             panelKeThuoc.Controls.Add(txtCachDung);
-            panelKeThuoc.Controls.Add(txtMaThuoc);
             panelKeThuoc.Controls.Add(txtTenThuoc);
-            panelKeThuoc.Controls.Add(txtMaBS);
             panelKeThuoc.Controls.Add(txtMaBenhNhan);
             panelKeThuoc.Controls.Add(dataGridViewDSToaThuoc);
             panelKeThuoc.Controls.Add(label4);
@@ -155,12 +152,30 @@
             panelKeThuoc.Size = new Size(1085, 485);
             panelKeThuoc.TabIndex = 1;
             // 
-            // txtMaTT
+            // txtBoxMaThuoc
             // 
-            txtMaTT.Location = new Point(67, 78);
-            txtMaTT.Name = "txtMaTT";
-            txtMaTT.Size = new Size(65, 27);
-            txtMaTT.TabIndex = 5;
+            txtBoxMaThuoc.Location = new Point(224, 78);
+            txtBoxMaThuoc.Name = "txtBoxMaThuoc";
+            txtBoxMaThuoc.Size = new Size(138, 27);
+            txtBoxMaThuoc.TabIndex = 7;
+            // 
+            // btnInToaThuoc
+            // 
+            btnInToaThuoc.Image = (Image)resources.GetObject("btnInToaThuoc.Image");
+            btnInToaThuoc.ImageAlign = ContentAlignment.MiddleLeft;
+            btnInToaThuoc.Location = new Point(745, 424);
+            btnInToaThuoc.Name = "btnInToaThuoc";
+            btnInToaThuoc.Size = new Size(106, 45);
+            btnInToaThuoc.TabIndex = 6;
+            btnInToaThuoc.Text = "       In Toa";
+            btnInToaThuoc.UseVisualStyleBackColor = true;
+            // 
+            // txtBoxMaLSKB
+            // 
+            txtBoxMaLSKB.Location = new Point(83, 78);
+            txtBoxMaLSKB.Name = "txtBoxMaLSKB";
+            txtBoxMaLSKB.Size = new Size(65, 27);
+            txtBoxMaLSKB.TabIndex = 5;
             // 
             // dateTimeNgayKee
             // 
@@ -168,7 +183,6 @@
             dateTimeNgayKee.Name = "dateTimeNgayKee";
             dateTimeNgayKee.Size = new Size(277, 27);
             dateTimeNgayKee.TabIndex = 4;
-            dateTimeNgayKee.ValueChanged += dateTimeNgayKee_ValueChanged;
             // 
             // btnXoa
             // 
@@ -180,7 +194,7 @@
             btnXoa.TabIndex = 3;
             btnXoa.Text = "    Xóa";
             btnXoa.UseVisualStyleBackColor = true;
-            btnXoa.Click += btnXoa_Click;
+            btnXoa.Click += btnXoa_Click_1;
             // 
             // btnSua
             // 
@@ -192,7 +206,7 @@
             btnSua.TabIndex = 3;
             btnSua.Text = "     Sửa";
             btnSua.UseVisualStyleBackColor = true;
-            btnSua.Click += btnSua_Click;
+            btnSua.Click += btnSua_Click_1;
             // 
             // btnLuu
             // 
@@ -204,32 +218,29 @@
             btnLuu.TabIndex = 3;
             btnLuu.Text = "    Lưu";
             btnLuu.UseVisualStyleBackColor = true;
-            btnLuu.Click += btnLuu_Click;
+            btnLuu.Click += btnLuu_Click_1;
             // 
             // txtTenBenhNhan
             // 
-            txtTenBenhNhan.Location = new Point(637, 31);
+            txtTenBenhNhan.Location = new Point(664, 27);
             txtTenBenhNhan.Name = "txtTenBenhNhan";
             txtTenBenhNhan.ReadOnly = true;
             txtTenBenhNhan.Size = new Size(416, 27);
             txtTenBenhNhan.TabIndex = 2;
-            txtTenBenhNhan.TextChanged += txtTenBenhNhan_TextChanged;
             // 
             // txtLieuLuong
             // 
-            txtLieuLuong.Location = new Point(910, 78);
+            txtLieuLuong.Location = new Point(937, 78);
             txtLieuLuong.Name = "txtLieuLuong";
             txtLieuLuong.Size = new Size(143, 27);
             txtLieuLuong.TabIndex = 2;
-            txtLieuLuong.TextChanged += txtLieuLuong_TextChanged;
             // 
             // txtBietDuoc
             // 
-            txtBietDuoc.Location = new Point(669, 78);
+            txtBietDuoc.Location = new Point(696, 78);
             txtBietDuoc.Name = "txtBietDuoc";
             txtBietDuoc.Size = new Size(147, 27);
             txtBietDuoc.TabIndex = 2;
-            txtBietDuoc.TextChanged += txtBietDuoc_TextChanged;
             // 
             // txtLoiDan
             // 
@@ -237,7 +248,6 @@
             txtLoiDan.Name = "txtLoiDan";
             txtLoiDan.Size = new Size(283, 27);
             txtLoiDan.TabIndex = 2;
-            txtLoiDan.TextChanged += txtLoiDan_TextChanged;
             // 
             // txtCachDung
             // 
@@ -245,41 +255,21 @@
             txtCachDung.Name = "txtCachDung";
             txtCachDung.Size = new Size(219, 27);
             txtCachDung.TabIndex = 2;
-            txtCachDung.TextChanged += txtCachDung_TextChanged;
-            // 
-            // txtMaThuoc
-            // 
-            txtMaThuoc.Location = new Point(225, 78);
-            txtMaThuoc.Name = "txtMaThuoc";
-            txtMaThuoc.Size = new Size(100, 27);
-            txtMaThuoc.TabIndex = 2;
-            txtMaThuoc.TextChanged += txtTenThuoc_TextChanged;
             // 
             // txtTenThuoc
             // 
-            txtTenThuoc.Location = new Point(418, 78);
+            txtTenThuoc.Location = new Point(450, 78);
             txtTenThuoc.Name = "txtTenThuoc";
             txtTenThuoc.Size = new Size(159, 27);
             txtTenThuoc.TabIndex = 2;
-            txtTenThuoc.TextChanged += txtTenThuoc_TextChanged;
-            // 
-            // txtMaBS
-            // 
-            txtMaBS.Location = new Point(90, 31);
-            txtMaBS.Name = "txtMaBS";
-            txtMaBS.ReadOnly = true;
-            txtMaBS.Size = new Size(150, 27);
-            txtMaBS.TabIndex = 2;
-            txtMaBS.TextChanged += txtMaBenhNhan_TextChanged;
             // 
             // txtMaBenhNhan
             // 
-            txtMaBenhNhan.Location = new Point(387, 31);
+            txtMaBenhNhan.Location = new Point(387, 24);
             txtMaBenhNhan.Name = "txtMaBenhNhan";
             txtMaBenhNhan.ReadOnly = true;
             txtMaBenhNhan.Size = new Size(124, 27);
             txtMaBenhNhan.TabIndex = 2;
-            txtMaBenhNhan.TextChanged += txtMaBenhNhan_TextChanged;
             // 
             // dataGridViewDSToaThuoc
             // 
@@ -290,12 +280,11 @@
             dataGridViewDSToaThuoc.Size = new Size(1034, 227);
             dataGridViewDSToaThuoc.TabIndex = 1;
             dataGridViewDSToaThuoc.CellClick += dataGridViewDSToaThuoc_CellClick;
-            dataGridViewDSToaThuoc.CellContentClick += dataGridViewDSToaThuoc_CellContentClick;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(523, 34);
+            label4.Location = new Point(550, 31);
             label4.Name = "label4";
             label4.Size = new Size(108, 20);
             label4.TabIndex = 0;
@@ -304,7 +293,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(822, 81);
+            label8.Location = new Point(849, 81);
             label8.Name = "label8";
             label8.Size = new Size(82, 20);
             label8.TabIndex = 0;
@@ -340,7 +329,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(583, 81);
+            label6.Location = new Point(615, 81);
             label6.Name = "label6";
             label6.Size = new Size(75, 20);
             label6.TabIndex = 0;
@@ -351,15 +340,15 @@
             label12.AutoSize = true;
             label12.Location = new Point(10, 81);
             label12.Name = "label12";
-            label12.Size = new Size(58, 20);
+            label12.Size = new Size(67, 20);
             label12.TabIndex = 0;
-            label12.Text = "Mã Toa";
+            label12.Text = "Mã LSKB";
             label12.Click += label11_Click;
             // 
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(10, 34);
+            label11.Location = new Point(10, 27);
             label11.Name = "label11";
             label11.Size = new Size(74, 20);
             label11.TabIndex = 0;
@@ -378,7 +367,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(331, 81);
+            label5.Location = new Point(368, 81);
             label5.Name = "label5";
             label5.Size = new Size(76, 20);
             label5.TabIndex = 0;
@@ -387,7 +376,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(275, 34);
+            label3.Location = new Point(275, 27);
             label3.Name = "label3";
             label3.Size = new Size(106, 20);
             label3.TabIndex = 0;
@@ -404,17 +393,13 @@
             label2.TabIndex = 0;
             label2.Text = "Kê Thuốc";
             // 
-            // btnInToaThuoc
+            // cboMaBS
             // 
-            btnInToaThuoc.Image = (Image)resources.GetObject("btnInToaThuoc.Image");
-            btnInToaThuoc.ImageAlign = ContentAlignment.MiddleLeft;
-            btnInToaThuoc.Location = new Point(745, 424);
-            btnInToaThuoc.Name = "btnInToaThuoc";
-            btnInToaThuoc.Size = new Size(106, 45);
-            btnInToaThuoc.TabIndex = 6;
-            btnInToaThuoc.Text = "       In Toa";
-            btnInToaThuoc.UseVisualStyleBackColor = true;
-            btnInToaThuoc.Click += btnInToaThuoc_Click;
+            cboMaBS.FormattingEnabled = true;
+            cboMaBS.Location = new Point(90, 24);
+            cboMaBS.Name = "cboMaBS";
+            cboMaBS.Size = new Size(151, 28);
+            cboMaBS.TabIndex = 8;
             // 
             // KeThuoc
             // 
@@ -465,14 +450,14 @@
         private Button btnXoa;
         private Label label10;
         private DateTimePicker dateTimeNgayKee;
-        private TextBox txtMaBS;
         private Label label11;
-        private TextBox txtMaTT;
+        private TextBox txtBoxMaLSKB;
         private Label label12;
-        private TextBox txtMaThuoc;
         private Label label13;
         private Label label14;
         private DateTimePicker dateTimeNgayKham;
         private Button btnInToaThuoc;
+        private TextBox txtBoxMaThuoc;
+        private ComboBox cboMaBS;
     }
 }
