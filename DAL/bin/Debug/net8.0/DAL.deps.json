@@ -10,6 +10,7 @@
         "dependencies": {
           "ClosedXML": "0.104.2",
           "DTO": "1.0.0",
+          "QRCoder": "1.6.0",
           "System.Data.SqlClient": "4.8.6"
         },
         "runtime": {
@@ -74,6 +75,14 @@
         "dependencies": {
           "System.Security.AccessControl": "4.7.0",
           "System.Security.Principal.Windows": "4.7.0"
+        }
+      },
+      "QRCoder/1.6.0": {
+        "runtime": {
+          "lib/net6.0/QRCoder.dll": {
+            "assemblyVersion": "1.6.0.0",
+            "fileVersion": "1.6.0.0"
+          }
         }
       },
       "RBush/4.0.0": {
@@ -170,7 +179,8 @@
       "System.Security.Principal.Windows/4.7.0": {},
       "DTO/1.0.0": {
         "dependencies": {
-          "ClosedXML": "0.104.2"
+          "ClosedXML": "0.104.2",
+          "QRCoder": "1.6.0"
         },
         "runtime": {
           "DTO.dll": {
@@ -235,6 +245,13 @@
       "sha512": "sha512-KSrRMb5vNi0CWSGG1++id2ZOs/1QhRqROt+qgbEAdQuGjGrFcl4AOl4/exGPUYz2wUnU42nvJqon1T3U0kPXLA==",
       "path": "microsoft.win32.registry/4.7.0",
       "hashPath": "microsoft.win32.registry.4.7.0.nupkg.sha512"
+    },
+    "QRCoder/1.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XmPA81eo+oRxBuyVdswsSkTGTE1d3thfF11Z1PdD7oB56A6HU4G4AAOdySmGRMb/cljwlFTMWUtosGEnwpS6GA==",
+      "path": "qrcoder/1.6.0",
+      "hashPath": "qrcoder.1.6.0.nupkg.sha512"
     },
     "RBush/4.0.0": {
       "type": "package",

@@ -14,13 +14,13 @@ namespace DAL
     public class DAL_BaoCao
     {
         // Hàm lấy báo cáo theo khoảng thời gian
-        private static readonly string strcon = @"Data Source=SANTA\SQLEXPRESS;Initial Catalog=QuanLyPKTN_Final_2;User ID=sa;Password=123";
+        //private static readonly string strcon = @"Data Source=SANTA\SQLEXPRESS;Initial Catalog=QuanLyPKTN_Final_2;User ID=sa;Password=123";
 
         // Hàm lấy báo cáo theo khoảng thời gian
         public static System.Data.DataTable GetBaoCao(DateTime tungay, DateTime denngay)
         {
             // Tạo kết nối SQL
-            using (SqlConnection conn = new SqlConnection(strcon))
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
                 // Mở kết nối
                 conn.Open();
@@ -91,11 +91,5 @@ namespace DAL
                 workbook.SaveAs(filePath);
             }
         }
-
-
-
-
-
-
     }
 }

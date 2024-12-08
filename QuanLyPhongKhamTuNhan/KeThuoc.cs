@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,10 +24,21 @@ namespace GUI
         public KeThuoc()
         {
             InitializeComponent();
-            txtTenThuoc.ReadOnly = true; // Khóa ô tên thuốc
+            //txtTenThuoc.ReadOnly = true; // Khóa ô tên thuốc
+            txtBoxMaThuoc.ReadOnly = true;
             txtBietDuoc.ReadOnly = true; // Khóa ô biệt dược
+            var danhSachThuoc = _KeThuocBLL.GetAllThuoc();
+            cboTenThuoc.DataSource = danhSachThuoc;
+            cboTenThuoc.DisplayMember = "TenThuoc";
+            cboTenThuoc.ValueMember = "MaThuoc";
+            List<DTO_LichSuBenhNhan> danhSachBN = _KeThuocBLL.LayDanhSachBenhNhan();
+            dataGridViewDSBenhNhan.DataSource = danhSachBN;
+            DataHelper dbHelper = new DataHelper();
 
-
+            List<DTO_QuanLyBacSi> bacsiList = dbHelper.GetBacSiList();
+            cboMaBS.DataSource = bacsiList;
+            cboMaBS.DisplayMember = "TenBS";
+            cboMaBS.ValueMember = "MaBS";
         }
         private void LoadBenhNhan()
         {
@@ -415,23 +427,34 @@ namespace GUI
         {
             try
             {
-                var chiTietToaThuoc = new DTO_ChiTietToaThuoc
+                // Tạo đối tượng DTO_ChiTietToaThuoc từ các điều khiển trên form
+                DTO_ChiTietToaThuoc chiTiet = new DTO_ChiTietToaThuoc
                 {
-                    MaLSKB = int.Parse(txtBoxMaLSKB.Text),
-                    MaThuoc = int.Parse(txtBoxMaThuoc.Text),
-                    CachDung = txtCachDung.Text,
-                    LieuLuong = txtLieuLuong.Text,
-                    NgayKeToa = dateTimeNgayKee.Value,
-                    MaBS = (int)cboMaBS.SelectedValue
+                    MaLSKB = int.Parse(txtBoxMaLSKB.Text), // Chuyển đổi từ TextBox
+                    MaThuoc = int.Parse(txtBoxMaThuoc.Text), // Chuyển đổi từ TextBox
+                    CachDung = txtCachDung.Text, // Lấy giá trị từ TextBox
+                    LieuLuong = txtLieuLuong.Text, // Lấy giá trị từ TextBox
+                    NgayKeToa = dateTimeNgayKee.Value, // Lấy giá trị từ DateTimePicker
+                    LoiDanBS = txtLoiDan.Text, // Lấy giá trị từ TextBox
+                    MaBS = int.Parse(cboMaBS.SelectedValue.ToString()) // Chuyển đổi từ TextBox
                 };
 
-                _KeThuocBLL.AddChiTietToaThuoc(chiTietToaThuoc);
-                MessageBox.Show("Thêm chi tiết toa thuốc thành công!");
+                // Gọi phương thức BLL để thêm chi tiết toa thuốc
+                string message = _KeThuocBLL.AddChiTietToaThuoc(chiTiet);
+
+                // Hiển thị thông báo cho người dùng
+                MessageBox.Show(message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Tải lại dữ liệu nếu cần thiết (nếu bạn có một bảng để hiển thị danh sách chi tiết toa thuốc)
                 LoadData();
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show("Vui lòng nhập đúng định dạng cho các trường số.", "Lỗi định dạng", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi: {ex.Message}");
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -446,7 +469,9 @@ namespace GUI
                     CachDung = txtCachDung.Text,
                     LieuLuong = txtLieuLuong.Text,
                     NgayKeToa = dateTimeNgayKee.Value,
-                    MaBS = (int)cboMaBS.SelectedValue
+                    MaBS = (int)cboMaBS.SelectedValue,
+                    LoiDanBS = txtLoiDan.Text
+
                 };
 
                 _KeThuocBLL.UpdateChiTietToaThuoc(chiTietToaThuoc);
@@ -490,6 +515,84 @@ namespace GUI
                 txtLieuLuong.Text = row.Cells["LieuLuong"].Value.ToString();
                 dateTimeNgayKee.Value = Convert.ToDateTime(row.Cells["NgayKeToa"].Value);
                 cboMaBS.SelectedValue = row.Cells["MaBS"].Value;
+            }
+        }
+
+        private void cboTenThuoc_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cboTenThuoc.SelectedItem is DTO_Thuoc selectedThuoc)
+            {
+                txtBoxMaThuoc.Text = selectedThuoc.MaThuoc.ToString(); // Cập nhật mã thuốc
+                txtBietDuoc.Text = selectedThuoc.BietDuoc;
+            }
+        }
+
+        private void dataGridViewDSBenhNhan_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Kiểm tra xem người dùng đã nhấn vào một dòng hợp lệ
+            if (e.RowIndex >= 0) // e.RowIndex >= 0 đảm bảo rằng bạn không nhấn vào tiêu đề cột
+            {
+                // Lấy dòng đã chọn
+                DataGridViewRow row = dataGridViewDSBenhNhan.Rows[e.RowIndex];
+
+                // Gán giá trị từ dòng vào các trường tương ứng
+                txtBoxMaLSKB.Text = row.Cells["MaLSKB"].Value.ToString();
+                txtMaBenhNhan.Text = row.Cells["MaBN"].Value.ToString(); // Thay "MaBN" bằng tên cột thực tế trong DataGridView
+                txtTenBenhNhan.Text = row.Cells["HoTenBN"].Value.ToString(); // Thay "HoTenBN" bằng tên cột thực tế
+
+            }
+        }
+
+        private void btnInToaThuoc_Click_1(object sender, EventArgs e)
+        {
+            if (dataGridViewDSToaThuoc.SelectedRows.Count > 0)
+            {
+                int maLSKB = (int)dataGridViewDSToaThuoc.SelectedRows[0].Cells["MaLSKB"].Value;
+                var (chiTietToaThuoc, bacSi, benhNhan) = _KeThuocBLL.GetToaThuocByMaLSKB(maLSKB);
+
+                // Tạo chuỗi thông tin để in
+                string thongTinToaThuoc = $"Tên Bác Sĩ: {bacSi.TenBS}\n" +
+                                           $"Họ Tên Bệnh Nhân: {benhNhan.HoTenBN}\n" +
+                                           $"Số Điện Thoại: {benhNhan.SoDT}\n" +
+                                           $"Ngày Giờ Kê Toa: {DateTime.Now:dd/MM/yyyy HH:mm} CH\n\n" +
+                                           "Chi Tiết Toa Thuốc:\n";
+
+                int thuocIndex = 1; // Đếm số thuốc
+                foreach (var chiTiet in chiTietToaThuoc)
+                {
+                    thongTinToaThuoc += $"- Thuốc {thuocIndex}:\n" +
+                                        $"  - Tên Thuốc: {chiTiet.TenThuoc}\n" +
+                                        $"  - Biệt Dược: {chiTiet.BietDuoc}\n" +
+                                        $"  - Cách Dùng: {chiTiet.ChiTietToaThuoc.CachDung}\n" +
+                                        $"  - Liều Lượng: {chiTiet.ChiTietToaThuoc.LieuLuong}\n" +
+                                        $"  - Lời Dặn: {chiTiet.ChiTietToaThuoc.LoiDanBS}\n\n";
+                    thuocIndex++;
+                }
+
+                // Khởi tạo PrintDocument
+                PrintDocument printDocument = new PrintDocument();
+                printDocument.PrintPage += (s, ev) =>
+                {
+                    ev.Graphics.DrawString(thongTinToaThuoc, new Font("Arial", 12), Brushes.Black, new PointF(100, 100));
+                };
+
+                // Hiển thị hộp thoại in
+                PrintDialog printDialog = new PrintDialog
+                {
+                    Document = printDocument
+                };
+
+                if (printDialog.ShowDialog() == DialogResult.OK)
+                {
+                    printDocument.Print();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một dòng trong bảng để in thông tin toa thuốc.",
+                                "Thông báo",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
             }
         }
     }

@@ -222,6 +222,27 @@ namespace DAL
 
             return danhSachNhanVien;
         }
+        public DTO_NhanVien GetNhanVienById(int maNV)
+        {
+            DTO_NhanVien nhanVien = null;
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT * FROM NhanVien WHERE MaNV = @MaNV";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaNV", maNV);
 
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    nhanVien = new DTO_NhanVien
+                    {
+                        MaNV = (int)reader["MaNV"],
+                        HoTen = reader["HoTen"].ToString()
+                    };
+                }
+            }
+            return nhanVien;
+        }
     }
 }

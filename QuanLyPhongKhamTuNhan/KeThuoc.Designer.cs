@@ -35,6 +35,8 @@
             dataGridViewDSBenhNhan = new DataGridView();
             label1 = new Label();
             panelKeThuoc = new Panel();
+            cboTenThuoc = new ComboBox();
+            cboMaBS = new ComboBox();
             txtBoxMaThuoc = new TextBox();
             btnInToaThuoc = new Button();
             txtBoxMaLSKB = new TextBox();
@@ -47,7 +49,6 @@
             txtBietDuoc = new TextBox();
             txtLoiDan = new TextBox();
             txtCachDung = new TextBox();
-            txtTenThuoc = new TextBox();
             txtMaBenhNhan = new TextBox();
             dataGridViewDSToaThuoc = new DataGridView();
             label4 = new Label();
@@ -62,7 +63,6 @@
             label5 = new Label();
             label3 = new Label();
             label2 = new Label();
-            cboMaBS = new ComboBox();
             panelDSBenhNhan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewDSBenhNhan).BeginInit();
             panelKeThuoc.SuspendLayout();
@@ -104,6 +104,7 @@
             dataGridViewDSBenhNhan.RowHeadersWidth = 51;
             dataGridViewDSBenhNhan.Size = new Size(412, 391);
             dataGridViewDSBenhNhan.TabIndex = 0;
+            dataGridViewDSBenhNhan.CellClick += dataGridViewDSBenhNhan_CellClick;
             dataGridViewDSBenhNhan.SelectionChanged += dataGridViewDSBenhNhan_SelectionChanged;
             // 
             // label1
@@ -120,6 +121,7 @@
             // panelKeThuoc
             // 
             panelKeThuoc.BorderStyle = BorderStyle.FixedSingle;
+            panelKeThuoc.Controls.Add(cboTenThuoc);
             panelKeThuoc.Controls.Add(cboMaBS);
             panelKeThuoc.Controls.Add(txtBoxMaThuoc);
             panelKeThuoc.Controls.Add(btnInToaThuoc);
@@ -133,7 +135,6 @@
             panelKeThuoc.Controls.Add(txtBietDuoc);
             panelKeThuoc.Controls.Add(txtLoiDan);
             panelKeThuoc.Controls.Add(txtCachDung);
-            panelKeThuoc.Controls.Add(txtTenThuoc);
             panelKeThuoc.Controls.Add(txtMaBenhNhan);
             panelKeThuoc.Controls.Add(dataGridViewDSToaThuoc);
             panelKeThuoc.Controls.Add(label4);
@@ -152,6 +153,23 @@
             panelKeThuoc.Size = new Size(1085, 485);
             panelKeThuoc.TabIndex = 1;
             // 
+            // cboTenThuoc
+            // 
+            cboTenThuoc.FormattingEnabled = true;
+            cboTenThuoc.Location = new Point(450, 78);
+            cboTenThuoc.Name = "cboTenThuoc";
+            cboTenThuoc.Size = new Size(151, 28);
+            cboTenThuoc.TabIndex = 9;
+            cboTenThuoc.SelectedIndexChanged += cboTenThuoc_SelectedIndexChanged;
+            // 
+            // cboMaBS
+            // 
+            cboMaBS.FormattingEnabled = true;
+            cboMaBS.Location = new Point(90, 24);
+            cboMaBS.Name = "cboMaBS";
+            cboMaBS.Size = new Size(151, 28);
+            cboMaBS.TabIndex = 8;
+            // 
             // txtBoxMaThuoc
             // 
             txtBoxMaThuoc.Location = new Point(224, 78);
@@ -169,6 +187,7 @@
             btnInToaThuoc.TabIndex = 6;
             btnInToaThuoc.Text = "       In Toa";
             btnInToaThuoc.UseVisualStyleBackColor = true;
+            btnInToaThuoc.Click += btnInToaThuoc_Click_1;
             // 
             // txtBoxMaLSKB
             // 
@@ -255,13 +274,6 @@
             txtCachDung.Name = "txtCachDung";
             txtCachDung.Size = new Size(219, 27);
             txtCachDung.TabIndex = 2;
-            // 
-            // txtTenThuoc
-            // 
-            txtTenThuoc.Location = new Point(450, 78);
-            txtTenThuoc.Name = "txtTenThuoc";
-            txtTenThuoc.Size = new Size(159, 27);
-            txtTenThuoc.TabIndex = 2;
             // 
             // txtMaBenhNhan
             // 
@@ -393,14 +405,6 @@
             label2.TabIndex = 0;
             label2.Text = "Kê Thuốc";
             // 
-            // cboMaBS
-            // 
-            cboMaBS.FormattingEnabled = true;
-            cboMaBS.Location = new Point(90, 24);
-            cboMaBS.Name = "cboMaBS";
-            cboMaBS.Size = new Size(151, 28);
-            cboMaBS.TabIndex = 8;
-            // 
             // KeThuoc
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -445,7 +449,6 @@
         private TextBox txtBietDuoc;
         private TextBox txtLoiDan;
         private TextBox txtCachDung;
-        private TextBox txtTenThuoc;
         private TextBox txtMaBenhNhan;
         private Button btnXoa;
         private Label label10;
@@ -459,5 +462,6 @@
         private Button btnInToaThuoc;
         private TextBox txtBoxMaThuoc;
         private ComboBox cboMaBS;
+        private ComboBox cboTenThuoc;
     }
 }

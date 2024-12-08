@@ -1,6 +1,7 @@
 ﻿using BLL;
 using DAL;
 using DTO;
+using QRCoder;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -333,23 +335,22 @@ namespace GUI
         }
 
         private void btnInHoaDon_Click(object sender, EventArgs e)
-        {
-            if (DGVHD.SelectedRows.Count > 0)
-            {
-                DataGridViewRow selectedRow = DGVHD.SelectedRows[0];
-                int maHD = Convert.ToInt32(selectedRow.Cells["MaHD"].Value);
+        {// Tạo đối tượng BLL
+            BLL_HoaDon bllHoaDon = new BLL_HoaDon();
 
-                // Khởi tạo BLL
-                //HoaDonBLL hoaDonBLL = new HoaDonBLL();
-                InvoiceDetails invoiceDetails = _HoaDonBLL.GetInvoiceDetails(maHD);
+            // Lấy mã hóa đơn từ DataGridView
+            int maHD = (int)DGVHD.CurrentRow.Cells["MaHD"].Value;
 
-                // Gọi phương thức in hóa đơn
-                PrintInvoice(invoiceDetails);
-            }
-            else
-            {
-                MessageBox.Show("Vui lòng chọn một hóa đơn để in.");
-            }
+            // Lấy thông tin hóa đơn
+            DTO_HoaDon hoaDon = bllHoaDon.GetHoaDonById(maHD);
+            DTO_QuanLyBenhNhan benhNhan = bllHoaDon.GetBenhNhanById(hoaDon.MaBN);
+            DTO_NhanVien nhanVien = bllHoaDon.GetNhanVienById(hoaDon.MaNV);
+
+            // Lấy chi tiết dịch vụ và tên dịch vụ
+            var (chiTietDichVu, tenDichVuList) = bllHoaDon.GetChiTietSuDungDVByMaLSKB(hoaDon.MaLSKB);
+
+            // In hóa đơn
+            PrintInvoice(hoaDon, benhNhan, nhanVien, chiTietDichVu, tenDichVuList);
         }
 
         //private void cboBenhNhan_SelectedIndexChanged(object sender, EventArgs e)
@@ -505,5 +506,125 @@ namespace GUI
         //    txtBoxSDT.Clear();
         //    txtBoxSDT.ReadOnly = false;
         //}
+
+
+
+        private void PrintInvoice(DTO_HoaDon hoaDon, DTO_QuanLyBenhNhan benhNhan, DTO_NhanVien nhanVien, List<DTO_ChiTietSuDungDV> chiTietDichVu, List<string> tenDichVuList)
+        {
+            // Tạo tài liệu in
+            PrintDocument printDocument = new PrintDocument();
+
+            // Gán sự kiện in
+            printDocument.PrintPage += (sender, e) =>
+            {
+                // Font chữ
+                Font tieuDeFont = new Font("Arial", 20, FontStyle.Bold);
+                Font tieuDeNhoFont = new Font("Arial", 14, FontStyle.Bold);
+                Font vanBanFont = new Font("Arial", 12);
+
+                // Vẽ tiêu đề
+                e.Graphics.DrawString("HÓA ĐƠN DỊCH VỤ", tieuDeFont, Brushes.Black, new PointF(200, 50));
+
+                // Thông tin bệnh nhân
+                e.Graphics.DrawString($"Họ tên: {benhNhan.HoTenBN}", vanBanFont, Brushes.Black, new PointF(100, 100));
+                e.Graphics.DrawString($"Ngày sinh: {benhNhan.NgaySinh:dd/MM/yyyy}", vanBanFont, Brushes.Black, new PointF(100, 130));
+                e.Graphics.DrawString($"Số điện thoại: {benhNhan.SoDT}", vanBanFont, Brushes.Black, new PointF(100, 160));
+
+                // Thông tin hóa đơn
+                e.Graphics.DrawString($"Mã HĐ: {hoaDon.MaHD}", vanBanFont, Brushes.Black, new PointF(100, 200));
+                e.Graphics.DrawString($"Ngày lập: {hoaDon.NgayLapHD:dd/MM/yyyy}", vanBanFont, Brushes.Black, new PointF(100, 230));
+                e.Graphics.DrawString($"Nhân viên: {nhanVien.HoTen}", vanBanFont, Brushes.Black, new PointF(100, 260));
+
+                // Danh sách dịch vụ
+                e.Graphics.DrawString("DANH SÁCH DỊCH VỤ", tieuDeNhoFont, Brushes.Black, new PointF(100, 300));
+
+                float currentY = 330;
+                decimal tongTien = 0;
+
+                // Vẽ từng dịch vụ
+                for (int i = 0; i < chiTietDichVu.Count; i++)
+                {
+                    var item = chiTietDichVu[i];
+                    string tenDichVu = tenDichVuList[i];
+                    decimal thanhTien = item.SoLuong * item.Gia;
+                    tongTien += thanhTien;
+
+                    e.Graphics.DrawString(
+                        $"{tenDichVu} - SL: {item.SoLuong} - Đơn giá: {item.Gia:N0} VNĐ - Thành tiền: {thanhTien:N0} VNĐ",
+                        vanBanFont,
+                        Brushes.Black,
+                        new PointF(100, currentY)
+                    );
+                    currentY += 30;
+                }
+
+                // Tổng tiền
+                e.Graphics.DrawString($"Tổng tiền: {tongTien:N0} VNĐ", tieuDeNhoFont, Brushes.Black, new PointF(100, currentY + 20));
+
+                // Thông tin chuyển khoản
+                string tenNganHang = "VIETCOMBANK";
+                string soTaiKhoan = "1014647703";
+                string tenNguoiNhan = "Cao Hoang Nhat Thang";
+                string noiDung = $"Thanh toan HĐ #{hoaDon.MaHD}";
+
+                // Tạo nội dung QR
+                string qrContent = $"https://img.vietqr.io/image/{tenNganHang}-{soTaiKhoan}-{tongTien}.png" +
+                                   $"?accountName={WebUtility.UrlEncode(tenNguoiNhan)}" +
+                                   $"&addInfo={WebUtility.UrlEncode(noiDung)}";
+
+                // Tạo và vẽ QR Code
+                try
+                {
+                    using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                    {
+                        QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.M);
+                        using (QRCode qrCode = new QRCode(qrCodeData))
+                        {
+                            Bitmap qrCodeImage = qrCode.GetGraphic(10);
+
+                            // Vẽ chú thích QR
+                            e.Graphics.DrawString(
+                                "Quét mã QR để thanh toán",
+                                vanBanFont,
+                                Brushes.Black,
+                                new PointF(100, currentY + 100)
+                            );
+
+                            // Vẽ QR Code
+                            e.Graphics.DrawImage(
+                                qrCodeImage,
+                                new Rectangle(100, (int)currentY + 130, 200, 200)
+                            );
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý nếu lỗi tạo QR
+                    e.Graphics.DrawString(
+                        $"Lỗi tạo QR: {ex.Message}",
+                        vanBanFont,
+                        Brushes.Red,
+                        new PointF(100, currentY + 100)
+                    );
+                }
+            };
+
+            // Hiển thị hộp thoại in
+            PrintDialog printDialog = new PrintDialog();
+            printDialog.Document = printDocument;
+
+            if (printDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    printDocument.Print();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi in: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
     }
 }

@@ -179,9 +179,9 @@
             label7.AutoSize = true;
             label7.Location = new Point(736, 288);
             label7.Name = "label7";
-            label7.Size = new Size(66, 20);
+            label7.Size = new Size(88, 20);
             label7.TabIndex = 3;
-            label7.Text = "Kết Luận";
+            label7.Text = "Chuẩn đoán";
             // 
             // txtBoxChuanDoan
             // 

@@ -95,3 +95,4 @@ D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\refint\GUI.dll
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.pdb
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.genruntimeconfig.cache
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\ref\GUI.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\QRCoder.dll

@@ -26,6 +26,10 @@ namespace GUI
             cboChuyenKhoaBS.DataSource = chuyenKhoaList;
             cboChuyenKhoaBS.DisplayMember = "TenCK";
             cboChuyenKhoaBS.ValueMember = "MaCK";
+            List<DTO_QuanLyPhongKham> phongKhamList = dbHelper.GetPhongKhamList();
+            cboMaPhongKham.DataSource = phongKhamList;
+            cboMaPhongKham.DisplayMember = "TenPK";
+            cboMaPhongKham.ValueMember = "MaPK";
             errorProviderBS.BlinkStyle = ErrorBlinkStyle.NeverBlink;
         }
         private void LoadData()

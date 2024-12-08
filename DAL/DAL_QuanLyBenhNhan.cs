@@ -268,5 +268,59 @@ ORDER BY NgayKham DESC";
             }
             return latestMedicalHistoryId;
         }
+        public DTO_QuanLyBenhNhan GetBenhNhanByMaLSKB(int maLSKB)
+        {
+            DTO_QuanLyBenhNhan benhNhan = null;
+            string query = "SELECT BN.* FROM BenhNhan BN WHERE BN.MaBN IN (SELECT MaBN FROM ChiTietToaThuoc WHERE MaLSKB = @MaLSKB)";
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                SqlCommand command = new SqlCommand(query, conn);
+                command.Parameters.AddWithValue("@MaLSKB", maLSKB);
+                conn.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    benhNhan = new DTO_QuanLyBenhNhan
+                    {
+                        MaBN = (int)reader["MaBN"],
+                        HoTenBN = reader["HoTenBN"].ToString(),
+                        NgaySinh = (DateTime)reader["NgaySinh"],
+                        GioiTinh = reader["GioiTinh"].ToString(),
+                        Email = reader["Email"].ToString(),
+                        SoBHYT = reader["SoBHYT"].ToString(),
+                        SoDT = reader["SoDT"].ToString(),
+                        DiaChi = reader["DiaChi"].ToString()
+                    };
+                }
+            }
+            return benhNhan;
+        }
+        public DTO_QuanLyBenhNhan GetBenhNhanById(int maBN)
+        {
+            DTO_QuanLyBenhNhan benhNhan = null;
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT * FROM BenhNhan WHERE MaBN = @MaBN";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaBN", maBN);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    benhNhan = new DTO_QuanLyBenhNhan
+                    {
+                        MaBN = (int)reader["MaBN"],
+                        HoTenBN = reader["HoTenBN"].ToString(),
+                        NgaySinh = (DateTime)reader["NgaySinh"],
+                        SoDT = reader["SoDT"].ToString()
+                    };
+                }
+            }
+            return benhNhan;
+        }
+
     }
 }

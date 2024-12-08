@@ -17,11 +17,29 @@ namespace DAL
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
                 conn.Open();
+
+                // Lấy tổng tiền từ bảng ChiTietSuDungDV theo MaLSKB
+                decimal tongTien = 0;
+                string queryTongTien = @"
+            SELECT SUM(ThanhTien) 
+            FROM CTSDDV 
+            WHERE MaLSKB = @MaLSKB";
+
+                using (SqlCommand cmdTongTien = new SqlCommand(queryTongTien, conn))
+                {
+                    cmdTongTien.Parameters.AddWithValue("@MaLSKB", hoaDon.MaLSKB);
+                    var result = cmdTongTien.ExecuteScalar();
+                    tongTien = result != DBNull.Value ? Convert.ToDecimal(result) : 0;
+                }
+
+                // Áp dụng giảm giá
+                decimal tongTienSauGiamGia = tongTien - (tongTien * (hoaDon.GiamGia / 100));
+
                 string query = @"
 INSERT INTO HoaDon 
-(NgayLapHD, MaNV, MaBN, TongTien, TrangThai, GiamGia,PhuongThucThanhToan) 
+(NgayLapHD, MaNV, MaBN, TongTien, TrangThai, GiamGia, PhuongThucThanhToan) 
 VALUES 
-(@NgayLapHD, @MaNV, @MaBN, 0, 'CHUA_HOAN_THANH', @GiamGia,@PhuongThucThanhToan);
+(@NgayLapHD, @MaNV, @MaBN, @TongTien, 'CHUA_HOAN_THANH', @GiamGia, @PhuongThucThanhToan);
 SELECT SCOPE_IDENTITY();";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -29,6 +47,7 @@ SELECT SCOPE_IDENTITY();";
                     cmd.Parameters.AddWithValue("@NgayLapHD", hoaDon.NgayLapHD);
                     cmd.Parameters.AddWithValue("@MaNV", hoaDon.MaNV);
                     cmd.Parameters.AddWithValue("@MaBN", (object)hoaDon.MaBN ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@TongTien", tongTienSauGiamGia);
                     cmd.Parameters.AddWithValue("@GiamGia", hoaDon.GiamGia);
                     cmd.Parameters.AddWithValue("@PhuongThucThanhToan", hoaDon.PhuongThucThanhToan);
                     return Convert.ToInt32(cmd.ExecuteScalar());
@@ -56,16 +75,34 @@ SELECT SCOPE_IDENTITY();";
             using (SqlConnection conn = SqlConnectionData.GetConnection())
             {
                 conn.Open();
+
+                // Lấy tổng tiền từ bảng ChiTietSuDungDV theo MaLSKB
+                decimal tongTien = 0;
+                string queryTongTien = @"
+            SELECT SUM(ThanhTien) 
+            FROM CTSDDV 
+            WHERE MaLSKB = @MaLSKB";
+
+                using (SqlCommand cmdTongTien = new SqlCommand(queryTongTien, conn))
+                {
+                    cmdTongTien.Parameters.AddWithValue("@MaLSKB", hoaDon.MaLSKB);
+                    var result = cmdTongTien.ExecuteScalar();
+                    tongTien = result != DBNull.Value ? Convert.ToDecimal(result) : 0;
+                }
+
+                // Áp dụng giảm giá
+                decimal tongTienSauGiamGia = tongTien - (tongTien * (hoaDon.GiamGia / 100));
+
                 string query = @"
-                UPDATE HoaDon 
-                SET MaLSKB = @MaLSKB, 
-                MaBN = @MaBN, 
-                NgayLapHD = @NgayLapHD, 
-                MaNV = @MaNV, 
-                TongTien = @TongTien,  
-                GiamGia = @GiamGia, 
-                PhuongThucThanhToan = @PhuongThucThanhToan
-                WHERE MaHD = @MaHD";
+        UPDATE HoaDon 
+        SET MaLSKB = @MaLSKB, 
+        MaBN = @MaBN, 
+        NgayLapHD = @NgayLapHD, 
+        MaNV = @MaNV, 
+        TongTien = @TongTien,  
+        GiamGia = @GiamGia, 
+        PhuongThucThanhToan = @PhuongThucThanhToan
+        WHERE MaHD = @MaHD";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -74,8 +111,7 @@ SELECT SCOPE_IDENTITY();";
                     cmd.Parameters.AddWithValue("@MaBN", hoaDon.MaBN);
                     cmd.Parameters.AddWithValue("@NgayLapHD", hoaDon.NgayLapHD);
                     cmd.Parameters.AddWithValue("@MaNV", hoaDon.MaNV);
-                    cmd.Parameters.AddWithValue("@TongTien", hoaDon.TongTien);
-                    //cmd.Parameters.AddWithValue("@TrangThai", hoaDon.TrangThai);
+                    cmd.Parameters.AddWithValue("@TongTien", tongTienSauGiamGia);
                     cmd.Parameters.AddWithValue("@GiamGia", hoaDon.GiamGia);
                     cmd.Parameters.AddWithValue("@PhuongThucThanhToan", hoaDon.PhuongThucThanhToan);
 
@@ -389,6 +425,63 @@ ORDER BY NgayLapHD DESC";
             }
 
             return invoiceDetails;
+        }
+        public DTO_HoaDon GetHoaDonById(int maHD)
+        {
+            DTO_HoaDon hoaDon = null;
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT * FROM HoaDon WHERE MaHD = @MaHD";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaHD", maHD);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    hoaDon = new DTO_HoaDon
+                    {
+                        MaHD = (int)reader["MaHD"],
+                        MaBN = (int)reader["MaBN"],
+                        MaNV = (int)reader["MaNV"],
+                        NgayLapHD = (DateTime)reader["NgayLapHD"],
+                        GiamGia = (decimal)reader["GiamGia"],
+                        PhuongThucThanhToan = reader["PhuongThucThanhToan"].ToString(),
+                        MaLSKB = (int)reader["MaLSKB"],
+                        TongTien = (decimal)reader["TongTien"]
+                    };
+                }
+            }
+            return hoaDon;
+        }
+        public (List<DTO_ChiTietSuDungDV> list, List<string> tenDichVuList) GetChiTietSuDungDVByMaLSKB(int maLSKB)
+        {
+            List<DTO_ChiTietSuDungDV> list = new List<DTO_ChiTietSuDungDV>();
+            List<string> tenDichVuList = new List<string>();
+
+            string query = "SELECT dv.MaDV, ctdv.SoLuong, ctdv.Gia, dv.TenDV FROM CTSDDV ctdv JOIN DichVu dv ON ctdv.MaDV = dv.MaDV WHERE ctdv.MaLSKB = @maLSKB";
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                SqlCommand command = new SqlCommand(query, conn);
+                command.Parameters.AddWithValue("@maLSKB", maLSKB);
+                conn.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    DTO_ChiTietSuDungDV item = new DTO_ChiTietSuDungDV
+                    {
+                        MaDV = reader.GetInt32(0),
+                        SoLuong = reader.GetInt32(1),
+                        Gia = reader.GetDecimal(2)
+                    };
+                    list.Add(item);
+                    tenDichVuList.Add(reader.GetString(3)); // Lưu tên dịch vụ vào danh sách tạm
+                }
+            }
+
+            return (list, tenDichVuList);
         }
     }
 }

@@ -306,7 +306,7 @@ namespace GUI
 
         private void khámBệnhToolStripMenuItem_DoubleClick(object sender, EventArgs e)
         {
-            
+
         }
 
         private void cTSDDVToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -324,6 +324,12 @@ namespace GUI
         {
             KhamBenh kb = new KhamBenh();
             kb.Show();
+        }
+
+        private void bácSĩToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            QuanLyBacSi qlbs = new QuanLyBacSi();
+            qlbs.Show();
         }
     }
 }

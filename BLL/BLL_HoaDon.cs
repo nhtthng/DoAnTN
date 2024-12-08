@@ -11,6 +11,9 @@ namespace BLL
     public class BLL_HoaDon
     {
         private DAL_HoaDon _dalHoaDonDAL = new DAL_HoaDon();
+        private DAL_QuanLyBenhNhan dalBenhNhan = new DAL_QuanLyBenhNhan();
+        private DAL_QuanLyNhanVien dalNhanVien = new DAL_QuanLyNhanVien();
+
         // Thêm Hóa Đơn
         // Thêm Hóa Đơn
         public int ThemHoaDon(DTO_HoaDon hoaDon)
@@ -176,6 +179,26 @@ namespace BLL
             // Có thể thêm logic xử lý dữ liệu ở đây nếu cần
 
             return invoiceDetails;
+        }
+        public DTO_HoaDon GetHoaDonById(int maHD)
+        {
+            return _dalHoaDonDAL.GetHoaDonById(maHD);
+        }
+
+        public DTO_QuanLyBenhNhan GetBenhNhanById(int maBN)
+        {
+            return dalBenhNhan.GetBenhNhanById(maBN);
+        }
+
+        public DTO_NhanVien GetNhanVienById(int maNV)
+        {
+            return dalNhanVien.GetNhanVienById(maNV);
+        }
+
+        public (List<DTO_ChiTietSuDungDV> chiTietDichVuList, List<string> tenDichVuList) GetChiTietSuDungDVByMaLSKB(int maLSKB)
+        {
+            // Gọi phương thức DAL để lấy dữ liệu
+            return _dalHoaDonDAL.GetChiTietSuDungDVByMaLSKB(maLSKB);
         }
     }
 }

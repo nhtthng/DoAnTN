@@ -322,5 +322,33 @@ namespace DAL
             }
             return null;
         }
+        public DTO_QuanLyBacSi GetBacSiByMaLSKB(int maLSKB)
+        {
+            DTO_QuanLyBacSi bacSi = null;
+            string query = "SELECT B.* FROM BacSi B JOIN ChiTietToaThuoc CT ON B.MaBS = CT.MaBS WHERE CT.MaLSKB = @MaLSKB";
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                SqlCommand command = new SqlCommand(query, conn);
+                command.Parameters.AddWithValue("@MaLSKB", maLSKB);
+                conn.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    bacSi = new DTO_QuanLyBacSi
+                    {
+                        MaBS = (int)reader["MaBS"],
+                        TenBS = reader["TenBS"].ToString(),
+                        GioiTinh = reader["GioiTinh"].ToString(),
+                        Email = reader["Email"].ToString(),
+                        SoDT = reader["SoDT"].ToString(),
+                        KinhNghiem = (int)reader["KinhNghiem"],
+                        MaCK = (int)reader["MaCK"]
+                    };
+                }
+            }
+            return bacSi;
+        }
     }
 }

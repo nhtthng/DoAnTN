@@ -52,6 +52,8 @@
             btnSuaBS = new Button();
             errorProviderBS = new ErrorProvider(components);
             btnReset = new Button();
+            label7 = new Label();
+            cboMaPhongKham = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)DGVBS).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProviderBS).BeginInit();
             SuspendLayout();
@@ -85,7 +87,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(20, 91);
+            label2.Location = new Point(5, 93);
             label2.Name = "label2";
             label2.Size = new Size(74, 20);
             label2.TabIndex = 3;
@@ -109,15 +111,15 @@
             // 
             // txtBoxMaBS
             // 
-            txtBoxMaBS.Location = new Point(132, 88);
+            txtBoxMaBS.Location = new Point(102, 88);
             txtBoxMaBS.Name = "txtBoxMaBS";
-            txtBoxMaBS.Size = new Size(125, 27);
+            txtBoxMaBS.Size = new Size(211, 27);
             txtBoxMaBS.TabIndex = 4;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(283, 91);
+            label4.Location = new Point(319, 94);
             label4.Name = "label4";
             label4.Size = new Size(46, 20);
             label4.TabIndex = 3;
@@ -127,7 +129,7 @@
             // 
             cboGTBS.FormattingEnabled = true;
             cboGTBS.Items.AddRange(new object[] { "Nam", "Nữ" });
-            cboGTBS.Location = new Point(742, 90);
+            cboGTBS.Location = new Point(763, 90);
             cboGTBS.Name = "cboGTBS";
             cboGTBS.Size = new Size(151, 28);
             cboGTBS.TabIndex = 5;
@@ -135,7 +137,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(20, 189);
+            label5.Location = new Point(3, 189);
             label5.Name = "label5";
             label5.Size = new Size(76, 20);
             label5.TabIndex = 3;
@@ -143,15 +145,15 @@
             // 
             // txtBoxTenBS
             // 
-            txtBoxTenBS.Location = new Point(132, 182);
+            txtBoxTenBS.Location = new Point(102, 186);
             txtBoxTenBS.Name = "txtBoxTenBS";
-            txtBoxTenBS.Size = new Size(125, 27);
+            txtBoxTenBS.Size = new Size(211, 27);
             txtBoxTenBS.TabIndex = 4;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(283, 189);
+            label6.Location = new Point(319, 189);
             label6.Name = "label6";
             label6.Size = new Size(102, 20);
             label6.TabIndex = 3;
@@ -167,7 +169,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(20, 280);
+            label8.Location = new Point(3, 280);
             label8.Name = "label8";
             label8.Size = new Size(95, 20);
             label8.TabIndex = 3;
@@ -175,9 +177,9 @@
             // 
             // txtBoxKNBS
             // 
-            txtBoxKNBS.Location = new Point(132, 277);
+            txtBoxKNBS.Location = new Point(102, 277);
             txtBoxKNBS.Name = "txtBoxKNBS";
-            txtBoxKNBS.Size = new Size(125, 27);
+            txtBoxKNBS.Size = new Size(155, 27);
             txtBoxKNBS.TabIndex = 4;
             // 
             // label9
@@ -185,9 +187,9 @@
             label9.AutoSize = true;
             label9.Location = new Point(283, 280);
             label9.Name = "label9";
-            label9.Size = new Size(120, 20);
+            label9.Size = new Size(93, 20);
             label9.TabIndex = 3;
-            label9.Text = "Mã Chuyên Khoa";
+            label9.Text = "Chuyên khoa";
             // 
             // cboChuyenKhoaBS
             // 
@@ -251,11 +253,30 @@
             btnReset.UseVisualStyleBackColor = true;
             btnReset.Click += btnReset_Click;
             // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(637, 189);
+            label7.Name = "label7";
+            label7.Size = new Size(91, 20);
+            label7.TabIndex = 10;
+            label7.Text = "Phòng khám";
+            // 
+            // cboMaPhongKham
+            // 
+            cboMaPhongKham.FormattingEnabled = true;
+            cboMaPhongKham.Location = new Point(763, 181);
+            cboMaPhongKham.Name = "cboMaPhongKham";
+            cboMaPhongKham.Size = new Size(151, 28);
+            cboMaPhongKham.TabIndex = 11;
+            // 
             // QuanLyBacSi
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(948, 627);
+            Controls.Add(cboMaPhongKham);
+            Controls.Add(label7);
             Controls.Add(btnReset);
             Controls.Add(btnSuaBS);
             Controls.Add(btnXoaBS);
@@ -312,5 +333,7 @@
         private Button btnSuaBS;
         private ErrorProvider errorProviderBS;
         private Button btnReset;
+        private ComboBox cboMaPhongKham;
+        private Label label7;
     }
 }

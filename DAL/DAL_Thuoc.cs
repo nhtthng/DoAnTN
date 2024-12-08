@@ -11,6 +11,8 @@ namespace DAL
 {
     public class DAL_Thuoc
     {
+
+        
         public List<DTO_Thuoc> GetAllThuoc()
         {
             List<DTO_Thuoc> danhSachThuoc = new List<DTO_Thuoc>();

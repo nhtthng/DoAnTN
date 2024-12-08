@@ -1,4 +1,5 @@
 ﻿using DAL;
+using DocumentFormat.OpenXml.Bibliography;
 using DTO;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace BLL
     public class BLL_KeThuoc
     {
         private DAL_KeThuoc _KeThuocDAL = new DAL_KeThuoc();
+        private DAL_QuanLyBacSi bacSiDAL = new DAL_QuanLyBacSi();
+        private DAL_QuanLyBenhNhan benhNhanDAL = new DAL_QuanLyBenhNhan();
         // Phương thức xác thực cho DTO_ChiTietToaThuoc
         public List<DTO_ChiTietToaThuoc> GetAllChiTietToaThuoc()
         {
@@ -40,11 +43,27 @@ namespace BLL
                 throw new ArgumentException("Mã bác sĩ phải lớn hơn 0.", nameof(chiTietToaThuoc.MaBS));
         }
         // Thêm chi tiết toa thuốc
-        public bool AddChiTietToaThuoc(DTO_ChiTietToaThuoc chiTietToaThuoc)
+        public string AddChiTietToaThuoc(DTO_ChiTietToaThuoc chiTietToaThuoc)
         {
             // Kiểm tra dữ liệu đầu vào
             ValidateChiTietToaThuoc(chiTietToaThuoc);
-            return _KeThuocDAL.AddChiTietToaThuoc(chiTietToaThuoc);
+
+            // Kiểm tra xem chi tiết toa thuốc đã tồn tại chưa
+            if (_KeThuocDAL.IsChiTietToaThuocExists(chiTietToaThuoc.MaLSKB, chiTietToaThuoc.MaThuoc, chiTietToaThuoc.NgayKeToa))
+            {
+                return $"Thuốc này đã được thêm cho bệnh nhân với mã {chiTietToaThuoc.MaLSKB} trong đơn.";
+            }
+
+            // Gọi phương thức DAL để thêm chi tiết toa thuốc
+            bool isAdded = _KeThuocDAL.AddChiTietToaThuoc(chiTietToaThuoc);
+            if (isAdded)
+            {
+                return $"Đã thêm thuốc {chiTietToaThuoc.MaThuoc} cho bệnh nhân {chiTietToaThuoc.MaLSKB} thành công.";
+            }
+            else
+            {
+                return "Thêm không thành công. Vui lòng kiểm tra lại.";
+            }
         }
         // Sửa chi tiết toa thuốc
         public bool UpdateChiTietToaThuoc(DTO_ChiTietToaThuoc chiTietToaThuoc)
@@ -77,6 +96,28 @@ namespace BLL
         public List<DTO_QuanLyBenhNhan> GetAllBenhNhanFromLichSuKham()
         {
             return _KeThuocDAL.GetAllBenhNhanFromLichSuKham();
+        }
+        public List<DTO_Thuoc> GetAllThuoc()
+        {
+            return _KeThuocDAL.GetAllThuocTheoTenThuoc();
+        }
+        public List<DTO_LichSuBenhNhan> LayDanhSachBenhNhan()
+        {
+            // Gọi phương thức DAL để lấy danh sách bệnh nhân
+            return _KeThuocDAL.LayDanhSachBenhNhan();
+        }
+        public (List<DTO_ChiTietToaThuocFULL> chiTietToaThuoc, DTO_QuanLyBacSi bacSi, DTO_QuanLyBenhNhan benhNhan) GetToaThuocByMaLSKB(int maLSKB)
+        {
+            // Lấy danh sách chi tiết toa thuốc
+            var chiTietToaThuoc = _KeThuocDAL.GetChiTietToaThuocByMaLSKBIN(maLSKB);
+
+            // Lấy thông tin bác sĩ
+            var bacSi = bacSiDAL.GetBacSiByMaLSKB(maLSKB);
+
+            // Lấy thông tin bệnh nhân
+            var benhNhan = benhNhanDAL.GetBenhNhanByMaLSKB(maLSKB);
+
+            return (chiTietToaThuoc, bacSi, benhNhan);
         }
     }
 }
