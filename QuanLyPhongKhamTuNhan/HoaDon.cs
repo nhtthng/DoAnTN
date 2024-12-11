@@ -336,21 +336,54 @@ namespace GUI
 
         private void btnInHoaDon_Click(object sender, EventArgs e)
         {// Tạo đối tượng BLL
-            BLL_HoaDon bllHoaDon = new BLL_HoaDon();
+            try
+            {
+                // Tạo đối tượng BLL
+                BLL_HoaDon bllHoaDon = new BLL_HoaDon();
 
-            // Lấy mã hóa đơn từ DataGridView
-            int maHD = (int)DGVHD.CurrentRow.Cells["MaHD"].Value;
+                // Lấy mã hóa đơn từ DataGridView
+                int maHD = (int)DGVHD.CurrentRow.Cells["MaHD"].Value;
 
-            // Lấy thông tin hóa đơn
-            DTO_HoaDon hoaDon = bllHoaDon.GetHoaDonById(maHD);
-            DTO_QuanLyBenhNhan benhNhan = bllHoaDon.GetBenhNhanById(hoaDon.MaBN);
-            DTO_NhanVien nhanVien = bllHoaDon.GetNhanVienById(hoaDon.MaNV);
+                // Kiểm tra trạng thái hiện tại của hóa đơn
+                DTO_HoaDon hoaDon = bllHoaDon.GetHoaDonById(maHD);
 
-            // Lấy chi tiết dịch vụ và tên dịch vụ
-            var (chiTietDichVu, tenDichVuList) = bllHoaDon.GetChiTietSuDungDVByMaLSKB(hoaDon.MaLSKB);
+                // Nếu hóa đơn chưa ở trạng thái Hoàn Thành
+                if (hoaDon.TrangThai != "Hoàn_Thanh")
+                {
+                    // Lấy thông tin bệnh nhân và nhân viên
+                    DTO_QuanLyBenhNhan benhNhan = bllHoaDon.GetBenhNhanById(hoaDon.MaBN);
+                    DTO_NhanVien nhanVien = bllHoaDon.GetNhanVienById(hoaDon.MaNV);
 
-            // In hóa đơn
-            PrintInvoice(hoaDon, benhNhan, nhanVien, chiTietDichVu, tenDichVuList);
+                    // Lấy chi tiết dịch vụ và tên dịch vụ
+                    var (chiTietDichVu, tenDichVuList) = bllHoaDon.GetChiTietSuDungDVByMaLSKB(hoaDon.MaLSKB);
+
+                    // In hóa đơn
+                    PrintInvoice(hoaDon, benhNhan, nhanVien, chiTietDichVu, tenDichVuList);
+
+                    // Cập nhật trạng thái hóa đơn
+                    bool capNhatThanhCong = bllHoaDon.CapNhatTrangThaiHoaDon(maHD);
+
+                    if (capNhatThanhCong)
+                    {
+                        // Làm mới danh sách hóa đơn
+                        LoadDanhSachHoaDon();
+
+                        MessageBox.Show("In hóa đơn và cập nhật trạng thái thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không thể cập nhật trạng thái hóa đơn.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Hóa đơn đã được in và hoàn thành.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         //private void cboBenhNhan_SelectedIndexChanged(object sender, EventArgs e)

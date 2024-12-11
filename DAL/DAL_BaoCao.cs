@@ -28,26 +28,32 @@ namespace DAL
                 // Truy vấn SQL với tham số ngày bắt đầu và kết thúc
                 string query = @"
                     SELECT 
-                        h.NgayLapHD AS Ngay,
-                        SUM(ctd.Gia * ctd.SoLuong) AS TongTienDichVu,
-                        SUM(thuoc.DonGia * cthd.SoLuong) AS TongTienThuoc,
-                        (SUM(ctd.Gia * ctd.SoLuong) + SUM(thuoc.DonGia * cthd.SoLuong)) AS TongDoanhThu
-                    FROM 
-                        HoaDon h
-                    JOIN 
-                        CTSDDV ctd ON h.MaHD = ctd.MaHD
-                    JOIN 
-                        DichVu dv ON ctd.MaDV = dv.MaDV
-                    LEFT JOIN 
-                        CTHD cthd ON h.MaHD = cthd.MaHD
-                    LEFT JOIN 
-                        Thuoc thuoc ON cthd.MaThuoc = thuoc.MaThuoc
-                    WHERE 
-                        h.NgayLapHD BETWEEN @Tungay AND @Denngay
-                    GROUP BY 
-                        h.NgayLapHD
-                    ORDER BY 
-                        h.NgayLapHD;";
+    CAST(h.NgayLapHD AS DATE) AS Ngay,
+    -- Tổng tiền dịch vụ
+    SUM(ISNULL(ctdv.ThanhTien, 0)) AS TongTienDichVu,
+    -- Tổng tiền thuốc
+    SUM(ISNULL(cthd.ThanhTien, 0)) AS TongTienThuoc,
+    -- Tổng doanh thu
+    SUM(ISNULL(ctdv.ThanhTien, 0) + ISNULL(cthd.ThanhTien, 0)) AS TongDoanhThu,
+    
+    -- Thống kê chi tiết
+    COUNT(DISTINCT h.MaHD) AS SoLuongHoaDon,
+    COUNT(DISTINCT ctdv.MaChiTietSDDV) AS SoLuongDichVu,
+    COUNT(DISTINCT cthd.MaChiTietHD) AS SoLuongThuoc
+FROM 
+    HoaDon h
+LEFT JOIN 
+    LichSuKhamBenh lskb ON h.MaLSKB = lskb.MaLSKB
+LEFT JOIN 
+    CTSDDV ctdv ON lskb.MaLSKB = ctdv.MaLSKB
+LEFT JOIN 
+    CTHD cthd ON lskb.MaLSKB = cthd.MaLSKB
+WHERE 
+    h.NgayLapHD BETWEEN @TuNgay AND @DenNgay
+GROUP BY 
+    CAST(h.NgayLapHD AS DATE)
+ORDER BY 
+    Ngay;";
 
                 // Tạo đối tượng SqlCommand
                 using (SqlCommand cmd = new SqlCommand(query, conn))

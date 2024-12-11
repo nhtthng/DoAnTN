@@ -56,6 +56,10 @@
               "target": "Package",
               "version": "[0.104.2, )"
             },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[7.5.2, )"
+            },
             "QRCoder": {
               "target": "Package",
               "version": "[1.6.0, )"
@@ -130,6 +134,10 @@
               "target": "Package",
               "version": "[0.104.2, )"
             },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[7.5.2, )"
+            },
             "QRCoder": {
               "target": "Package",
               "version": "[1.6.0, )"
@@ -203,6 +211,10 @@
             "ClosedXML": {
               "target": "Package",
               "version": "[0.104.2, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[7.5.2, )"
             },
             "QRCoder": {
               "target": "Package",
@@ -280,6 +292,10 @@
             "ClosedXML": {
               "target": "Package",
               "version": "[0.104.2, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[7.5.2, )"
             },
             "QRCoder": {
               "target": "Package",

@@ -58,6 +58,7 @@
             DTPLocBN = new DateTimePicker();
             label9 = new Label();
             DGVDSBenhNhanChuaKham = new DataGridView();
+            btnKL = new Button();
             ((System.ComponentModel.ISupportInitialize)DGVKB).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProviderKB).BeginInit();
             groupBox1.SuspendLayout();
@@ -192,7 +193,7 @@
             // 
             // btnThem
             // 
-            btnThem.Location = new Point(861, 338);
+            btnThem.Location = new Point(736, 338);
             btnThem.Name = "btnThem";
             btnThem.Size = new Size(94, 29);
             btnThem.TabIndex = 11;
@@ -202,7 +203,7 @@
             // 
             // btnSua
             // 
-            btnSua.Location = new Point(1231, 338);
+            btnSua.Location = new Point(1038, 338);
             btnSua.Name = "btnSua";
             btnSua.Size = new Size(94, 29);
             btnSua.TabIndex = 11;
@@ -222,7 +223,7 @@
             // 
             // btnXoa
             // 
-            btnXoa.Location = new Point(1061, 338);
+            btnXoa.Location = new Point(890, 338);
             btnXoa.Name = "btnXoa";
             btnXoa.Size = new Size(94, 29);
             btnXoa.TabIndex = 13;
@@ -262,7 +263,7 @@
             // 
             // btnReset
             // 
-            btnReset.Location = new Point(1373, 338);
+            btnReset.Location = new Point(1195, 338);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(94, 29);
             btnReset.TabIndex = 17;
@@ -322,11 +323,21 @@
             DGVDSBenhNhanChuaKham.TabIndex = 16;
             DGVDSBenhNhanChuaKham.CellClick += DGVDSBenhNhanChuaKham_CellClick_1;
             // 
+            // btnKL
+            // 
+            btnKL.Location = new Point(1351, 338);
+            btnKL.Name = "btnKL";
+            btnKL.Size = new Size(94, 29);
+            btnKL.TabIndex = 19;
+            btnKL.Text = "In Toa";
+            btnKL.UseVisualStyleBackColor = true;
+            // 
             // KhamBenh
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1479, 659);
+            Controls.Add(btnKL);
             Controls.Add(groupBox1);
             Controls.Add(btnReset);
             Controls.Add(btnXoa);
@@ -390,5 +401,6 @@
         private DateTimePicker DTPLocBN;
         private Label label9;
         private Button btnLocBN;
+        private Button btnKL;
     }
 }

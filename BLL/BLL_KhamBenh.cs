@@ -324,5 +324,94 @@ namespace BLL
         {
             return dalKhamBenh.GetPatientsNotExamined(date);
         }
+        public DTO_KhamBenh GetKhamBenhByMaLSKB(int maLSKB)
+        {
+            // Kiểm tra điều kiện nếu cần
+            if (maLSKB <= 0)
+            {
+                throw new ArgumentException("Mã lịch sử khám bệnh không hợp lệ");
+            }
+
+            return dalKhamBenh.GetKhamBenhByMaLSKB(maLSKB);
+        }
+        public DTO_QuanLyBenhNhan GetBenhNhanById(int maBN)
+        {
+            // Kiểm tra điều kiện nếu cần
+            if (maBN <= 0)
+            {
+                throw new ArgumentException("Mã bệnh nhân không hợp lệ");
+            }
+
+            return dalKhamBenh.GetBenhNhanById(maBN);
+        }
+        public DTO_QuanLyBacSi GetBacSiById(int maBS)
+        {
+            // Kiểm tra điều kiện nếu cần
+            if (maBS <= 0)
+            {
+                throw new ArgumentException("Mã bác sĩ không hợp lệ");
+            }
+
+            return dalKhamBenh.GetBacSiById(maBS);
+        }
+        public List<DTO_KhamBenh> GetDanhSachKhamBenh()
+        {
+            return dalKhamBenh.GetDanhSachKhamBenh();
+        }
+        public KhamBenhViewModel LayChiTietKhamBenh(int maLSKB)
+        {
+            try
+            {
+                // Lấy thông tin khám bệnh
+                DTO_KhamBenh khamBenh = GetKhamBenhByMaLSKB(maLSKB);
+
+                // Kiểm tra nếu không tìm thấy khám bệnh
+                if (khamBenh == null)
+                {
+                    throw new Exception($"Không tìm thấy lịch sử khám bệnh với mã {maLSKB}");
+                }
+
+                // Lấy thông tin bệnh nhân
+                DTO_QuanLyBenhNhan benhNhan = GetBenhNhanById(khamBenh.MaBN);
+
+                // Kiểm tra nếu không tìm thấy bệnh nhân
+                if (benhNhan == null)
+                {
+                    throw new Exception($"Không tìm thấy bệnh nhân với mã {khamBenh.MaBN}");
+                }
+
+                // Lấy thông tin bác sĩ
+                DTO_QuanLyBacSi bacSi = GetBacSiById(khamBenh.MaBS);
+
+                // Kiểm tra nếu không tìm thấy bác sĩ
+                if (bacSi == null)
+                {
+                    throw new Exception($"Không tìm thấy bác sĩ với mã {khamBenh.MaBS}");
+                }
+
+                // Lấy kết luận
+                string ketLuan = dalKhamBenh.GetKetLuanByMaLSKB(maLSKB);
+
+                // Tạo và trả về ViewModel
+                return new KhamBenhViewModel
+                {
+                    KhamBenh = khamBenh,
+                    BenhNhan = benhNhan,
+                    BacSi = bacSi,
+                    KetLuan = ketLuan
+                };
+            }
+            catch (SqlException sqlEx)
+            {
+                // Xử lý các lỗi liên quan đến SQL
+                throw new Exception($"Lỗi kết nối CSDL: {sqlEx.Message}", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý các ngoại lệ khác
+                throw new Exception($"Lỗi khi lấy chi tiết khám bệnh: {ex.Message}", ex);
+            }
+        }
+
     }
 }

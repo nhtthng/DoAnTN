@@ -483,5 +483,37 @@ ORDER BY NgayLapHD DESC";
 
             return (list, tenDichVuList);
         }
+        // Phương thức cập nhật trạng thái hóa đơn trong CSDL
+        public bool CapNhatTrangThaiHoaDon(int maHoaDon, string trangThai)
+        {
+            try
+            {
+                using (SqlConnection conn = SqlConnectionData.GetConnection())
+                {
+                    string query = @"
+                UPDATE HoaDon 
+                SET TrangThai = @TrangThai 
+                WHERE MaHD = @MaHoaDon";
+
+                    using (SqlCommand command = new SqlCommand(query, conn))
+                    {
+                        command.Parameters.AddWithValue("@TrangThai", trangThai);
+                        command.Parameters.AddWithValue("@MaHoaDon", maHoaDon);
+
+                        conn.Open();
+                        int soLuongDongCapNhat = command.ExecuteNonQuery();
+
+                        return soLuongDongCapNhat > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi
+                Console.WriteLine($"Lỗi cập nhật trạng thái: {ex.Message}");
+                return false;
+            }
+        }
+
     }
 }

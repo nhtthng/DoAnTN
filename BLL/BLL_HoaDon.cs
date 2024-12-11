@@ -200,5 +200,23 @@ namespace BLL
             // Gọi phương thức DAL để lấy dữ liệu
             return _dalHoaDonDAL.GetChiTietSuDungDVByMaLSKB(maLSKB);
         }
+        // Trong lớp BLL_HoaDon
+        public bool CapNhatTrangThaiHoaDon(int maHoaDon)
+        {
+            try
+            {
+                // Tạo đối tượng DAL
+                //DAL_HoaDon dalHoaDon = new DAL_HoaDon();
+
+                // Gọi phương thức cập nhật trạng thái từ DAL
+                return _dalHoaDonDAL.CapNhatTrangThaiHoaDon(maHoaDon, "Hoàn_Thanh");
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi
+                throw new Exception("Lỗi cập nhật trạng thái hóa đơn: " + ex.Message);
+            }
+        }
+
     }
 }

@@ -331,5 +331,169 @@ namespace DAL
             }
             return patients;
         }
+        public DTO_KhamBenh GetKhamBenhByMaLSKB(int maLSKB)
+        {
+            DTO_KhamBenh khamBenh = null;
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = @"
+                SELECT MaLSKB, MaBS, MaBN, NgayKham, ChuanDoan, MaPK
+                FROM LichSuKhamBenh
+                WHERE MaLSKB = @MaLSKB";
+
+                using (SqlCommand command = new SqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@MaLSKB", maLSKB);
+                    conn.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            khamBenh = new DTO_KhamBenh
+                            {
+                                MaLSKB = reader.GetInt32(reader.GetOrdinal("MaLSKB")),
+                                MaBS = reader.GetInt32(reader.GetOrdinal("MaBS")),
+                                MaBN = reader.GetInt32(reader.GetOrdinal("MaBN")),
+                                NgayKham = reader.GetDateTime(reader.GetOrdinal("NgayKham")),
+                                ChuanDoan = reader.GetString(reader.GetOrdinal("ChuanDoan")),
+                                MaPK = reader.GetInt32(reader.GetOrdinal("MaPK"))
+                            };
+                        }
+                    }
+                }
+            }
+
+            return khamBenh;
+        }
+        public DTO_QuanLyBenhNhan GetBenhNhanById(int maBN)
+        {
+            DTO_QuanLyBenhNhan benhNhan = null;
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = @"
+                SELECT MaBN, HoTenBN, NgaySinh, GioiTinh, Email, SoBHYT, SoDT, DiaChi
+                FROM BenhNhan
+                WHERE MaBN = @MaBN";
+
+                using (SqlCommand command = new SqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@MaBN", maBN);
+                    conn.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            benhNhan = new DTO_QuanLyBenhNhan
+                            {
+                                MaBN = reader.GetInt32(reader.GetOrdinal("MaBN")),
+                                HoTenBN = reader.GetString(reader.GetOrdinal("HoTenBN")),
+                                NgaySinh = reader.GetDateTime(reader.GetOrdinal("NgaySinh")),
+                                GioiTinh = reader.GetString(reader.GetOrdinal("GioiTinh")),
+                                Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? "" : reader.GetString(reader.GetOrdinal("Email")),
+                                SoBHYT = reader.IsDBNull(reader.GetOrdinal("SoBHYT")) ? "" : reader.GetString(reader.GetOrdinal("SoBHYT")),
+                                SoDT = reader.IsDBNull(reader.GetOrdinal("SoDT")) ? "" : reader.GetString(reader.GetOrdinal("SoDT")),
+                                DiaChi = reader.IsDBNull(reader.GetOrdinal("DiaChi")) ? "" : reader.GetString(reader.GetOrdinal("DiaChi"))
+                            };
+                        }
+                    }
+                }
+            }
+
+            return benhNhan;
+        }
+        public DTO_QuanLyBacSi GetBacSiById(int maBS)
+        {
+            DTO_QuanLyBacSi bacSi = null;
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = @"
+                SELECT MaBS, TenBS, GioiTinh, Email, SoDT, KinhNghiem, MaCK
+                FROM BacSi
+                WHERE MaBS = @MaBS";
+
+                using (SqlCommand command = new SqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@MaBS", maBS);
+                    conn.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            bacSi = new DTO_QuanLyBacSi
+                            {
+                                MaBS = reader.GetInt32(reader.GetOrdinal("MaBS")),
+                                TenBS = reader.GetString(reader.GetOrdinal("TenBS")),
+                                GioiTinh = reader.GetString(reader.GetOrdinal("GioiTinh")),
+                                Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? "" : reader.GetString(reader.GetOrdinal("Email")),
+                                SoDT = reader.IsDBNull(reader.GetOrdinal("SoDT")) ? "" : reader.GetString(reader.GetOrdinal("SoDT")),
+                                KinhNghiem = reader.GetInt32(reader.GetOrdinal("KinhNghiem")),
+                                MaCK = reader.GetInt32(reader.GetOrdinal("MaCK"))
+                            };
+                        }
+                    }
+                }
+            }
+
+            return bacSi;
+        }
+        public List<DTO_KhamBenh> GetDanhSachKhamBenh()
+        {
+            List<DTO_KhamBenh> danhSachKhamBenh = new List<DTO_KhamBenh>();
+
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = @"
+                SELECT MaLSKB, MaBS, MaBN, NgayKham, ChuanDoan, MaPK
+                FROM LichSuKhamBenh
+                ORDER BY NgayKham DESC";
+
+                using (SqlCommand command = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            DTO_KhamBenh khamBenh = new DTO_KhamBenh
+                            {
+                                MaLSKB = reader.GetInt32(reader.GetOrdinal("MaLSKB")),
+                                MaBS = reader.GetInt32(reader.GetOrdinal("MaBS")),
+                                MaBN = reader.GetInt32(reader.GetOrdinal("MaBN")),
+                                NgayKham = reader.GetDateTime(reader.GetOrdinal("NgayKham")),
+                                ChuanDoan = reader.GetString(reader.GetOrdinal("ChuanDoan")),
+                                MaPK = reader.GetInt32(reader.GetOrdinal("MaPK"))
+                            };
+
+                            danhSachKhamBenh.Add(khamBenh);
+                        }
+                    }
+                }
+            }
+
+            return danhSachKhamBenh;
+        }
+        public string GetKetLuanByMaLSKB(int maLSKB)
+        {
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                string query = "SELECT KetLuan FROM LichSuKhamBenh WHERE MaLSKB = @MaLSKB";
+
+                using (SqlCommand command = new SqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@MaLSKB", maLSKB);
+                    conn.Open();
+
+                    object result = command.ExecuteScalar();
+                    return result != null ? result.ToString() : string.Empty;
+                }
+            }
+        }
     }
 }

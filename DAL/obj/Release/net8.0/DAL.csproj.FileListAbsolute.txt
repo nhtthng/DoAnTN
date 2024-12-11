@@ -1,0 +1,16 @@
+D:\Study\DoAnC\DAL\bin\Release\net8.0\DAL.deps.json
+D:\Study\DoAnC\DAL\bin\Release\net8.0\DAL.dll
+D:\Study\DoAnC\DAL\bin\Release\net8.0\DAL.pdb
+D:\Study\DoAnC\DAL\bin\Release\net8.0\DTO.dll
+D:\Study\DoAnC\DAL\bin\Release\net8.0\DTO.pdb
+D:\Study\DoAnC\DAL\obj\Release\net8.0\DAL.csproj.AssemblyReference.cache
+D:\Study\DoAnC\DAL\obj\Release\net8.0\DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Study\DoAnC\DAL\obj\Release\net8.0\DAL.AssemblyInfoInputs.cache
+D:\Study\DoAnC\DAL\obj\Release\net8.0\DAL.AssemblyInfo.cs
+D:\Study\DoAnC\DAL\obj\Release\net8.0\DAL.csproj.CoreCompileInputs.cache
+D:\Study\DoAnC\DAL\obj\Release\net8.0\DAL.sourcelink.json
+D:\Study\DoAnC\DAL\obj\Release\net8.0\DAL.csproj.Up2Date
+D:\Study\DoAnC\DAL\obj\Release\net8.0\DAL.dll
+D:\Study\DoAnC\DAL\obj\Release\net8.0\refint\DAL.dll
+D:\Study\DoAnC\DAL\obj\Release\net8.0\DAL.pdb
+D:\Study\DoAnC\DAL\obj\Release\net8.0\ref\DAL.dll
