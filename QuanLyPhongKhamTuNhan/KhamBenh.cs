@@ -1,5 +1,6 @@
 ﻿using BLL;
 using DAL;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DTO;
 using QuanLyPhongKham;
@@ -628,6 +629,38 @@ namespace GUI
             DateTime selectedDate = DTPLocBN.Value.Date;
             var patients = bllKhamBenh.GetPatientsNotExamined(selectedDate);
             DGVDSBenhNhanChuaKham.DataSource = patients;
+        }
+
+        private void btnKL_Click(object sender, EventArgs e)
+        {
+            // Kiểm tra xem tất cả các trường đều hợp lệ
+            if (cboMaBacSi.SelectedIndex == -1 ||
+                cboMaBenhNhan.SelectedIndex == -1 ||
+                string.IsNullOrEmpty(txtBoxChuanDoan.Text))
+            {
+                // Hiển thị thông báo nếu có bất kỳ trường nào không hợp lệ
+                MessageBox.Show("Vui lòng chọn bác sĩ, bệnh nhân và nhập chuẩn đoán.");
+            }
+            else
+            {
+                // Tạo đối tượng DTO nếu tất cả các điều kiện đều hợp lệ
+                DTO_InToaKham dto = new DTO_InToaKham
+                {
+                    TenBacSi = cboMaBacSi.Text,
+                    TenBenhNhan = cboMaBenhNhan.Text,
+                    NgayKham = DTPNgayKham.Value,
+                    ChuanDoan = txtBoxChuanDoan.Text,
+                };
+
+                // Tạo instance của InToaKham và truyền DTO
+                InToaKham itk = new InToaKham
+                {
+                    toaKhamdata = dto
+                };
+
+                // Hiển thị form InToaKham
+                itk.ShowDialog();
+            }
         }
     }
 }

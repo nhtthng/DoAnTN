@@ -331,6 +331,7 @@
             btnKL.TabIndex = 19;
             btnKL.Text = "In Toa";
             btnKL.UseVisualStyleBackColor = true;
+            btnKL.Click += btnKL_Click;
             // 
             // KhamBenh
             // 

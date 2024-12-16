@@ -37,7 +37,7 @@
             label4 = new Label();
             txtChuanDoan = new TextBox();
             label5 = new Label();
-            button1 = new Button();
+            btnInPhieu = new Button();
             label6 = new Label();
             RtxtBoxKetLuan = new RichTextBox();
             SuspendLayout();
@@ -115,14 +115,15 @@
             label5.TabIndex = 8;
             label5.Text = "Kết Luận";
             // 
-            // button1
+            // btnInPhieu
             // 
-            button1.Location = new Point(270, 502);
-            button1.Name = "button1";
-            button1.Size = new Size(94, 29);
-            button1.TabIndex = 10;
-            button1.Text = "In Phiếu";
-            button1.UseVisualStyleBackColor = true;
+            btnInPhieu.Location = new Point(270, 502);
+            btnInPhieu.Name = "btnInPhieu";
+            btnInPhieu.Size = new Size(94, 29);
+            btnInPhieu.TabIndex = 10;
+            btnInPhieu.Text = "In Phiếu";
+            btnInPhieu.UseVisualStyleBackColor = true;
+            btnInPhieu.Click += btnInPhieu_Click;
             // 
             // label6
             // 
@@ -149,7 +150,7 @@
             ClientSize = new Size(652, 557);
             Controls.Add(RtxtBoxKetLuan);
             Controls.Add(label6);
-            Controls.Add(button1);
+            Controls.Add(btnInPhieu);
             Controls.Add(label5);
             Controls.Add(txtChuanDoan);
             Controls.Add(label4);
@@ -161,6 +162,7 @@
             Controls.Add(label1);
             Name = "InToaKham";
             Text = "InToaKham";
+            Load += InToaKham_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -176,7 +178,7 @@
         private Label label4;
         private TextBox txtChuanDoan;
         private Label label5;
-        private Button button1;
+        private Button btnInPhieu;
         private Label label6;
         private RichTextBox RtxtBoxKetLuan;
     }
