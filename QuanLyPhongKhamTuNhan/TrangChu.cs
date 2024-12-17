@@ -337,5 +337,17 @@ namespace GUI
             QuanLyNhanVien quanLyNhanVien = new QuanLyNhanVien();
             quanLyNhanVien.Show();
         }
+
+        private void phòngKhámToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Quanlyphongkham quanlyphongkham = new Quanlyphongkham();
+            quanlyphongkham.Show();
+        }
+
+        private void chuyênKhoaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            QuanLyChuyenKhoa quanLyChuyenKhoa = new QuanLyChuyenKhoa();
+            quanLyChuyenKhoa.Show();
+        }
     }
 }

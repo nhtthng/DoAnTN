@@ -40,6 +40,9 @@
             danhMụcDịchVụToolStripMenuItem = new ToolStripMenuItem();
             phòngBanToolStripMenuItem = new ToolStripMenuItem();
             bácSĩToolStripMenuItem = new ToolStripMenuItem();
+            nhânViênToolStripMenuItem = new ToolStripMenuItem();
+            phòngKhámToolStripMenuItem = new ToolStripMenuItem();
+            chuyênKhoaToolStripMenuItem = new ToolStripMenuItem();
             tiếpNhậnToolStripMenuItem = new ToolStripMenuItem();
             khámBệnhToolStripMenuItem = new ToolStripMenuItem();
             cTSDDVToolStripMenuItem = new ToolStripMenuItem();
@@ -51,7 +54,6 @@
             thoátToolStripMenuItem = new ToolStripMenuItem();
             panel1 = new Panel();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            nhânViênToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -112,7 +114,7 @@
             // 
             // danhMụcToolStripMenuItem
             // 
-            danhMụcToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { thuốcToolStripMenuItem, danhMụcDịchVụToolStripMenuItem, phòngBanToolStripMenuItem, bácSĩToolStripMenuItem, nhânViênToolStripMenuItem });
+            danhMụcToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { thuốcToolStripMenuItem, danhMụcDịchVụToolStripMenuItem, phòngBanToolStripMenuItem, bácSĩToolStripMenuItem, nhânViênToolStripMenuItem, phòngKhámToolStripMenuItem, chuyênKhoaToolStripMenuItem });
             danhMụcToolStripMenuItem.Image = (Image)resources.GetObject("danhMụcToolStripMenuItem.Image");
             danhMụcToolStripMenuItem.ImageAlign = ContentAlignment.MiddleLeft;
             danhMụcToolStripMenuItem.Name = "danhMụcToolStripMenuItem";
@@ -151,6 +153,30 @@
             bácSĩToolStripMenuItem.Size = new Size(224, 30);
             bácSĩToolStripMenuItem.Text = "Bác sĩ";
             bácSĩToolStripMenuItem.Click += bácSĩToolStripMenuItem_Click;
+            // 
+            // nhânViênToolStripMenuItem
+            // 
+            nhânViênToolStripMenuItem.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
+            nhânViênToolStripMenuItem.Name = "nhânViênToolStripMenuItem";
+            nhânViênToolStripMenuItem.Size = new Size(224, 30);
+            nhânViênToolStripMenuItem.Text = "Nhân Viên";
+            nhânViênToolStripMenuItem.Click += nhânViênToolStripMenuItem_Click;
+            // 
+            // phòngKhámToolStripMenuItem
+            // 
+            phòngKhámToolStripMenuItem.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
+            phòngKhámToolStripMenuItem.Name = "phòngKhámToolStripMenuItem";
+            phòngKhámToolStripMenuItem.Size = new Size(224, 30);
+            phòngKhámToolStripMenuItem.Text = "Phòng Khám";
+            phòngKhámToolStripMenuItem.Click += phòngKhámToolStripMenuItem_Click;
+            // 
+            // chuyênKhoaToolStripMenuItem
+            // 
+            chuyênKhoaToolStripMenuItem.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
+            chuyênKhoaToolStripMenuItem.Name = "chuyênKhoaToolStripMenuItem";
+            chuyênKhoaToolStripMenuItem.Size = new Size(224, 30);
+            chuyênKhoaToolStripMenuItem.Text = "Chuyên Khoa";
+            chuyênKhoaToolStripMenuItem.Click += chuyênKhoaToolStripMenuItem_Click;
             // 
             // tiếpNhậnToolStripMenuItem
             // 
@@ -241,14 +267,6 @@
             panel1.TabIndex = 1;
             panel1.Paint += panel1_Paint;
             // 
-            // nhânViênToolStripMenuItem
-            // 
-            nhânViênToolStripMenuItem.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
-            nhânViênToolStripMenuItem.Name = "nhânViênToolStripMenuItem";
-            nhânViênToolStripMenuItem.Size = new Size(224, 30);
-            nhânViênToolStripMenuItem.Text = "Nhân Viên";
-            nhânViênToolStripMenuItem.Click += nhânViênToolStripMenuItem_Click;
-            // 
             // TrangChu
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -291,5 +309,7 @@
         private ToolStripMenuItem lSKBToolStripMenuItem;
         private ToolStripMenuItem bácSĩToolStripMenuItem;
         private ToolStripMenuItem nhânViênToolStripMenuItem;
+        private ToolStripMenuItem phòngKhámToolStripMenuItem;
+        private ToolStripMenuItem chuyênKhoaToolStripMenuItem;
     }
 }
