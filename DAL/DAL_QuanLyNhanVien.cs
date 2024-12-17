@@ -22,7 +22,7 @@ namespace DAL
                 conn.Open();
 
                 string query = @"
-                SELECT MaNV, HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau 
+                SELECT MaNV, HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau, Email
                 FROM NhanVien";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -41,6 +41,8 @@ namespace DAL
                                 MaPB = reader.GetInt32(reader.GetOrdinal("MaPB")),
                                 MatKhau = reader.GetString(reader.GetOrdinal("MatKhau")),
                                 //Quyen = reader.GetInt32(reader.GetOrdinal("Quyen"))
+                                Email = reader.GetString(reader.GetOrdinal("Email"))
+
                             };
 
                             danhSachNhanVien.Add(nhanVien);
@@ -71,9 +73,9 @@ namespace DAL
 
                 string query = @"
                 INSERT INTO NhanVien 
-                (HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau) 
+                (HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau, Email) 
                 VALUES 
-                (@HoTen, @GioiTinh, @NgaySinh, @SoDT, @MaPB, 1)";
+                (@HoTen, @GioiTinh, @NgaySinh, @SoDT, @MaPB, 1, @Email)";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -82,6 +84,7 @@ namespace DAL
                     cmd.Parameters.AddWithValue("@NgaySinh", nhanVien.NgaySinh);
                     cmd.Parameters.AddWithValue("@SoDT", nhanVien.SoDT);
                     cmd.Parameters.AddWithValue("@MaPB", nhanVien.MaPB);
+                    cmd.Parameters.AddWithValue("@Email", nhanVien.Email);
                     //cmd.Parameters.AddWithValue("@Quyen", nhanVien.Quyen);
 
                     int result = cmd.ExecuteNonQuery();
@@ -114,7 +117,8 @@ namespace DAL
                     NgaySinh = @NgaySinh, 
                     SoDT = @SoDT, 
                     MaPB = @MaPB, 
-                    MatKhau = @MatKhau 
+                    MatKhau = @MatKhau,
+                    Email = @Email
                 WHERE MaNV = @MaNV";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -126,6 +130,7 @@ namespace DAL
                     cmd.Parameters.AddWithValue("@SoDT", nhanVien.SoDT);
                     cmd.Parameters.AddWithValue("@MaPB", nhanVien.MaPB);
                     cmd.Parameters.AddWithValue("@MatKhau", nhanVien.MatKhau);
+                    cmd.Parameters.AddWithValue("@Email", nhanVien.Email);
                     //cmd.Parameters.AddWithValue("@Quyen", nhanVien.Quyen);
 
                     int result = cmd.ExecuteNonQuery();
@@ -182,7 +187,7 @@ namespace DAL
                 conn.Open();
 
                 string query = @"
-                SELECT MaNV, HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau
+                SELECT MaNV, HoTen, GioiTinh, NgaySinh, SoDT, MaPB, MatKhau, Email
                 FROM NhanVien 
                 WHERE SoDT LIKE @SoDT";
 
@@ -203,6 +208,7 @@ namespace DAL
                                 SoDT = reader.GetString(reader.GetOrdinal("SoDT")),
                                 MaPB = reader.GetInt32(reader.GetOrdinal("MaPB")),
                                 MatKhau = reader.GetString(reader.GetOrdinal("MatKhau")),
+                                Email = reader.GetString(reader.GetOrdinal("Email")),
                                 //Quyen = reader.GetInt32(reader.GetOrdinal("Quyen"))
                             };
 
@@ -243,6 +249,26 @@ namespace DAL
                 }
             }
             return nhanVien;
+        }
+        public void UpdatePassword(string email, string newPassword)
+        {
+            string hashedPassword = PasswordHasher.HashPassword(newPassword);
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                conn.Open();
+                string query = "UPDATE NhanVien SET MatKhau = @MatKhau WHERE Email = @Email";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MatKhau", hashedPassword);
+                    cmd.Parameters.AddWithValue("@Email", email);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected == 0)
+                    {
+                        throw new Exception("Nhân viên không tồn tại.");
+                    }
+                }
+            }
         }
     }
 }

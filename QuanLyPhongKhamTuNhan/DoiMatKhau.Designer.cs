@@ -35,7 +35,6 @@
             label3 = new Label();
             txtBoxXacNhanMKM = new TextBox();
             btnDoiMK = new Button();
-            btnQuenMK = new Button();
             btnReset = new Button();
             SuspendLayout();
             // 
@@ -89,7 +88,7 @@
             // 
             // btnDoiMK
             // 
-            btnDoiMK.Location = new Point(12, 269);
+            btnDoiMK.Location = new Point(61, 268);
             btnDoiMK.Name = "btnDoiMK";
             btnDoiMK.Size = new Size(129, 29);
             btnDoiMK.TabIndex = 2;
@@ -97,18 +96,9 @@
             btnDoiMK.UseVisualStyleBackColor = true;
             btnDoiMK.Click += btnDoiMK_Click;
             // 
-            // btnQuenMK
-            // 
-            btnQuenMK.Location = new Point(244, 269);
-            btnQuenMK.Name = "btnQuenMK";
-            btnQuenMK.Size = new Size(129, 29);
-            btnQuenMK.TabIndex = 3;
-            btnQuenMK.Text = "Quên mật khẩu";
-            btnQuenMK.UseVisualStyleBackColor = true;
-            // 
             // btnReset
             // 
-            btnReset.Location = new Point(466, 268);
+            btnReset.Location = new Point(366, 268);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(94, 29);
             btnReset.TabIndex = 3;
@@ -121,7 +111,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(618, 365);
             Controls.Add(btnReset);
-            Controls.Add(btnQuenMK);
             Controls.Add(btnDoiMK);
             Controls.Add(txtBoxXacNhanMKM);
             Controls.Add(txtBoxMatKhauMoi);
@@ -144,7 +133,6 @@
         private Label label3;
         private TextBox txtBoxXacNhanMKM;
         private Button btnDoiMK;
-        private Button btnQuenMK;
         private Button btnReset;
     }
 }

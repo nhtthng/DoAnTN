@@ -116,5 +116,11 @@ namespace BLL
         //    }
         //    return true;
         //}
+
+        public void ChangePassword(string Email, string newPassword)
+        {
+            _QuanLyBacSiDAL.UpdatePassword(Email, newPassword);
+        }
+
     }
 }

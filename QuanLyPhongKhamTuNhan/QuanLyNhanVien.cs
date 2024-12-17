@@ -51,6 +51,7 @@ namespace GUI
                     SoDT = txtBoxSDT.Text,
                     MaPB = (int)cboMaPhongBan.SelectedValue,
                     //Quyen = 1 // Quyền mặc định
+                    Email = txtBoxEmail.Text,
                 };
 
                 if (bllNhanVien.AddNhanVien(nhanVien))
@@ -107,6 +108,7 @@ namespace GUI
                 currentNhanVien.NgaySinh = DTPNgaySinh.Value;
                 currentNhanVien.SoDT = txtBoxSDT.Text;
                 currentNhanVien.MaPB = (int)cboMaPhongBan.SelectedValue;
+                currentNhanVien.Email = txtBoxEmail.Text;
 
                 if (bllNhanVien.UpdateNhanVien(currentNhanVien))
                 {
@@ -150,6 +152,7 @@ namespace GUI
             txtBoxTimKiem.Clear();
             cboGioiTinh.SelectedIndex = -1;
             cboMaPhongBan.SelectedIndex = -1;
+            txtBoxEmail.Clear();
         }
 
         private void txtBoxSDT_KeyPress(object sender, KeyPressEventArgs e)

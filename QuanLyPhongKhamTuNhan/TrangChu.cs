@@ -331,5 +331,11 @@ namespace GUI
             QuanLyBacSi qlbs = new QuanLyBacSi();
             qlbs.Show();
         }
+
+        private void nhânViênToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            QuanLyNhanVien quanLyNhanVien = new QuanLyNhanVien();
+            quanLyNhanVien.Show();
+        }
     }
 }

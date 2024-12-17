@@ -350,5 +350,25 @@ namespace DAL
             }
             return bacSi;
         }
+        public void UpdatePassword(string Email, string newPassword)
+        {
+            string hashedPassword = PasswordHasher.HashPassword(newPassword);
+            using (SqlConnection conn = SqlConnectionData.GetConnection())
+            {
+                conn.Open();
+                string query = "UPDATE BacSi SET MatKhau = @MatKhau WHERE Email = @Email";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MatKhau", hashedPassword);
+                    cmd.Parameters.AddWithValue("@Email", Email);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected == 0)
+                    {
+                        throw new Exception("Bác sĩ không tồn tại.");
+                    }
+                }
+            }
+        }
     }
 }

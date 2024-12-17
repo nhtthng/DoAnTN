@@ -42,10 +42,10 @@ namespace GUI
                 txtBoxMatKhauCu.Enabled = !laLanDauDangNhap;
                 txtBoxMatKhauCu.Visible = !laLanDauDangNhap;
 
-                if (_batBuocDoiMK)
-                {
-                    ControlBox = false; // Vô hiệu hóa nút đóng
-                }
+                //if (_batBuocDoiMK)
+                //{
+                //    ControlBox = false; // Vô hiệu hóa nút đóng
+                //}
             }
         }
 

@@ -123,5 +123,11 @@ namespace BLL
             var nhanViens = dalNhanVien.SearchNhanVienBySDT(soDT);
             return nhanViens != null && nhanViens.Count > 0;
         }
+
+        public void ChangePassword(string Email, string newPassword)
+        {
+            
+            dalNhanVien.UpdatePassword(Email, newPassword);
+        }
     }
 }

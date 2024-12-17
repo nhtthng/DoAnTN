@@ -37,6 +37,7 @@
             txtMauKhau = new TextBox();
             btnDangNhap = new Button();
             cboLoaiTaiKhoan = new ComboBox();
+            btnQuenMK = new Button();
             SuspendLayout();
             // 
             // panel1
@@ -115,11 +116,26 @@
             cboLoaiTaiKhoan.Size = new Size(151, 28);
             cboLoaiTaiKhoan.TabIndex = 5;
             // 
+            // btnQuenMK
+            // 
+            btnQuenMK.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnQuenMK.Image = (Image)resources.GetObject("btnQuenMK.Image");
+            btnQuenMK.ImageAlign = ContentAlignment.MiddleLeft;
+            btnQuenMK.Location = new Point(26, 274);
+            btnQuenMK.Name = "btnQuenMK";
+            btnQuenMK.Size = new Size(160, 46);
+            btnQuenMK.TabIndex = 6;
+            btnQuenMK.Text = "Quên mật khẩu";
+            btnQuenMK.TextAlign = ContentAlignment.MiddleRight;
+            btnQuenMK.UseVisualStyleBackColor = true;
+            btnQuenMK.Click += btnQuenMK_Click;
+            // 
             // DangNhap
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(592, 345);
+            Controls.Add(btnQuenMK);
             Controls.Add(cboLoaiTaiKhoan);
             Controls.Add(btnDangNhap);
             Controls.Add(txtMauKhau);
@@ -144,5 +160,6 @@
         private TextBox txtMauKhau;
         private Button btnDangNhap;
         private ComboBox cboLoaiTaiKhoan;
+        private Button btnQuenMK;
     }
 }

@@ -105,5 +105,10 @@ namespace GUI
             }
         }
 
+        private void btnQuenMK_Click(object sender, EventArgs e)
+        {
+            KiemTraEmail kte = new KiemTraEmail();
+            kte.ShowDialog();
+        }
     }
 }

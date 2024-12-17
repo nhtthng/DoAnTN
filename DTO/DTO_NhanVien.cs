@@ -16,5 +16,6 @@ namespace DTO
         public int MaPB { get; set; }       // Mã phòng ban
         public string MatKhau { get; set; }    // Mật khẩu
         //public int Quyen { get; set; }
+        public string Email { get; set; }
     }
 }

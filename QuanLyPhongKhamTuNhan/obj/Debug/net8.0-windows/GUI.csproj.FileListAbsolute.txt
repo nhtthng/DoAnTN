@@ -112,3 +112,8 @@ D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\Microsoft.IO.Recyc
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\System.Drawing.Common.dll
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\System.Security.Cryptography.Pkcs.dll
 D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.KiemTraEmail.resources
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\obj\Debug\net8.0-windows\GUI.TaoMatKhau.resources
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\BouncyCastle.Cryptography.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\MailKit.dll
+D:\Study\DoAnC\QuanLyPhongKhamTuNhan\bin\Debug\net8.0-windows\MimeKit.dll

@@ -48,6 +48,8 @@
             btnSua = new Button();
             btnReset = new Button();
             DGVQuanLyNV = new DataGridView();
+            label8 = new Label();
+            txtBoxEmail = new TextBox();
             ((System.ComponentModel.ISupportInitialize)DGVQuanLyNV).BeginInit();
             SuspendLayout();
             // 
@@ -80,7 +82,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 106);
+            label2.Location = new Point(11, 78);
             label2.Name = "label2";
             label2.Size = new Size(102, 20);
             label2.TabIndex = 3;
@@ -88,7 +90,7 @@
             // 
             // txtBoxMaNV
             // 
-            txtBoxMaNV.Location = new Point(120, 103);
+            txtBoxMaNV.Location = new Point(119, 75);
             txtBoxMaNV.Name = "txtBoxMaNV";
             txtBoxMaNV.Size = new Size(174, 27);
             txtBoxMaNV.TabIndex = 4;
@@ -96,7 +98,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(408, 102);
+            label3.Location = new Point(408, 78);
             label3.Name = "label3";
             label3.Size = new Size(56, 20);
             label3.TabIndex = 5;
@@ -104,7 +106,7 @@
             // 
             // txtBoxHoTen
             // 
-            txtBoxHoTen.Location = new Point(464, 99);
+            txtBoxHoTen.Location = new Point(464, 75);
             txtBoxHoTen.Name = "txtBoxHoTen";
             txtBoxHoTen.Size = new Size(203, 27);
             txtBoxHoTen.TabIndex = 4;
@@ -112,7 +114,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(724, 106);
+            label4.Location = new Point(799, 78);
             label4.Name = "label4";
             label4.Size = new Size(68, 20);
             label4.TabIndex = 5;
@@ -122,7 +124,7 @@
             // 
             cboGioiTinh.FormattingEnabled = true;
             cboGioiTinh.Items.AddRange(new object[] { "Nam", "Nữ" });
-            cboGioiTinh.Location = new Point(823, 99);
+            cboGioiTinh.Location = new Point(924, 75);
             cboGioiTinh.Name = "cboGioiTinh";
             cboGioiTinh.Size = new Size(151, 28);
             cboGioiTinh.TabIndex = 6;
@@ -130,7 +132,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(12, 194);
+            label5.Location = new Point(12, 163);
             label5.Name = "label5";
             label5.Size = new Size(76, 20);
             label5.TabIndex = 7;
@@ -138,7 +140,7 @@
             // 
             // DTPNgaySinh
             // 
-            DTPNgaySinh.Location = new Point(94, 189);
+            DTPNgaySinh.Location = new Point(94, 163);
             DTPNgaySinh.Name = "DTPNgaySinh";
             DTPNgaySinh.Size = new Size(250, 27);
             DTPNgaySinh.TabIndex = 8;
@@ -146,7 +148,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(408, 194);
+            label6.Location = new Point(408, 165);
             label6.Name = "label6";
             label6.Size = new Size(35, 20);
             label6.TabIndex = 7;
@@ -154,7 +156,7 @@
             // 
             // txtBoxSDT
             // 
-            txtBoxSDT.Location = new Point(464, 191);
+            txtBoxSDT.Location = new Point(464, 162);
             txtBoxSDT.Name = "txtBoxSDT";
             txtBoxSDT.Size = new Size(203, 27);
             txtBoxSDT.TabIndex = 9;
@@ -163,7 +165,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(712, 191);
+            label7.Location = new Point(799, 165);
             label7.Name = "label7";
             label7.Size = new Size(105, 20);
             label7.TabIndex = 5;
@@ -172,14 +174,14 @@
             // cboMaPhongBan
             // 
             cboMaPhongBan.FormattingEnabled = true;
-            cboMaPhongBan.Location = new Point(823, 186);
+            cboMaPhongBan.Location = new Point(924, 162);
             cboMaPhongBan.Name = "cboMaPhongBan";
             cboMaPhongBan.Size = new Size(151, 28);
             cboMaPhongBan.TabIndex = 6;
             // 
             // btnThem
             // 
-            btnThem.Location = new Point(38, 275);
+            btnThem.Location = new Point(38, 289);
             btnThem.Name = "btnThem";
             btnThem.Size = new Size(94, 29);
             btnThem.TabIndex = 10;
@@ -189,7 +191,7 @@
             // 
             // btnXoa
             // 
-            btnXoa.Location = new Point(286, 275);
+            btnXoa.Location = new Point(306, 289);
             btnXoa.Name = "btnXoa";
             btnXoa.Size = new Size(94, 29);
             btnXoa.TabIndex = 10;
@@ -199,7 +201,7 @@
             // 
             // btnSua
             // 
-            btnSua.Location = new Point(584, 275);
+            btnSua.Location = new Point(614, 289);
             btnSua.Name = "btnSua";
             btnSua.Size = new Size(94, 29);
             btnSua.TabIndex = 10;
@@ -209,7 +211,7 @@
             // 
             // btnReset
             // 
-            btnReset.Location = new Point(837, 275);
+            btnReset.Location = new Point(903, 289);
             btnReset.Name = "btnReset";
             btnReset.Size = new Size(94, 29);
             btnReset.TabIndex = 10;
@@ -220,17 +222,35 @@
             // DGVQuanLyNV
             // 
             DGVQuanLyNV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            DGVQuanLyNV.Location = new Point(2, 327);
+            DGVQuanLyNV.Location = new Point(2, 344);
             DGVQuanLyNV.Name = "DGVQuanLyNV";
             DGVQuanLyNV.RowHeadersWidth = 51;
-            DGVQuanLyNV.Size = new Size(982, 232);
+            DGVQuanLyNV.Size = new Size(1096, 215);
             DGVQuanLyNV.TabIndex = 11;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(12, 237);
+            label8.Name = "label8";
+            label8.Size = new Size(46, 20);
+            label8.TabIndex = 12;
+            label8.Text = "Email";
+            // 
+            // txtBoxEmail
+            // 
+            txtBoxEmail.Location = new Point(94, 234);
+            txtBoxEmail.Name = "txtBoxEmail";
+            txtBoxEmail.Size = new Size(250, 27);
+            txtBoxEmail.TabIndex = 13;
             // 
             // QuanLyNhanVien
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(986, 562);
+            ClientSize = new Size(1101, 562);
+            Controls.Add(txtBoxEmail);
+            Controls.Add(label8);
             Controls.Add(DGVQuanLyNV);
             Controls.Add(btnReset);
             Controls.Add(btnSua);
@@ -280,5 +300,7 @@
         private Button btnSua;
         private Button btnReset;
         private DataGridView DGVQuanLyNV;
+        private Label label8;
+        private TextBox txtBoxEmail;
     }
 }
